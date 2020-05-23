@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width,initial-scale=1'>
+    <title>Generic Crud Table</title>
+    <link rel='icon' type='image/png' href='favicon.png'>
+    <link rel='stylesheet' href='global.css'>
+    <link rel='stylesheet' href='index.css'>
+    <script defer src='index.js'></script>
+</head>
+
+<body>
+<svelte-generic-crud-table></svelte-generic-crud-table>
+</body>
+<script>
+    let table = [
+        {name: 'myName', job: 'code', private: 'not editable'},
+        {name: 'myName2', job: 'code2', private: 'not editable'}];
+    let options = ['CREATE', 'EDIT', 'DELETE', 'DETAILS'];
+    let name = 'Awesome table name';
+    let show_fields = [];
+    let editable_fields = ['name', 'job'];
+    let genericCrudTable = document.querySelector('svelte-generic-crud-table');
+    genericCrudTable.setAttribute('name', name);
+    genericCrudTable.setAttribute('show_fields', JSON.stringify(show_fields));
+    genericCrudTable.setAttribute('editable_fields', JSON.stringify(editable_fields));
+//    genericCrudTable.setAttribute('options', JSON.stringify(options));
+    genericCrudTable.setAttribute('table', JSON.stringify(table));
+</script>
+</html>
