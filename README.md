@@ -1,6 +1,7 @@
 # svelte-generic-crud-table
 
-A minimal Self-Contained svelte table example.  
+A self-containing svelte table component with inline edit option.
+
 Allows CRUD-operations for Object-Arrays.
 
 ## Install
@@ -19,7 +20,6 @@ Your Component
 ```
 <script>
     import SvelteGenericCrudTable from "svelte-generic-crud-table";
-
     function handleDelete(event) {
         const id = event.detail.id; // position in myObjectArray
         const body = event.detail.body; // object to delete
@@ -28,7 +28,7 @@ Your Component
         console.log(JSON.stringify(event.detail.body));
     }
 
-    function handleUpdate(e) {
+    function handleUpdate(event) {
         const id = event.detail.id; // position in myObjectArray
         const body = event.detail.body; // object to update
         // refer id with event.detail.body.id for database operations!
@@ -36,9 +36,10 @@ Your Component
         console.log(JSON.stringify(event.detail.body));
     }
 
-    function handleCreate(e) {
+    function handleCreate(event) {
         // better integration in SvelteGenericCrudTable not finished yet.
         // your code here
+        console.log(JSON.stringify(event.detail));
     }
 
     // example object array. This should be your db query result.
@@ -46,6 +47,7 @@ Your Component
         {id: 1, name: "A_NAME_1", sthg: "A_STHG_1"},
         {id: 2, name: "A_NAME_2", sthg: "A_STHG_2"}
     ]
+	export let name;
 </script>
 
 <main>
@@ -55,7 +57,6 @@ Your Component
                              name="tableName"
                              editable={['name']}
                              table={myObjectArray}/>
-
 </main>
 ...
 ```

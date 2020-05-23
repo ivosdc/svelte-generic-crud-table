@@ -33,7 +33,7 @@
 
     function resetEditmode(id) {
         editable.forEach((toEdit) => {
-            document.getElementById(name + toEdit + id).readOnly = true;
+            document.getElementById(name + toEdit + id).setAttribute("disabled", "true");
         })
         document.getElementById(name + 'options' + id).classList.remove('hidden');
         document.getElementById(name + 'options' + id).classList.add('shown');
@@ -43,7 +43,7 @@
 
     function setEditmode(id) {
         editable.forEach((toEdit) => {
-            document.getElementById(name + toEdit + id).readOnly = false;
+            document.getElementById(name + toEdit + id).removeAttribute("disabled");
         })
         document.getElementById(name + 'options' + id).classList.add('hidden');
         document.getElementById(name + 'options' + id).classList.remove('shown');
@@ -91,7 +91,7 @@
                     <tr class="row">
                         {#each Object.entries(tableRow) as elem}
                             <td>
-                                <input id="{name}{getKey(elem)}{i}" value={getValue(elem)} readonly="true"/>
+                                <input id="{name}{getKey(elem)}{i}" value={getValue(elem)} disabled="true"/>
                             </td>
                         {/each}
                         <td>
@@ -116,7 +116,6 @@
 <style>
     table {
         width: 100%;
-        padding: 0.5em;
         text-align: left;
         border-collapse: collapse;
     }
@@ -138,7 +137,7 @@
 
     .button {
         margin-top: 1em;
-        color: #aaaaaa;
+        color: #5f5f5f;
         border-radius: 10%;
         background-color: #efefef;
         font-size: 0.85em;
@@ -156,11 +155,17 @@
         display: block;
     }
 
+    .row {
+        margin-top: 0px;
+        margin-bottom: 1px;
+    }
+
     .row:hover {
         background-color: #efefef;
     }
 
     .options {
+        font-size: 0.75em;
         color: #aaaaaa;
         cursor: pointer;
     }
@@ -170,21 +175,35 @@
     }
 
     input {
-        padding: 0px;
-        margin: 0px;
-        font-size: 0.85em;
-        font-weight: 100;
-    }
-
-    input:read-only {
-        color: #5f5f5f;
-        background-color: inherit;
+        position: relative;
+        top: 0.3em;
+        width: 100%;
+        background-color: #ffffff;
         border: none;
         font-size: 0.85em;
-        font-weight: 200;
+        font-weight: 300;
+        -webkit-transition: box-shadow 0.3s;
+        transition: box-shadow 0.3s;
+        box-shadow: -9px 9px 0px -8px #aaaaaa, 9px 9px 0px -8px #aaaaaa;
     }
 
-    input:read-only:hover {
-        color: #aaaaaa;
+    input:disabled {
+        color: #5f5f5f;
+        background-color: inherit;
+        font-size: 0.85em;
+        font-weight: 200;
+        box-shadow: none;
+    }
+
+    input:focus,
+    select:focus {
+        outline: none;
+        font-weight: 300;
+        box-shadow: -9px 9px 0px -8px #5f5f5f, 9px 9px 0px -8px#5f5f5f;
+    }
+
+    button:focus {
+        outline: none;
+        font-weight: 300;
     }
 </style>
