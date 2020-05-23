@@ -20,11 +20,17 @@ Your Component
 <script>
     import SvelteGenericCrudTable from "svelte-generic-crud-table";
 
-    function handleDelete(e) {
+    function handleDelete(event) {
+        const id = event.detail.id; // position in myObjectArray
+        const body = event.detail.body; // object to update
+        // refer id with event.detail.body.id for database operations!
         // your code here
     }
 
     function handleUpdate(e) {
+        const id = event.detail.id; // position in myObjectArray
+        const body = event.detail.body; // object to update
+        // refer id with event.detail.body.id for database operations!
         // your code here
     }
 

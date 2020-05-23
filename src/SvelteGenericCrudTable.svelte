@@ -20,8 +20,10 @@
     }
 
     function handleDelete(id) {
+        const body = gatherUpdates(id);
         dispatch('delete', {
-            id: id
+            id: id,
+            body: body
         });
     }
 
@@ -50,20 +52,24 @@
     }
 
     function handleEdit(id) {
-
         for (let i = 0; i < table.length; i++) {
             resetEditmode(i);
         }
         setEditmode(id);
     }
 
-    function handleUpdate(id) {
+    function gatherUpdates(id) {
         const body = {};
         Object.entries(table[0]).forEach((elem) => {
             body[getKey(elem)] = document.getElementById(name + getKey(elem) + id).value;
         })
+        return body;
+    }
+
+    function handleUpdate(id) {
+        const body = gatherUpdates(id);
         dispatch('update', {
-            id: body.id,
+            id: id,
             body: body
         });
     }
@@ -90,8 +96,8 @@
                         {/each}
                         <td>
                             <div id="{name}options{i}" class="shown">
-                            <span class="options" on:click={() => handleDelete(i)}>delete</span>
-                            <span class="options" on:click={() => handleEdit(i)}>edit</span>
+                                <span class="options" on:click={() => handleDelete(i)}>delete</span>
+                                <span class="options" on:click={() => handleEdit(i)}>edit</span>
                             </div>
                             <div id="{name}update{i}" class="hidden">
                                 <span class="options" on:click={() => handleUpdate(i)}>update</span>
