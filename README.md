@@ -1,4 +1,4 @@
-# Generic-CRUD-Table
+# svelte-generic-crud-table
 
 A minimal Self-Contained svelte table example.  
 Allows CRUD-operations for Object-Arrays.
@@ -10,14 +10,14 @@ npm install -save svelte-generic-crud-table
 ```
 
 # Usage
-Use the Generic-CRUD-Table in your component to show and, if you like, edit,update and delete it's content.
+Use the svelte-generic-crud-table in your component to show and, if you like, edit,update and delete it's content.
 Just include the table as seen in the example below.
 
 
 Your Component
 ```html
 <script>
-    import SvelteGenericCrudTable from "./Generic-CRUD-Table/svelte-generic-crud-table";
+    import SvelteGenericCrudTable from "./SvelteGenericCrudTable/svelte-generic-crud-table";
     ...
 </script>
 
