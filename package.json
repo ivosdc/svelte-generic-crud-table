@@ -1,0 +1,26 @@
+{
+  "name": "svelte-generic-crud-table",
+  "version": "1.0.0",
+  "description": "A generic table for object-arrays with CRUD functionality.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ivosdc/svelte-generic-crud-table.git"
+  },
+  "keywords": [
+    "svelte",
+    "table",
+    "generic",
+    "crud",
+    "self-contained"
+  ],
+  "author": "Ivo Bozic",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ivosdc/svelte-generic-crud-table/issues"
+  },
+  "homepage": "https://github.com/ivosdc/svelte-generic-crud-table#readme"
+}
