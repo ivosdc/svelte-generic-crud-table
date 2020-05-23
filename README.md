@@ -22,9 +22,10 @@ Your Component
 
     function handleDelete(event) {
         const id = event.detail.id; // position in myObjectArray
-        const body = event.detail.body; // object to update
+        const body = event.detail.body; // object to delete
         // refer id with event.detail.body.id for database operations!
         // your code here
+        console.log(JSON.stringify(event.detail.body));
     }
 
     function handleUpdate(e) {
@@ -32,12 +33,15 @@ Your Component
         const body = event.detail.body; // object to update
         // refer id with event.detail.body.id for database operations!
         // your code here
+        console.log(JSON.stringify(event.detail.body));
     }
 
     function handleCreate(e) {
+        // better integration in SvelteGenericCrudTable not finished yet.
         // your code here
     }
 
+    // example object array. This should be your db query result.
     const myObjectArray = [
         {id: 1, name: "A_NAME_1", sthg: "A_STHG_1"},
         {id: 2, name: "A_NAME_2", sthg: "A_STHG_2"}
