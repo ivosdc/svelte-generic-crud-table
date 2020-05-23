@@ -5,7 +5,7 @@ Allows CRUD-operations for Object-Arrays.
 
 ## Install
 
-```sh
+```
 npm install -save svelte-generic-crud-table
 ```
 
@@ -15,23 +15,40 @@ Just include the table as seen in the example below.
 
 
 Your Component
-```html
+
+```
 <script>
-    import SvelteGenericCrudTable from "./SvelteGenericCrudTable/svelte-generic-crud-table";
-    ...
+    import SvelteGenericCrudTable from "svelte-generic-crud-table";
+
+    function handleDelete(e) {
+        // your code here
+    }
+
+    function handleUpdate(e) {
+        // your code here
+    }
+
+    function handleCreate(e) {
+        // your code here
+    }
+
+    const myObjectArray = [
+        {id: 1, name: "A_NAME_1", sthg: "A_STHG_1"},
+        {id: 2, name: "A_NAME_2", sthg: "A_STHG_2"}
+    ]
 </script>
 
-
 <main>
-<SvelteGenericCrudTable on:delete={handleDelete}
-           on:update={handleUpdate}
-           on:create={handleCreate}
-           name="tableName"
-           editable={['name']}
-           table={myObjectArray}/>```
+    <SvelteGenericCrudTable  on:delete={handleDelete}
+                             on:update={handleUpdate}
+                             on:create={handleCreate}
+                             name="tableName"
+                             editable={['name']}
+                             table={myObjectArray}/>
+
 </main>
 ...
-```html
+```
 
 - dispatches UPDATE, DELETE, CREATE for individual object handling.
 - name: the individual table name. It's an identifier for the elements.
