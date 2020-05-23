@@ -20,6 +20,7 @@ Your Component
 ```
 <script>
     import SvelteGenericCrudTable from "svelte-generic-crud-table";
+
     function handleDelete(event) {
         const id = event.detail.id; // position in myObjectArray
         const body = event.detail.body; // object to delete
@@ -29,33 +30,39 @@ Your Component
     }
 
     function handleUpdate(event) {
-        const id = event.detail.id; // position in myObjectArray
-        const body = event.detail.body; // object to update
-        // refer id with event.detail.body.id for database operations!
-        // your code here
-        console.log(JSON.stringify(event.detail.body));
+        const id = event.detail.id;
+        const body = event.detail.body;
+
+        console.log(JSON.stringify(body));
     }
 
     function handleCreate(event) {
         // better integration in SvelteGenericCrudTable not finished yet.
-        // your code here
         console.log(JSON.stringify(event.detail));
+    }
+
+    function handleDetails(event) {
+        const id = event.detail.id;
+        const body = event.detail.body;
+        console.log(JSON.stringify(body));
     }
 
     // example object array. This should be your db query result.
     const myObjectArray = [
-        {id: 1, name: "A_NAME_1", sthg: "A_STHG_1"},
-        {id: 2, name: "A_NAME_2", sthg: "A_STHG_2"}
+        {id: 1, name: "A_NAME", sthg: "A_STHG", why: 'because'},
+        {id: 2, name: "ANOTHER_NAME", sthg: "ANOTHER_STHG", why: 'I can'},
+        {id: 3, name: "svelte-generic-crud-table", sthg: "Awesome !", why: '!'}
     ]
-	export let name;
 </script>
 
 <main>
     <SvelteGenericCrudTable  on:delete={handleDelete}
                              on:update={handleUpdate}
                              on:create={handleCreate}
+                             on:details={handleDetails}
                              name="tableName"
                              editable={['name']}
+                             options={['EDIT', 'DELETE', 'DETAILS']}
                              table={myObjectArray}/>
 </main>
 ...
