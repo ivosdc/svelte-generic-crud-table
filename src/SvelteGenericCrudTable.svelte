@@ -82,7 +82,7 @@
                             <th width="100px">Options</th>
                         </tr>
                     {/if}
-                    <tr class="row{i}">
+                    <tr class="row">
                         {#each Object.entries(tableRow) as elem}
                             <td>
                                 <input id="{name}{getKey(elem)}{i}" value={getValue(elem)} readonly="true"/>

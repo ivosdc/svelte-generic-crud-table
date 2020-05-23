@@ -1,6 +1,6 @@
 {
   "name": "svelte-generic-crud-table",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A generic table for object-arrays with CRUD functionality.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
