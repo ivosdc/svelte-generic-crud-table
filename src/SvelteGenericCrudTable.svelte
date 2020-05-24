@@ -17,7 +17,7 @@
     const DETAILS = 'DETAILS';
     const NO_ROW_IN_EDIT_MODE = -1;
 
-    let row_in_edit_mode = NO_ROW_IN_EDIT_MODE;
+    let cursor = NO_ROW_IN_EDIT_MODE;
 
     export let name = '';
     export let table = [];
@@ -39,7 +39,7 @@
         return elem.toString().split(',')[1];
     }
 
-    function resetEditmode(id) {
+    function resetEditMode(id) {
         editable_fields.forEach((toEdit) => {
             document.getElementById(name + toEdit + id).setAttribute("disabled", "true");
         })
@@ -49,7 +49,14 @@
         document.getElementById(name + 'options-edit' + id).classList.add('hidden');
     }
 
-    function setEditmode(id) {
+    function resetDeleteMode(id) {
+        document.getElementById(name + 'options-default' + id).classList.remove('hidden');
+        document.getElementById(name + 'options-default' + id).classList.add('shown');
+        document.getElementById(name + 'options-delete' + id).classList.remove('shown');
+        document.getElementById(name + 'options-delete' + id).classList.add('hidden');
+    }
+
+    function setEditMode(id) {
         editable_fields.forEach((toEdit) => {
             document.getElementById(name + toEdit + id).removeAttribute("disabled");
         })
@@ -57,6 +64,13 @@
         document.getElementById(name + 'options-default' + id).classList.remove('shown');
         document.getElementById(name + 'options-edit' + id).classList.remove('hidden');
         document.getElementById(name + 'options-edit' + id).classList.add('shown');
+    }
+
+    function setDeleteMode(id) {
+        document.getElementById(name + 'options-default' + id).classList.add('hidden');
+        document.getElementById(name + 'options-default' + id).classList.remove('shown');
+        document.getElementById(name + 'options-delete' + id).classList.remove('hidden');
+        document.getElementById(name + 'options-delete' + id).classList.add('shown');
     }
 
     function gatherUpdates(id) {
@@ -68,18 +82,18 @@
     }
 
     function resetRawInEditMode(id) {
-        if ((row_in_edit_mode !== id) && (row_in_edit_mode !== NO_ROW_IN_EDIT_MODE)) {
-            handleCancel(row_in_edit_mode);
+        if ((cursor !== id) && (cursor !== NO_ROW_IN_EDIT_MODE)) {
+            handleCancelEdit(cursor);
         }
     }
 
     function handleEdit(id) {
         resetRawInEditMode(id);
-        row_in_edit_mode = id;
+        cursor = id;
         for (let i = 0; i < table.length; i++) {
-            resetEditmode(i);
+            resetEditMode(i);
         }
-        setEditmode(id);
+        setEditMode(id);
     }
 
     function handleUpdate(id) {
@@ -89,28 +103,38 @@
             id: id,
             body: body
         });
+        resetEditMode(id);
     }
 
     function handleDelete(id) {
         resetRawInEditMode(id);
+        resetDeleteMode(id)
+        cursor = id;
         const body = gatherUpdates(id);
         dispatch('delete', {
             id: id,
             body: body
         });
+        setDeleteMode(id);
     }
 
     function handleCreate() {
         dispatch('create', {});
     }
 
-    function handleCancel(id) {
+    function handleCancelEdit(id) {
         Object.entries(table[id]).forEach((elem) => {
             document.getElementById(name + getKey(elem) + id).value =
                     document.getElementById(name + getKey(elem) + id + 'copy').innerText;
         });
-        resetEditmode(id);
-        row_in_edit_mode = NO_ROW_IN_EDIT_MODE;
+        resetEditMode(id);
+        resetDeleteMode(id);
+        cursor = NO_ROW_IN_EDIT_MODE;
+    }
+
+    function handleCancelDelete(id) {
+        resetEditMode(id);
+        resetDeleteMode(id);
     }
 
     function handleDetails(id) {
@@ -177,27 +201,37 @@
                         <td>
                             <div id="{name}options-default{i}" class="options shown">
                                 {#if options.includes(DELETE)}
-                                    <div class="options" on:click={() => handleDelete(i)} title="Delete">
+                                    <div class="options red" on:click={() => handleDelete(i)} title="Delete">
                                         <Icon icon={iconTrash}/>
                                     </div>
                                 {/if}
                                 {#if options.includes(EDIT)}
-                                    <div class="options" on:click={() => handleEdit(i)} title="Edit">
+                                    <div class="options green" on:click={() => handleEdit(i)} title="Edit">
                                         <Icon icon={iconEdit}/>
                                     </div>
                                 {/if}
                                 {#if options.includes(DETAILS)}
-                                    <div class="options" on:click={() => handleDetails(i)} title="Details">
+                                    <div class="options blue" on:click={() => handleDetails(i)} title="Details">
                                         <Icon icon={iconDetail}/>
                                     </div>
                                 {/if}
                             </div>
                             <div id="{name}options-edit{i}" class="options hidden">
                                 {#if options.includes(EDIT)}
-                                    <div class="options" on:click={() => handleUpdate(i)} title="Send">
+                                    <div class="options green" on:click={() => handleUpdate(i)} title="Update">
                                         <Icon icon={iconSend}/>
                                     </div>
-                                    <div class="options" on:click={() => handleCancel(i)} title="Cancel">
+                                    <div class="options red" on:click={() => handleCancelEdit(i)} title="Cancel">
+                                        <Icon icon={iconCancel}/>
+                                    </div>
+                                {/if}
+                            </div>
+                            <div id="{name}options-delete{i}" class="options hidden">
+                                {#if options.includes(DELETE)}
+                                    <div class="options green" on:click={() => handleUpdate(i)} title="Delete">
+                                        <Icon icon={iconSend}/>
+                                    </div>
+                                    <div class="options red" on:click={() => handleCancelDelete(i)} title="Cancel">
                                         <Icon icon={iconCancel}/>
                                     </div>
                                 {/if}
@@ -218,6 +252,18 @@
 </main>
 
 <style>
+    .red:hover {
+        color: red;
+    }
+
+    .green:hover {
+        color: limegreen;
+    }
+
+    .blue:hover {
+        color: dodgerblue;
+    }
+
     table {
         text-align: left;
         border-collapse: collapse;
@@ -249,12 +295,12 @@
         float: left;
         min-height: 1.3em;
         font-size: 1em;
-        color: #aaaaaa;
         cursor: pointer;
+        opacity: 60%;
     }
 
     .options:hover {
-        color: #000000;
+        opacity: 100%;
     }
 
     #options-create {
