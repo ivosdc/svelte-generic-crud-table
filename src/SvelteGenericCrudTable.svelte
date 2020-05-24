@@ -95,7 +95,8 @@
 
     function handleCancel(id) {
         Object.entries(table[id]).forEach((elem) => {
-            document.getElementById(name + getKey(elem) + id).value = document.getElementById(name + getKey(elem) + id + 'copy').innerText;
+            document.getElementById(name + getKey(elem) + id).value =
+                    document.getElementById(name + getKey(elem) + id + 'copy').innerText;
         });
         resetEditmode(id);
         row_in_edit_mode = NO_ROW_IN_EDIT_MODE;

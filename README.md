@@ -70,6 +70,9 @@ Your Component
 ```
 
 - dispatches UPDATE, DELETE, CREATE for individual object handling.
-- name: the individual table name. It's an identifier for the elements.
-- editable: List the 'editable' fields in your object. E.g. editing the id makes no sense in most cases, so it is not listed here.
-- table: The object-array. Your data to show.
+- dispatches DETAILS to handle Object detail handling.
+- `name`: the individual table name. It's an identifier for the elements.
+- `show_fields`: List of fields to display.
+- `editable_fields`: List the 'editable' fields in your object. E.g. editing the id makes no sense in most cases, so it is not listed here.
+- `options`: set the options for your table. Displays/hides button for `'EDIT', 'DELETE', 'DETAILS'`.
+- `table`: The object-array. Your data to show.
