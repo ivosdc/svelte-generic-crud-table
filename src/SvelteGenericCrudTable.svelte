@@ -126,7 +126,7 @@
                     <tr class="row">
                         {#each Object.entries(tableRow) as elem}
                             <td>
-                                <textarea id="{name}{getKey(elem)}{i}" value={getValue(elem)} disabled="true"/>
+                                <textarea id="{name}{getKey(elem)}{i}" value={getValue(elem)} disabled="true"></textarea>
                                 <div class="hidden" id="{name}{getKey(elem)}{i}copy">{getValue(elem)}</div>
                             </td>
                         {/each}
@@ -225,21 +225,27 @@
     textarea {
         position: relative;
         resize: none;
-        overflow: auto;
         top: 0.4em;
         width: 100%;
-        height: 1.3em;
+        min-height: 1.3em;
+        max-height: 2.6em;
         padding: 1px;
         background-color: #ffffff;
         border: none;
         font-size: 0.85em;
         font-weight: 300;
         text-overflow: ellipsis;
-        white-space: nowrap;
+        white-space: pre;
         overflow: hidden;
         -webkit-transition: box-shadow 0.3s;
         transition: box-shadow 0.3s;
         box-shadow: -6px 6px 0px -5px #aaaaaa, 6px 6px 0px -5px #aaaaaa;
+    }
+
+    textarea:not(:disabled) {
+        height: 2.6em;
+        min-height: 2.6em;
+        padding-top: 0.75em;
     }
 
     textarea:disabled {
@@ -248,6 +254,8 @@
         font-size: 0.85em;
         font-weight: 200;
         box-shadow: none;
+        height: 1.3em;
+        max-height: 1.3em;
     }
 
     input:focus,
@@ -256,6 +264,14 @@
         outline: none;
         font-weight: 300;
         box-shadow: -6px 6px 0px -5px #5f5f5f, 6px 6px 0px -5px #5f5f5f;
+        resize: vertical;
+        white-space: normal;
+        overflow: auto;
+        padding-top: 1px;
+    }
+
+    textarea:not(:focus) {
+        max-height: 1.3em;
     }
 
     button:focus {
