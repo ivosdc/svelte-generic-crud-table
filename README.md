@@ -61,7 +61,8 @@ Your Component
                              on:create={handleCreate}
                              on:details={handleDetails}
                              name="tableName"
-                             editable={['name']}
+                             show_fields={['name', 'sthg', 'why']}
+                             editable_fields={['name', 'why']}
                              options={['EDIT', 'DELETE', 'DETAILS']}
                              table={myObjectArray}/>
 </main>

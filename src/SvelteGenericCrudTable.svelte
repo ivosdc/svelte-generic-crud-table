@@ -11,7 +11,8 @@
 
     export let name = '';
     export let table = [];
-    export let editable = [];
+    export let show_fields = [];
+    export let editable_fields = [];
     export let options = [EDIT, DELETE]
 
     function getKey(elem) {
@@ -28,7 +29,7 @@
     }
 
     function resetEditmode(id) {
-        editable.forEach((toEdit) => {
+        editable_fields.forEach((toEdit) => {
             document.getElementById(name + toEdit + id).setAttribute("disabled", "true");
         })
         document.getElementById(name + 'options-default' + id).classList.remove('hidden');
@@ -38,7 +39,7 @@
     }
 
     function setEditmode(id) {
-        editable.forEach((toEdit) => {
+        editable_fields.forEach((toEdit) => {
             document.getElementById(name + toEdit + id).removeAttribute("disabled");
         })
         document.getElementById(name + 'options-default' + id).classList.add('hidden');
@@ -118,15 +119,16 @@
                     {#if i === 0}
                         <tr>
                             {#each Object.entries(tableRow) as elem}
-                                <th>{getKeyCapitalLead(elem)}</th>
+                                <th class="{!show_fields.includes(getKey(elem)) ? 'hidden' : ''}">{getKeyCapitalLead(elem)}</th>
                             {/each}
-                            <th width="100px">Options</th>
+                            <th id="labelOptions" width="100px"></th>
                         </tr>
                     {/if}
                     <tr class="row">
                         {#each Object.entries(tableRow) as elem}
-                            <td>
-                                <textarea id="{name}{getKey(elem)}{i}" value={getValue(elem)} disabled="true"></textarea>
+                            <td class="{!show_fields.includes(getKey(elem)) ? 'hidden' : ''}">
+                                <textarea id="{name}{getKey(elem)}{i}" value={getValue(elem)}
+                                          disabled="true"></textarea>
                                 <div class="hidden" id="{name}{getKey(elem)}{i}copy">{getValue(elem)}</div>
                             </td>
                         {/each}
