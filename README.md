@@ -67,7 +67,7 @@ Your Component
                                 {why: '100px'}
                              ]}
                              editable_fields={['name', 'why']}
-                             options={['EDIT', 'DELETE', 'DETAILS']}
+                             options={['CREATE', 'EDIT', 'DELETE', 'DETAILS']}
                              table={myObjectArray}/>
 </main>
 ...
@@ -78,5 +78,5 @@ Your Component
 - `name`: the individual table name. It's an identifier for the elements.
 - `show_fields`: List of fields to display with its width. Type: `{fieldname: 'width'}`. If no fields are set all fields will be shown.
 - `editable_fields`: List the 'editable' fields in your object. E.g. editing the id makes no sense in most cases, so it is not listed here.
-- `options`: set the options for your table. Displays/hides button for `'EDIT', 'DELETE', 'DETAILS'`.
+- `options`: set the options for your table. Displays/hides button for `'CREATE', 'EDIT', 'DELETE', 'DETAILS'`.
 - `table`: The object-array. Your data to show.

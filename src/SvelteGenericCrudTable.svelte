@@ -4,6 +4,7 @@
     const dispatch = createEventDispatcher();
     const EDIT = 'EDIT';
     const DELETE = 'DELETE';
+    const CREATE = 'CREATE';
     const DETAILS = 'DETAILS';
     const NO_ROW_IN_EDIT_MODE = -1;
 
@@ -146,8 +147,9 @@
                     {#if i === 0}
                         <tr>
                             {#each Object.entries(tableRow) as elem}
-                                <td class="headline {showField(getKey(elem)) === false ? 'hidden' : 'shown'}" width="{showFieldWidth(getKey(elem))}">
-                                <textarea value={getKeyCapitalLead(elem)} disabled></textarea>
+                                <td class="headline {showField(getKey(elem)) === false ? 'hidden' : 'shown'}"
+                                    width="{showFieldWidth(getKey(elem))}">
+                                    <textarea value={getKeyCapitalLead(elem)} disabled></textarea>
                                 </td>
                             {/each}
                             <td id="labelOptions" class="headline">
@@ -157,7 +159,8 @@
                     {/if}
                     <tr class="row">
                         {#each Object.entries(tableRow) as elem}
-                            <td  class="{showField(getKey(elem)) === false ? 'hidden' : 'shown'}" width="{showFieldWidth(getKey(elem))}">
+                            <td class="{showField(getKey(elem)) === false ? 'hidden' : 'shown'}"
+                                width="{showFieldWidth(getKey(elem))}">
                                 <textarea id="{name}{getKey(elem)}{i}" value={getValue(elem)} disabled></textarea>
                                 <div class="hidden" id="{name}{getKey(elem)}{i}copy">{getValue(elem)}</div>
                             </td>
@@ -184,10 +187,14 @@
                     </tr>
                 {/each}
             </table>
+            {#if options.includes(CREATE)}
+                <div id="options-create">
+                    <button class="button" on:click={handleCreate}>add</button>
+                </div>
+            {/if}
         {:else}
             {JSON.stringify(table)}
         {/if}
-        <button class="button" on:click={handleCreate}>add</button>
     {/if}
 </main>
 
@@ -195,7 +202,8 @@
     table {
         text-align: left;
         border-collapse: collapse;
-        table-layout:fixed;
+        table-layout: fixed;
+        width: 100%;
     }
 
     .headline {
@@ -220,7 +228,7 @@
     .options {
         padding: 0.2em;
         margin: 0.2em;
-        float:left;
+        float: left;
         min-height: 1.3em;
         font-size: 0.75em;
         color: #aaaaaa;
@@ -231,7 +239,14 @@
         color: #000000;
     }
 
+    #options-create {
+        height: 1.3em;
+        padding-bottom: 1em;
+        width: 100%;
+    }
+
     .button {
+        float: left;
         margin-top: 1em;
         color: #5f5f5f;
         border-radius: 10%;
@@ -242,6 +257,12 @@
         height: auto;
         cursor: pointer;
     }
+
+    button:focus {
+        outline: none;
+        font-weight: 300;
+    }
+
 
     .hidden {
         display: none;
@@ -312,8 +333,4 @@
         max-height: 1.3em;
     }
 
-    button:focus {
-        outline: none;
-        font-weight: 300;
-    }
 </style>
