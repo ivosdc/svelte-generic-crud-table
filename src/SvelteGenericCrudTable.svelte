@@ -22,7 +22,6 @@
     export let name = '';
     export let table = [];
     export let show_fields = [];
-    export let fields_width = [];
     export let editable_fields = [];
     export let options = []
 
@@ -244,6 +243,7 @@
                 <div class="options" id="options-create" on:click={handleCreate} title="Create">
                     <Icon icon={iconCreate}/>
                 </div>
+                <br><br>
             {/if}
         {:else}
             {JSON.stringify(table)}
