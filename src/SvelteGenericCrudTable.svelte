@@ -12,6 +12,7 @@
     export let name = '';
     export let table = [];
     export let show_fields = [];
+    export let fields_width = [];
     export let editable_fields = [];
     export let options = [EDIT, DELETE]
 
@@ -110,6 +111,33 @@
             body: body
         });
     }
+
+    function showField(field) {
+        let show = false;
+        if (show_fields.length === 0) {
+            show = true;
+        }
+        show_fields.forEach((showField) => {
+            if (Object.keys(showField)[0] === field) {
+                console.log(Object.keys(showField)[0]);
+                show = true;
+            }
+        });
+
+        return show;
+    }
+
+    function showFieldWidth(field) {
+        let width = '';
+        show_fields.forEach((showField) => {
+            if (Object.keys(showField)[0] === field) {
+                console.log(showField[field]);
+                width = showField[field];
+            }
+        });
+
+        return width;
+    }
 </script>
 
 <main>
@@ -120,35 +148,35 @@
                     {#if i === 0}
                         <tr>
                             {#each Object.entries(tableRow) as elem}
-                                <th class="{!show_fields.includes(getKey(elem)) ? 'hidden' : ''}">{getKeyCapitalLead(elem)}</th>
+                                <th class="{showField(getKey(elem)) === false ? 'hidden' : 'shown'}" width="{showFieldWidth(getKey(elem))}">{getKeyCapitalLead(elem)}</th>
                             {/each}
-                            <th id="labelOptions" width="100px"></th>
+                            <th id="labelOptions" width="100px">Options:</th>
                         </tr>
                     {/if}
                     <tr class="row">
                         {#each Object.entries(tableRow) as elem}
-                            <td class="{!show_fields.includes(getKey(elem)) ? 'hidden' : ''}">
+                            <td  class="{showField(getKey(elem)) === false ? 'hidden' : 'shown'}" width="{showFieldWidth(getKey(elem))}">
                                 <textarea id="{name}{getKey(elem)}{i}" value={getValue(elem)}
                                           disabled="true"></textarea>
                                 <div class="hidden" id="{name}{getKey(elem)}{i}copy">{getValue(elem)}</div>
                             </td>
                         {/each}
                         <td>
-                            <div id="{name}options-default{i}" class="shown">
+                            <div id="{name}options-default{i}" class="options shown">
                                 {#if options.includes(DELETE)}
-                                    <span class="options" on:click={() => handleDelete(i)}>delete</span>
+                                    <div class="options" on:click={() => handleDelete(i)}>delete</div>
                                 {/if}
                                 {#if options.includes(EDIT)}
-                                    <span class="options" on:click={() => handleEdit(i)}>edit</span>
+                                    <div class="options" on:click={() => handleEdit(i)}>edit</div>
                                 {/if}
                                 {#if options.includes(DETAILS)}
-                                    <span class="options" on:click={() => handleDetails(i)}>details</span>
+                                    <div class="options" on:click={() => handleDetails(i)}>details</div>
                                 {/if}
                             </div>
-                            <div id="{name}options-edit{i}" class="hidden">
+                            <div id="{name}options-edit{i}" class="options hidden">
                                 {#if options.includes(EDIT)}
-                                    <span class="options" on:click={() => handleUpdate(i)}>update</span>
-                                    <span class="options" on:click={() => handleCancel(i)}>cancel</span>
+                                    <div class="options" on:click={() => handleUpdate(i)}>update</div>
+                                    <div class="options" on:click={() => handleCancel(i)}>cancel</div>
                                 {/if}
                             </div>
                         </td>
@@ -164,7 +192,6 @@
 
 <style>
     table {
-        width: 100%;
         text-align: left;
         border-collapse: collapse;
     }
@@ -176,6 +203,7 @@
         font-size: 0.85em;
         font-weight: 300;
         padding-left: 0.2em;
+        float: left;
     }
 
     td {
@@ -184,6 +212,19 @@
         font-size: 0.85em;
         font-weight: 200;
         padding-left: 0.2em;
+        float: left;
+    }
+
+    #labelOptions {
+        color: #aaaaaa;
+        font-weight: 100;
+    }
+
+    .options {
+        padding: 0.2em;
+        margin: 0.2em;
+        float:left;
+        min-height: 1.3em;
     }
 
     .button {
@@ -232,7 +273,7 @@
         width: 100%;
         min-height: 1.3em;
         max-height: 2.6em;
-        padding: 1px;
+        padding: 0px;
         background-color: #ffffff;
         border: none;
         font-size: 0.85em;
@@ -246,9 +287,9 @@
     }
 
     textarea:not(:disabled) {
-        height: 2.6em;
-        min-height: 2.6em;
-        padding-top: 0.75em;
+        height: 2em;
+        min-height: 2em;
+        padding-left: 0.3em;
     }
 
     textarea:disabled {
