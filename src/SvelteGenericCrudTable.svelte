@@ -1,5 +1,14 @@
 <script>
     import {createEventDispatcher} from 'svelte';
+    import Icon from 'fa-svelte'
+    import {faTrash, faEdit, faPaperPlane, faTimes, faInfo, faPlus} from '@fortawesome/free-solid-svg-icons'
+
+    const iconTrash = faTrash;
+    const iconEdit = faEdit;
+    const iconSend = faPaperPlane;
+    const iconCancel = faTimes;
+    const iconDetail = faInfo;
+    const iconCreate = faPlus;
 
     const dispatch = createEventDispatcher();
     const EDIT = 'EDIT';
@@ -153,7 +162,7 @@
                                 </td>
                             {/each}
                             <td id="labelOptions" class="headline">
-                                <textarea value="Options" disabled></textarea>
+                                <textarea value="" disabled></textarea>
                             </td>
                         </tr>
                     {/if}
@@ -168,19 +177,29 @@
                         <td>
                             <div id="{name}options-default{i}" class="options shown">
                                 {#if options.includes(DELETE)}
-                                    <div class="options" on:click={() => handleDelete(i)}>delete</div>
+                                    <div class="options" on:click={() => handleDelete(i)} title="Delete">
+                                        <Icon icon={iconTrash}/>
+                                    </div>
                                 {/if}
                                 {#if options.includes(EDIT)}
-                                    <div class="options" on:click={() => handleEdit(i)}>edit</div>
+                                    <div class="options" on:click={() => handleEdit(i)} title="Edit">
+                                        <Icon icon={iconEdit}/>
+                                    </div>
                                 {/if}
                                 {#if options.includes(DETAILS)}
-                                    <div class="options" on:click={() => handleDetails(i)}>details</div>
+                                    <div class="options" on:click={() => handleDetails(i)} title="Details">
+                                        <Icon icon={iconDetail}/>
+                                    </div>
                                 {/if}
                             </div>
                             <div id="{name}options-edit{i}" class="options hidden">
                                 {#if options.includes(EDIT)}
-                                    <div class="options" on:click={() => handleUpdate(i)}>update</div>
-                                    <div class="options" on:click={() => handleCancel(i)}>cancel</div>
+                                    <div class="options" on:click={() => handleUpdate(i)} title="Send">
+                                        <Icon icon={iconSend}/>
+                                    </div>
+                                    <div class="options" on:click={() => handleCancel(i)} title="Cancel">
+                                        <Icon icon={iconCancel}/>
+                                    </div>
                                 {/if}
                             </div>
                         </td>
@@ -188,8 +207,8 @@
                 {/each}
             </table>
             {#if options.includes(CREATE)}
-                <div id="options-create">
-                    <button class="button" on:click={handleCreate}>+</button>
+                <div class="options" id="options-create" on:click={handleCreate} title="Create">
+                    <Icon icon={iconCreate}/>
                 </div>
             {/if}
         {:else}
@@ -226,11 +245,10 @@
     }
 
     .options {
-        padding: 0.2em;
-        margin: 0.2em;
+        padding: 0.2em 0.2em 0em;
         float: left;
         min-height: 1.3em;
-        font-size: 0.75em;
+        font-size: 1em;
         color: #aaaaaa;
         cursor: pointer;
     }
@@ -240,41 +258,10 @@
     }
 
     #options-create {
+        text-align: left;
         height: 1.3em;
         padding-bottom: 1em;
-        width: 100%;
-    }
-
-    .button {
-        padding: 0px;
-        margin: 0px;
-        float: left;
-        outline: none;
-        color: #aaaaaa;
-        border-radius: 50%;
-        background-color: #efefef;
-        font-size: 0.85em;
-        font-weight: 300;
-        width: 1.5em;
-        height: 1.5em;
-        cursor: pointer;
-        line-height: 1em;
-        text-align: center;
-        border: #dedede solid 0.5px;
-    }
-
-    .button:hover {
-        font-weight: 100;
-        border: #dddddd solid 0.5px;
-        color: #999999;
-        background-color: #eeeeee;
-    }
-
-    .button:focus {
-        font-weight: 100;
-        border: none;
-        color: #aaaaaa;
-        background-color: #efefef;
+        max-width: 0px;
     }
 
     .hidden {
