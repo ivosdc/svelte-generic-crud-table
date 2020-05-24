@@ -14,9 +14,14 @@ npm install -save svelte-generic-crud-table
 Use the svelte-generic-crud-table in your component to show and, if you like, edit,update and delete it's content.
 Just include the table as seen in the example below.
 
+### Displays all data without any CRUD option:
+```
+    <SvelteGenericCrudTable table={myObjectArray}/>
+```
+All parameters are optional ;)
 
-Your Component
 
+###  Set options:
 ```
 <script>
     import SvelteGenericCrudTable from "svelte-generic-crud-table";
@@ -80,3 +85,4 @@ Your Component
 - `editable_fields`: List the 'editable' fields in your object. E.g. editing the id makes no sense in most cases, so it is not listed here.
 - `options`: set the options for your table. Displays/hides button for `'CREATE', 'EDIT', 'DELETE', 'DETAILS'`.
 - `table`: The object-array. Your data to show.
+

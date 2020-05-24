@@ -24,7 +24,7 @@
     export let show_fields = [];
     export let fields_width = [];
     export let editable_fields = [];
-    export let options = [EDIT, DELETE]
+    export let options = []
 
     function getKey(elem) {
         return elem.toString().split(',')[0];
