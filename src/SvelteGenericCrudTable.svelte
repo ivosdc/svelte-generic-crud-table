@@ -189,7 +189,7 @@
             </table>
             {#if options.includes(CREATE)}
                 <div id="options-create">
-                    <button class="button" on:click={handleCreate}>add</button>
+                    <button class="button" on:click={handleCreate}>+</button>
                 </div>
             {/if}
         {:else}
@@ -246,23 +246,36 @@
     }
 
     .button {
+        padding: 0px;
+        margin: 0px;
         float: left;
-        margin-top: 1em;
-        color: #5f5f5f;
-        border-radius: 10%;
+        outline: none;
+        color: #aaaaaa;
+        border-radius: 50%;
         background-color: #efefef;
         font-size: 0.85em;
-        font-weight: 400;
-        width: auto;
-        height: auto;
-        cursor: pointer;
-    }
-
-    button:focus {
-        outline: none;
         font-weight: 300;
+        width: 1.5em;
+        height: 1.5em;
+        cursor: pointer;
+        line-height: 1em;
+        text-align: center;
+        border: #dedede solid 0.5px;
     }
 
+    .button:hover {
+        font-weight: 100;
+        border: #dddddd solid 0.5px;
+        color: #999999;
+        background-color: #eeeeee;
+    }
+
+    .button:focus {
+        font-weight: 100;
+        border: none;
+        color: #aaaaaa;
+        background-color: #efefef;
+    }
 
     .hidden {
         display: none;
@@ -280,7 +293,6 @@
     .row:hover {
         background-color: #efefef;
     }
-
 
     textarea {
         position: relative;
