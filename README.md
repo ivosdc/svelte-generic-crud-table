@@ -61,7 +61,7 @@ Your Component
                              on:create={handleCreate}
                              on:details={handleDetails}
                              name="tableName"
-                             show_fields={[
+                             show_fields={[             //optional: not set = show all
                                 {name: '200px'},
                                 {sthg: '20%'},
                                 {why: '100px'}
@@ -76,7 +76,7 @@ Your Component
 - dispatches UPDATE, DELETE, CREATE for individual object handling.
 - dispatches DETAILS to handle Object detail handling.
 - `name`: the individual table name. It's an identifier for the elements.
-- `show_fields`: List of fields to display with its width. Type: `{fieldname: 'width'}`
+- `show_fields`: List of fields to display with its width. Type: `{fieldname: 'width'}`. If no fields are set all fields will be shown.
 - `editable_fields`: List the 'editable' fields in your object. E.g. editing the id makes no sense in most cases, so it is not listed here.
 - `options`: set the options for your table. Displays/hides button for `'EDIT', 'DELETE', 'DETAILS'`.
 - `table`: The object-array. Your data to show.

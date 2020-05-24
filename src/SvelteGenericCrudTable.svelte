@@ -146,16 +146,19 @@
                     {#if i === 0}
                         <tr>
                             {#each Object.entries(tableRow) as elem}
-                                <th class="{showField(getKey(elem)) === false ? 'hidden' : 'shown'}" width="{showFieldWidth(getKey(elem))}">{getKeyCapitalLead(elem)}</th>
+                                <td class="headline {showField(getKey(elem)) === false ? 'hidden' : 'shown'}" width="{showFieldWidth(getKey(elem))}">
+                                <textarea value={getKeyCapitalLead(elem)} disabled></textarea>
+                                </td>
                             {/each}
-                            <th id="labelOptions" width="100px">Options:</th>
+                            <td id="labelOptions" class="headline">
+                                <textarea value="Options" disabled></textarea>
+                            </td>
                         </tr>
                     {/if}
                     <tr class="row">
                         {#each Object.entries(tableRow) as elem}
                             <td  class="{showField(getKey(elem)) === false ? 'hidden' : 'shown'}" width="{showFieldWidth(getKey(elem))}">
-                                <textarea id="{name}{getKey(elem)}{i}" value={getValue(elem)}
-                                          disabled="true"></textarea>
+                                <textarea id="{name}{getKey(elem)}{i}" value={getValue(elem)} disabled></textarea>
                                 <div class="hidden" id="{name}{getKey(elem)}{i}copy">{getValue(elem)}</div>
                             </td>
                         {/each}
@@ -192,16 +195,11 @@
     table {
         text-align: left;
         border-collapse: collapse;
+        table-layout:fixed;
     }
 
-    th {
-        border: none;
+    .headline {
         border-bottom: 1px solid #dddddd;
-        color: #5f5f5f;
-        font-size: 0.85em;
-        font-weight: 300;
-        padding-left: 0.2em;
-        float: left;
     }
 
     td {
@@ -216,6 +214,7 @@
     #labelOptions {
         color: #aaaaaa;
         font-weight: 100;
+        width: 100px;
     }
 
     .options {
