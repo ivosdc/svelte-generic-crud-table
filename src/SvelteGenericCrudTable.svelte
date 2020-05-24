@@ -119,7 +119,6 @@
         }
         show_fields.forEach((showField) => {
             if (Object.keys(showField)[0] === field) {
-                console.log(Object.keys(showField)[0]);
                 show = true;
             }
         });
@@ -131,7 +130,6 @@
         let width = '';
         show_fields.forEach((showField) => {
             if (Object.keys(showField)[0] === field) {
-                console.log(showField[field]);
                 width = showField[field];
             }
         });
@@ -225,6 +223,13 @@
         margin: 0.2em;
         float:left;
         min-height: 1.3em;
+        font-size: 0.75em;
+        color: #aaaaaa;
+        cursor: pointer;
+    }
+
+    .options:hover {
+        color: #000000;
     }
 
     .button {
@@ -256,15 +261,6 @@
         background-color: #efefef;
     }
 
-    .options {
-        font-size: 0.75em;
-        color: #aaaaaa;
-        cursor: pointer;
-    }
-
-    .options:hover {
-        color: #000000;
-    }
 
     textarea {
         position: relative;
@@ -272,8 +268,8 @@
         top: 0.4em;
         width: 100%;
         min-height: 1.3em;
-        max-height: 2.6em;
-        padding: 0px;
+        max-height: 1.6em;
+        padding: 1px 0px 0px;
         background-color: #ffffff;
         border: none;
         font-size: 0.85em;
@@ -287,8 +283,8 @@
     }
 
     textarea:not(:disabled) {
-        height: 2em;
-        min-height: 2em;
+        height: 1.6em;
+        min-height: 1.6em;
         padding-left: 0.3em;
     }
 
@@ -308,7 +304,6 @@
         outline: none;
         font-weight: 300;
         box-shadow: -6px 6px 0px -5px #5f5f5f, 6px 6px 0px -5px #5f5f5f;
-        resize: vertical;
         white-space: normal;
         overflow: auto;
         padding-top: 1px;
