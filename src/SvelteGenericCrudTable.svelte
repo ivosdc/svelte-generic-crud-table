@@ -2,6 +2,8 @@
     import {createEventDispatcher} from 'svelte';
     import Icon from 'fa-svelte'
     import {faTrash, faEdit, faPaperPlane, faTimes, faInfo, faPlus} from '@fortawesome/free-solid-svg-icons'
+    import {SvelteGenericCrudTable} from "./SvelteGenericCrudTable";
+    const dispatch = createEventDispatcher();
 
     const iconTrash = faTrash;
     const iconEdit = faEdit;
@@ -10,7 +12,6 @@
     const iconDetail = faInfo;
     const iconCreate = faPlus;
 
-    const dispatch = createEventDispatcher();
     const EDIT = 'EDIT';
     const DELETE = 'DELETE';
     const CREATE = 'CREATE';
@@ -20,65 +21,12 @@
     let cursor = NO_ROW_IN_EDIT_MODE;
 
     export let name = '';
-    export let table = [];
     export let show_fields = [];
     export let editable_fields = [];
+    export let table = [];
     export let options = []
 
-    function getKey(elem) {
-        return elem.toString().split(',')[0];
-    }
-
-    function getKeyCapitalLead(elem) {
-        let elemKey = elem.toString().split(',')[0];
-        return elemKey[0].toUpperCase() + elemKey.substr(1);
-    }
-
-    function getValue(elem) {
-        return elem.toString().split(',')[1];
-    }
-
-    function resetEditMode(id) {
-        editable_fields.forEach((toEdit) => {
-            document.getElementById(name + toEdit + id).setAttribute("disabled", "true");
-        })
-        document.getElementById(name + 'options-default' + id).classList.remove('hidden');
-        document.getElementById(name + 'options-default' + id).classList.add('shown');
-        document.getElementById(name + 'options-edit' + id).classList.remove('shown');
-        document.getElementById(name + 'options-edit' + id).classList.add('hidden');
-    }
-
-    function resetDeleteMode(id) {
-        document.getElementById(name + 'options-default' + id).classList.remove('hidden');
-        document.getElementById(name + 'options-default' + id).classList.add('shown');
-        document.getElementById(name + 'options-delete' + id).classList.remove('shown');
-        document.getElementById(name + 'options-delete' + id).classList.add('hidden');
-    }
-
-    function setEditMode(id) {
-        editable_fields.forEach((toEdit) => {
-            document.getElementById(name + toEdit + id).removeAttribute("disabled");
-        })
-        document.getElementById(name + 'options-default' + id).classList.add('hidden');
-        document.getElementById(name + 'options-default' + id).classList.remove('shown');
-        document.getElementById(name + 'options-edit' + id).classList.remove('hidden');
-        document.getElementById(name + 'options-edit' + id).classList.add('shown');
-    }
-
-    function setDeleteMode(id) {
-        document.getElementById(name + 'options-default' + id).classList.add('hidden');
-        document.getElementById(name + 'options-default' + id).classList.remove('shown');
-        document.getElementById(name + 'options-delete' + id).classList.remove('hidden');
-        document.getElementById(name + 'options-delete' + id).classList.add('shown');
-    }
-
-    function gatherUpdates(id) {
-        const body = {};
-        Object.entries(table[0]).forEach((elem) => {
-            body[getKey(elem)] = document.getElementById(name + getKey(elem) + id).value;
-        })
-        return body;
-    }
+    const genericCrudTable = new SvelteGenericCrudTable(table, name, editable_fields, show_fields);
 
     function resetRawInEditMode(id) {
         if ((cursor !== id) && (cursor !== NO_ROW_IN_EDIT_MODE)) {
@@ -90,85 +38,65 @@
         resetRawInEditMode(id);
         cursor = id;
         for (let i = 0; i < table.length; i++) {
-            resetEditMode(i);
+            genericCrudTable.resetEditMode(i);
         }
-        setEditMode(id);
+        genericCrudTable.setEditMode(id);
     }
 
-    function handleUpdate(id) {
+    function handleCancelEdit(id) {
+        Object.entries(table[id]).forEach((elem) => {
+            document.getElementById(name + genericCrudTable.getKey(elem) + id).value =
+                    document.getElementById(name + genericCrudTable.getKey(elem) + id + 'copy').innerText;
+        });
+        genericCrudTable.resetEditMode(id);
+        genericCrudTable.resetDeleteMode(id);
+        cursor = NO_ROW_IN_EDIT_MODE;
+    }
+
+    function handleEditConfirmation(id) {
         resetRawInEditMode(id);
-        const body = gatherUpdates(id);
+        const body = genericCrudTable.gatherUpdates(id);
         dispatch('update', {
             id: id,
             body: body
         });
-        resetEditMode(id);
+        genericCrudTable.resetEditMode(id);
     }
 
     function handleDelete(id) {
         resetRawInEditMode(id);
-        resetDeleteMode(id)
+        genericCrudTable.resetDeleteMode(id)
         cursor = id;
-        const body = gatherUpdates(id);
+        genericCrudTable.setDeleteMode(id);
+    }
+
+    function handleCancelDelete(id) {
+        genericCrudTable.resetEditMode(id);
+        genericCrudTable.resetDeleteMode(id);
+    }
+
+    function handleDeleteConfirmation(id) {
+        const body = genericCrudTable.gatherUpdates(id);
         dispatch('delete', {
             id: id,
             body: body
         });
-        setDeleteMode(id);
+        genericCrudTable.resetDeleteMode(id)
     }
 
     function handleCreate() {
         dispatch('create', {});
     }
 
-    function handleCancelEdit(id) {
-        Object.entries(table[id]).forEach((elem) => {
-            document.getElementById(name + getKey(elem) + id).value =
-                    document.getElementById(name + getKey(elem) + id + 'copy').innerText;
-        });
-        resetEditMode(id);
-        resetDeleteMode(id);
-        cursor = NO_ROW_IN_EDIT_MODE;
-    }
-
-    function handleCancelDelete(id) {
-        resetEditMode(id);
-        resetDeleteMode(id);
-    }
-
     function handleDetails(id) {
         resetRawInEditMode(id);
-        const body = gatherUpdates(id);
+        const body = genericCrudTable.gatherUpdates(id);
         dispatch('details', {
             id: id,
             body: body
         });
     }
 
-    function showField(field) {
-        let show = false;
-        if (show_fields.length === 0) {
-            show = true;
-        }
-        show_fields.forEach((showField) => {
-            if (Object.keys(showField)[0] === field) {
-                show = true;
-            }
-        });
-
-        return show;
-    }
-
-    function showFieldWidth(field) {
-        let width = '';
-        show_fields.forEach((showField) => {
-            if (Object.keys(showField)[0] === field) {
-                width = showField[field];
-            }
-        });
-
-        return width;
-    }
 </script>
 
 <main>
@@ -179,9 +107,9 @@
                     {#if i === 0}
                         <tr>
                             {#each Object.entries(tableRow) as elem}
-                                <td class="headline {showField(getKey(elem)) === false ? 'hidden' : 'shown'}"
-                                    width="{showFieldWidth(getKey(elem))}">
-                                    <textarea value={getKeyCapitalLead(elem)} disabled></textarea>
+                                <td class="headline {genericCrudTable.showField(genericCrudTable.getKey(elem)) === false ? 'hidden' : 'shown'}"
+                                    width="{genericCrudTable.showFieldWidth(genericCrudTable.getKey(elem))}">
+                                    <textarea value={genericCrudTable.getKeyCapitalLead(elem)} disabled></textarea>
                                 </td>
                             {/each}
                             <td id="labelOptions" class="headline">
@@ -191,10 +119,10 @@
                     {/if}
                     <tr class="row">
                         {#each Object.entries(tableRow) as elem}
-                            <td class="{showField(getKey(elem)) === false ? 'hidden' : 'shown'}"
-                                width="{showFieldWidth(getKey(elem))}">
-                                <textarea id="{name}{getKey(elem)}{i}" value={getValue(elem)} disabled></textarea>
-                                <div class="hidden" id="{name}{getKey(elem)}{i}copy">{getValue(elem)}</div>
+                            <td class="{genericCrudTable.showField(genericCrudTable.getKey(elem)) === false ? 'hidden' : 'shown'}"
+                                width="{genericCrudTable.showFieldWidth(genericCrudTable.getKey(elem))}">
+                                <textarea id="{name}{genericCrudTable.getKey(elem)}{i}" value={genericCrudTable.getValue(elem)} disabled></textarea>
+                                <div class="hidden" id="{name}{genericCrudTable.getKey(elem)}{i}copy">{genericCrudTable.getValue(elem)}</div>
                             </td>
                         {/each}
                         <td>
@@ -217,7 +145,7 @@
                             </div>
                             <div id="{name}options-edit{i}" class="options hidden">
                                 {#if options.includes(EDIT)}
-                                    <div class="options green" on:click={() => handleUpdate(i)} title="Update">
+                                    <div class="options green" on:click={() => handleEditConfirmation(i)} title="Update">
                                         <Icon icon={iconSend}/>
                                     </div>
                                     <div class="options red" on:click={() => handleCancelEdit(i)} title="Cancel">
@@ -227,7 +155,7 @@
                             </div>
                             <div id="{name}options-delete{i}" class="options hidden">
                                 {#if options.includes(DELETE)}
-                                    <div class="options green" on:click={() => handleUpdate(i)} title="Delete">
+                                    <div class="options green" on:click={() => handleDeleteConfirmation(i)} title="Delete">
                                         <Icon icon={iconSend}/>
                                     </div>
                                     <div class="options red" on:click={() => handleCancelDelete(i)} title="Cancel">
