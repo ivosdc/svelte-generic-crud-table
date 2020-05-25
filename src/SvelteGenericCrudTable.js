@@ -1,7 +1,6 @@
 export class SvelteGenericCrudTable {
 
-    constructor(table, name, editable_fields, show_fields){
-        this.table = table;
+    constructor(name, editable_fields, show_fields){
         this.name = name;
         this.editable_fields = editable_fields;
         this.show_fields = show_fields;
@@ -55,13 +54,14 @@ export class SvelteGenericCrudTable {
         document.getElementById(this.name + 'options-delete' + id).classList.add('shown');
     }
 
-    gatherUpdates(id) {
+    gatherUpdates(id, table) {
         const body = {};
-        Object.entries(this.table[0]).forEach((elem) => {
+        Object.entries(table[0]).forEach((elem) => {
             body[this.getKey(elem)] = document.getElementById(this.name + this.getKey(elem) + id).value;
         })
         return body;
     }
+
 
     showField(field) {
         let show = false;

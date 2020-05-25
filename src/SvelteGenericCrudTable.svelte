@@ -16,9 +16,6 @@
     const DELETE = 'DELETE';
     const CREATE = 'CREATE';
     const DETAILS = 'DETAILS';
-    const NO_ROW_IN_EDIT_MODE = -1;
-
-    let cursor = NO_ROW_IN_EDIT_MODE;
 
     export let name = '';
     export let show_fields = [];
@@ -26,13 +23,10 @@
     export let table = [];
     export let options = []
 
-    const genericCrudTable = new SvelteGenericCrudTable(table, name, editable_fields, show_fields);
+    const NO_ROW_IN_EDIT_MODE = -1;
+    let cursor = NO_ROW_IN_EDIT_MODE;
+    const genericCrudTable = new SvelteGenericCrudTable(name, editable_fields, show_fields);
 
-    function resetRawInEditMode(id) {
-        if ((cursor !== id) && (cursor !== NO_ROW_IN_EDIT_MODE)) {
-            handleCancelEdit(cursor);
-        }
-    }
 
     function handleEdit(id) {
         resetRawInEditMode(id);
@@ -55,7 +49,7 @@
 
     function handleEditConfirmation(id) {
         resetRawInEditMode(id);
-        const body = genericCrudTable.gatherUpdates(id);
+        const body = genericCrudTable.gatherUpdates(id, table);
         dispatch('update', {
             id: id,
             body: body
@@ -76,7 +70,7 @@
     }
 
     function handleDeleteConfirmation(id) {
-        const body = genericCrudTable.gatherUpdates(id);
+        const body = genericCrudTable.gatherUpdates(id, table);
         dispatch('delete', {
             id: id,
             body: body
@@ -90,12 +84,20 @@
 
     function handleDetails(id) {
         resetRawInEditMode(id);
-        const body = genericCrudTable.gatherUpdates(id);
+        const body = genericCrudTable.gatherUpdates(id, table);
         dispatch('details', {
             id: id,
             body: body
         });
     }
+
+
+    function resetRawInEditMode(id) {
+        if ((cursor !== id) && (cursor !== NO_ROW_IN_EDIT_MODE)) {
+            handleCancelEdit(cursor);
+        }
+    }
+
 
 </script>
 
