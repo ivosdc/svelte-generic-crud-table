@@ -49,6 +49,10 @@
 
     function handleEditConfirmation(id) {
         resetRawInEditMode(id);
+        Object.entries(table[id]).forEach((elem) => {
+            document.getElementById(name + genericCrudTable.getKey(elem) + id + 'copy').innerText =
+                    document.getElementById(name + genericCrudTable.getKey(elem) + id).value;
+        });
         const body = genericCrudTable.gatherUpdates(id, table);
         dispatch('update', {
             id: id,
