@@ -20,7 +20,7 @@ Just include the table as seen in the example below.
 ```
 All parameters are optional ;)
 
-
+[Generic CRUD Table](https://github.com/ivosdc/svelte-generic-crud-table.png/raw/master/assets/generic-crud-table.png "Svelte GenericCrudTable")
 ###  Set options:
 ```
 <script>
