@@ -4,6 +4,9 @@ A self-containing svelte table component with inline edit option.
 
 Allows CRUD-operations for Object-Arrays.
 
+![Generic CRUD Table](https://github.com/ivosdc/svelte-generic-crud-table/raw/master/assets/generic-crud-table.png "Svelte GenericCrudTable")
+
+
 ## Install
 
 ```
@@ -14,13 +17,23 @@ npm install -save svelte-generic-crud-table
 Use the svelte-generic-crud-table in your component to show and, if you like, edit,update and delete it's content.
 Just include the table as seen in the example below.
 
-### Displays all data without any CRUD option:
+### Displays all data with no options:
 ```
     <SvelteGenericCrudTable table={myObjectArray}/>
 ```
-All parameters are optional ;)
 
-![Generic CRUD Table](https://github.com/ivosdc/svelte-generic-crud-table/raw/master/assets/generic-crud-table.png "Svelte GenericCrudTable")
+All parameters are optional.
+
+
+- dispatches UPDATE, DELETE, CREATE for individual object handling.
+- dispatches DETAILS to handle Object detail handling.
+- `name`: the individual table name. It's an identifier for the elements.
+- `show_fields`: List of fields to display with its width. Type: `{fieldname: 'width'}`. If no fields are set all fields will be shown.
+- `editable_fields`: List the 'editable' fields in your object. E.g. editing the id makes no sense in most cases, so it is not listed here.
+- `options`: set the options for your table. Displays/hides button for `'CREATE', 'EDIT', 'DELETE', 'DETAILS'`.
+- `table`: The object-array. Your data to show.
+
+
 ###  Set options:
 ```
 <script>
@@ -77,12 +90,3 @@ All parameters are optional ;)
 </main>
 ...
 ```
-
-- dispatches UPDATE, DELETE, CREATE for individual object handling.
-- dispatches DETAILS to handle Object detail handling.
-- `name`: the individual table name. It's an identifier for the elements.
-- `show_fields`: List of fields to display with its width. Type: `{fieldname: 'width'}`. If no fields are set all fields will be shown.
-- `editable_fields`: List the 'editable' fields in your object. E.g. editing the id makes no sense in most cases, so it is not listed here.
-- `options`: set the options for your table. Displays/hides button for `'CREATE', 'EDIT', 'DELETE', 'DETAILS'`.
-- `table`: The object-array. Your data to show.
-
