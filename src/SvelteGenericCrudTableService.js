@@ -62,7 +62,7 @@ export class SvelteGenericCrudTableService {
     }
 
 
-    showField(field) {
+    isShowField(field) {
         let show = false;
         if (this.show_fields.length === 0) {
             show = true;
@@ -76,7 +76,7 @@ export class SvelteGenericCrudTableService {
         return show;
     }
 
-    showFieldWidth(field) {
+    getShowFieldWidth(field) {
         let width = '';
         this.show_fields.forEach((showField) => {
             if (Object.keys(showField)[0] === field) {

@@ -112,49 +112,49 @@ describe('Test SvelteGenericCrudTableService', () => {
         expect(table[0]).toStrictEqual(actual);
     })
 
-    it('testShowField', async () => {
+    it('testIsShowField', async () => {
         const toShow = 'name';
         genericCrudTable.show_fields = [{'name': '200px'}];
 
-        let actual = genericCrudTable.showField(toShow);
+        let actual = genericCrudTable.isShowField(toShow);
 
         expect(actual).toBe(true);
     })
 
-    it('testShowField_noFieldsSet', async () => {
+    it('testIsShowField_noFieldsSet', async () => {
         const toShow = 'name';
         genericCrudTable.show_fields = [];
 
-        let actual = genericCrudTable.showField(toShow);
+        let actual = genericCrudTable.isShowField(toShow);
 
         expect(actual).toBe(true);
     })
 
 
-    it('testShowField_dontShow', async () => {
+    it('testIsShowField_dontShow', async () => {
         const toShow = 'name';
         genericCrudTable.show_fields = [{'noName': '200px'}];
 
-        let actual = genericCrudTable.showField(toShow);
+        let actual = genericCrudTable.isShowField(toShow);
 
         expect(actual).toBe(false);
     })
 
-    it('testShowFieldWidth', async () => {
+    it('testGetShowFieldWidth', async () => {
         const toShow = 'name';
         genericCrudTable.show_fields = [{'name': '200px'}];
 
-        let actual = genericCrudTable.showFieldWidth(toShow);
+        let actual = genericCrudTable.getShowFieldWidth(toShow);
 
         expect(actual).toBe('200px');
     })
 
 
-    it('testShowFieldWidth_noWidth', async () => {
+    it('testGetShowFieldWidth_noWidth', async () => {
         const toShow = 'name';
         genericCrudTable.show_fields = [{'noName': '200px'}];
 
-        let actual = genericCrudTable.showFieldWidth(toShow);
+        let actual = genericCrudTable.getShowFieldWidth(toShow);
 
         expect(actual).toBe('');
     })

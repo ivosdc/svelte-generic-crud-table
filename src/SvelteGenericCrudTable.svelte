@@ -3,6 +3,7 @@
     import Icon from 'fa-svelte'
     import {faTrash, faEdit, faPaperPlane, faTimes, faInfo, faPlus} from '@fortawesome/free-solid-svg-icons'
     import {SvelteGenericCrudTableService} from "./SvelteGenericCrudTableService";
+
     const dispatch = createEventDispatcher();
 
     const iconTrash = faTrash;
@@ -113,8 +114,8 @@
                     {#if i === 0}
                         <tr>
                             {#each Object.keys(tableRow) as elem}
-                                <td class="headline {genericCrudTable.showField(elem) === false ? 'hidden' : 'shown'}"
-                                    width="{genericCrudTable.showFieldWidth(elem)}">
+                                <td class="headline {genericCrudTable.isShowField(elem) === false ? 'hidden' : 'shown'}"
+                                    width="{genericCrudTable.getShowFieldWidth(elem)}">
                                     <textarea value={genericCrudTable.makeCapitalLead(elem)} disabled></textarea>
                                 </td>
                             {/each}
@@ -124,52 +125,60 @@
                         </tr>
                     {/if}
                     <tr class="row">
-                        {#each Object.entries(tableRow) as elem}
-                            <td class="{genericCrudTable.showField(genericCrudTable.getKey(elem)) === false ? 'hidden' : 'shown'}"
-                                width="{genericCrudTable.showFieldWidth(genericCrudTable.getKey(elem))}">
-                                <textarea id="{name}{genericCrudTable.getKey(elem)}{i}" value={genericCrudTable.getValue(elem)} disabled></textarea>
-                                <div class="hidden" id="{name}{genericCrudTable.getKey(elem)}{i}copy">{genericCrudTable.getValue(elem)}</div>
+                        {#each Object.entries(tableRow) as elem, j}
+                            <td class="{genericCrudTable.isShowField(genericCrudTable.getKey(elem)) === false ? 'hidden' : 'shown'}"
+                                width="{genericCrudTable.getShowFieldWidth(genericCrudTable.getKey(elem))}">
+                                <textarea id="{name}{genericCrudTable.getKey(elem)}{i}"
+                                          value={genericCrudTable.getValue(elem)} disabled></textarea>
+                                <div class="hidden"
+                                     id="{name}{genericCrudTable.getKey(elem)}{i}copy">{genericCrudTable.getValue(elem)}</div>
                             </td>
+                            {#if Object.entries(tableRow).length - 1 === j}
+                                <td>
+                                    <div id="{name}options-default{i}" class="options shown">
+                                        {#if options.includes(DELETE)}
+                                            <div class="options red" on:click={() => handleDelete(i)} title="Delete">
+                                                <Icon icon={iconTrash}/>
+                                            </div>
+                                        {/if}
+                                        {#if options.includes(EDIT)}
+                                            <div class="options green"
+                                                 on:click={() => handleEdit(i)} title="Edit">
+                                                <Icon icon={iconEdit}/>
+                                            </div>
+                                        {/if}
+                                        {#if options.includes(DETAILS)}
+                                            <div class="options blue" on:click={() => handleDetails(i)} title="Details">
+                                                <Icon icon={iconDetail}/>
+                                            </div>
+                                        {/if}
+                                    </div>
+                                    <div id="{name}options-edit{i}" class="options hidden">
+                                        {#if options.includes(EDIT)}
+                                            <div class="options green" on:click={() => handleEditConfirmation(i)}
+                                                 title="Update">
+                                                <Icon icon={iconSend}/>
+                                            </div>
+                                            <div class="options red" on:click={() => handleCancelEdit(i)} title="Cancel">
+                                                <Icon icon={iconCancel}/>
+                                            </div>
+                                        {/if}
+                                    </div>
+                                    <div id="{name}options-delete{i}" class="options hidden">
+                                        {#if options.includes(DELETE)}
+                                            <div class="options green" on:click={() => handleDeleteConfirmation(i)}
+                                                 title="Delete">
+                                                <Icon icon={iconSend}/>
+                                            </div>
+                                            <div class="options red" on:click={() => handleCancelDelete(i)} title="Cancel">
+                                                <Icon icon={iconCancel}/>
+                                            </div>
+                                        {/if}
+                                    </div>
+                                </td>
+                            {/if}
                         {/each}
-                        <td>
-                            <div id="{name}options-default{i}" class="options shown">
-                                {#if options.includes(DELETE)}
-                                    <div class="options red" on:click={() => handleDelete(i)} title="Delete">
-                                        <Icon icon={iconTrash}/>
-                                    </div>
-                                {/if}
-                                {#if options.includes(EDIT)}
-                                    <div class="options green" on:click={() => handleEdit(i)} title="Edit">
-                                        <Icon icon={iconEdit}/>
-                                    </div>
-                                {/if}
-                                {#if options.includes(DETAILS)}
-                                    <div class="options blue" on:click={() => handleDetails(i)} title="Details">
-                                        <Icon icon={iconDetail}/>
-                                    </div>
-                                {/if}
-                            </div>
-                            <div id="{name}options-edit{i}" class="options hidden">
-                                {#if options.includes(EDIT)}
-                                    <div class="options green" on:click={() => handleEditConfirmation(i)} title="Update">
-                                        <Icon icon={iconSend}/>
-                                    </div>
-                                    <div class="options red" on:click={() => handleCancelEdit(i)} title="Cancel">
-                                        <Icon icon={iconCancel}/>
-                                    </div>
-                                {/if}
-                            </div>
-                            <div id="{name}options-delete{i}" class="options hidden">
-                                {#if options.includes(DELETE)}
-                                    <div class="options green" on:click={() => handleDeleteConfirmation(i)} title="Delete">
-                                        <Icon icon={iconSend}/>
-                                    </div>
-                                    <div class="options red" on:click={() => handleCancelDelete(i)} title="Cancel">
-                                        <Icon icon={iconCancel}/>
-                                    </div>
-                                {/if}
-                            </div>
-                        </td>
+
                     </tr>
                 {/each}
             </table>
