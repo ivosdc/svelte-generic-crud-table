@@ -2,7 +2,7 @@
     import {createEventDispatcher} from 'svelte';
     import Icon from 'fa-svelte'
     import {faTrash, faEdit, faPaperPlane, faTimes, faInfo, faPlus} from '@fortawesome/free-solid-svg-icons'
-    import {SvelteGenericCrudTable} from "./SvelteGenericCrudTable";
+    import {SvelteGenericCrudTableService} from "./SvelteGenericCrudTableService";
     const dispatch = createEventDispatcher();
 
     const iconTrash = faTrash;
@@ -25,7 +25,7 @@
 
     const NO_ROW_IN_EDIT_MODE = -1;
     let cursor = NO_ROW_IN_EDIT_MODE;
-    const genericCrudTable = new SvelteGenericCrudTable(name, editable_fields, show_fields);
+    const genericCrudTable = new SvelteGenericCrudTableService(name, editable_fields, show_fields);
 
 
     function handleEdit(id) {
@@ -112,10 +112,10 @@
                 {#each table as tableRow, i}
                     {#if i === 0}
                         <tr>
-                            {#each Object.entries(tableRow) as elem}
-                                <td class="headline {genericCrudTable.showField(genericCrudTable.getKey(elem)) === false ? 'hidden' : 'shown'}"
-                                    width="{genericCrudTable.showFieldWidth(genericCrudTable.getKey(elem))}">
-                                    <textarea value={genericCrudTable.getKeyCapitalLead(elem)} disabled></textarea>
+                            {#each Object.keys(tableRow) as elem}
+                                <td class="headline {genericCrudTable.showField(elem) === false ? 'hidden' : 'shown'}"
+                                    width="{genericCrudTable.showFieldWidth(elem)}">
+                                    <textarea value={genericCrudTable.makeCapitalLead(elem)} disabled></textarea>
                                 </td>
                             {/each}
                             <td id="labelOptions" class="headline">

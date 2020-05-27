@@ -1,4 +1,4 @@
-export class SvelteGenericCrudTable {
+export class SvelteGenericCrudTableService {
 
     constructor(name, editable_fields, show_fields){
         this.name = name;
@@ -7,16 +7,15 @@ export class SvelteGenericCrudTable {
     }
 
     getKey(elem) {
-        return elem.toString().split(',')[0];
+        return elem[0];
     }
 
-    getKeyCapitalLead(elem) {
-        let elemKey = elem.toString().split(',')[0];
-        return elemKey[0].toUpperCase() + elemKey.substr(1);
+    makeCapitalLead(elem) {
+        return elem[0].toUpperCase() + elem.substr(1);
     }
 
     getValue(elem) {
-        return elem.toString().split(',')[1];
+        return elem[1];
     }
 
 
