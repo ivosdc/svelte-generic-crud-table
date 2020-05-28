@@ -1,3 +1,4 @@
+<svelte:options tag={"svelte-generic-crud-table"}/>
 <script>
     import {createEventDispatcher} from 'svelte';
     import Icon from 'fa-svelte'
@@ -129,9 +130,12 @@
                             <td class="{genericCrudTable.isShowField(genericCrudTable.getKey(elem)) === false ? 'hidden' : 'shown'}"
                                 width="{genericCrudTable.getShowFieldWidth(genericCrudTable.getKey(elem))}">
                                 <textarea id="{name}{genericCrudTable.getKey(elem)}{i}"
+                                          aria-label="{name}{genericCrudTable.getKey(elem)}{i}"
                                           value={genericCrudTable.getValue(elem)} disabled></textarea>
                                 <div class="hidden"
-                                     id="{name}{genericCrudTable.getKey(elem)}{i}copy">{genericCrudTable.getValue(elem)}</div>
+                                     id="{name}{genericCrudTable.getKey(elem)}{i}copy"
+                                     aria-label="{name}{genericCrudTable.getKey(elem)}{i}copy">
+                                    {genericCrudTable.getValue(elem)}</div>
                             </td>
                             {#if Object.entries(tableRow).length - 1 === j}
                                 <td>
