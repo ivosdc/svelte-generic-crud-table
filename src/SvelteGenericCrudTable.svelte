@@ -145,7 +145,9 @@
                                 <td>
                                     <div id="{name}options-default{i}" class="options shown">
                                         {#if options.includes(DELETE)}
-                                            <div class="options red" on:click={() => handleDelete(i)} title="Delete">
+                                            <div class="options red" on:click={() => handleDelete(i)}
+                                                 title="Delete"
+                                                 aria-label="{name}{genericCrudTable.getKey(elem)}{i}delete">
                                                 <Icon icon={iconTrash}/>
                                             </div>
                                         {/if}
@@ -167,7 +169,9 @@
                                                  title="Update">
                                                 <Icon icon={iconSend}/>
                                             </div>
-                                            <div class="options red" on:click={() => handleCancelEdit(i)} title="Cancel">
+                                            <div class="options red" on:click={() => handleCancelEdit(i)}
+                                                 title="Cancel"
+                                                 aria-label="{name}{genericCrudTable.getKey(elem)}{i}editCancel">
                                                 <Icon icon={iconCancel}/>
                                             </div>
                                         {/if}
@@ -175,10 +179,13 @@
                                     <div id="{name}options-delete{i}" class="options hidden">
                                         {#if options.includes(DELETE)}
                                             <div class="options green" on:click={() => handleDeleteConfirmation(i)}
-                                                 title="Delete">
+                                                 title="Delete"
+                                                 aria-label="{name}{genericCrudTable.getKey(elem)}{i}deleteConfirmation">
                                                 <Icon icon={iconSend}/>
                                             </div>
-                                            <div class="options red" on:click={() => handleCancelDelete(i)} title="Cancel">
+                                            <div class="options red" on:click={() => handleCancelDelete(i)}
+                                                 title="Cancel"
+                                                 aria-label="{name}{genericCrudTable.getKey(elem)}{i}deleteCancel">
                                                 <Icon icon={iconCancel}/>
                                             </div>
                                         {/if}
