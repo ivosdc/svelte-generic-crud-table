@@ -4,10 +4,9 @@ A self-containing svelte table component with inline edit option.
 
 Allows CRUD-operations for Object-Arrays.
 
-![Generic CRUD Table](https://github.com/ivosdc/svelte-generic-crud-table/raw/master/assets/generic-crud-table.png "Svelte GenericCrudTable")
-
 [Try out on github pages:](https://ivosdc.github.io/svelte-generic-crud-table/ "GeneralCrudTable Example")
 
+![Generic CRUD Table](https://github.com/ivosdc/svelte-generic-crud-table/raw/master/assets/generic-crud-table.png "Svelte GenericCrudTable")
 
 ## Install
 

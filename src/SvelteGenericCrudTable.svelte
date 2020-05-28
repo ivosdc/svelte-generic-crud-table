@@ -143,7 +143,9 @@
                             </td>
                             {#if Object.entries(tableRow).length - 1 === j}
                                 <td>
-                                    <div id="{name}options-default{i}" class="options shown">
+                                    <div id="{name}options-default{i}"
+                                         aria-label="{name}options-default{i}"
+                                         class="options shown">
                                         {#if options.includes(DELETE)}
                                             <div class="options red" on:click={() => handleDelete(i)}
                                                  title="Delete"
@@ -176,7 +178,9 @@
                                             </div>
                                         {/if}
                                     </div>
-                                    <div id="{name}options-delete{i}" class="options hidden">
+                                    <div id="{name}options-delete{i}"
+                                         aria-label="{name}options-delete{i}"
+                                         class="options hidden">
                                         {#if options.includes(DELETE)}
                                             <div class="options green" on:click={() => handleDeleteConfirmation(i)}
                                                  title="Delete"
