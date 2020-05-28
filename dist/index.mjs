@@ -593,7 +593,7 @@
     	return child_ctx;
     }
 
-    // (111:4) {#if (table !== undefined)}
+    // (115:4) {#if (table !== undefined)}
     function create_if_block(ctx) {
     	let show_if;
     	let current_block_type_index;
@@ -604,7 +604,7 @@
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
-    		if (dirty[0] & /*table*/ 2) show_if = !!Array.isArray(/*table*/ ctx[1]);
+    		if (dirty[0] & /*table*/ 1) show_if = !!Array.isArray(/*table*/ ctx[0]);
     		if (show_if) return 0;
     		return 1;
     	}
@@ -663,9 +663,9 @@
     	};
     }
 
-    // (192:8) {:else}
+    // (206:8) {:else}
     function create_else_block(ctx) {
-    	let t_value = JSON.stringify(/*table*/ ctx[1]) + "";
+    	let t_value = JSON.stringify(/*table*/ ctx[0]) + "";
     	let t;
 
     	return {
@@ -676,7 +676,7 @@
     			insert(target, t, anchor);
     		},
     		p(ctx, dirty) {
-    			if (dirty[0] & /*table*/ 2 && t_value !== (t_value = JSON.stringify(/*table*/ ctx[1]) + "")) set_data(t, t_value);
+    			if (dirty[0] & /*table*/ 1 && t_value !== (t_value = JSON.stringify(/*table*/ ctx[0]) + "")) set_data(t, t_value);
     		},
     		i: noop,
     		o: noop,
@@ -686,14 +686,14 @@
     	};
     }
 
-    // (112:8) {#if Array.isArray(table)}
+    // (116:8) {#if Array.isArray(table)}
     function create_if_block_1(ctx) {
     	let table_1;
     	let t;
     	let show_if = /*options*/ ctx[2].includes(CREATE);
     	let if_block_anchor;
     	let current;
-    	let each_value = /*table*/ ctx[1];
+    	let each_value = /*table*/ ctx[0];
     	let each_blocks = [];
 
     	for (let i = 0; i < each_value.length; i += 1) {
@@ -731,8 +731,8 @@
     			current = true;
     		},
     		p(ctx, dirty) {
-    			if (dirty[0] & /*table, name, handleCancelDelete, iconCancel, handleDeleteConfirmation, iconSend, options, handleCancelEdit, handleEditConfirmation, handleDetails, iconDetail, handleEdit, iconEdit, handleDelete, iconTrash, genericCrudTable*/ 196351) {
-    				each_value = /*table*/ ctx[1];
+    			if (dirty[0] & /*table, name, genericCrudTable, handleCancelDelete, iconCancel, handleDeleteConfirmation, iconSend, options, handleCancelEdit, handleEditConfirmation, handleDetails, iconDetail, handleEdit, iconEdit, handleDelete, iconTrash*/ 196351) {
+    				each_value = /*table*/ ctx[0];
     				let i;
 
     				for (i = 0; i < each_value.length; i += 1) {
@@ -813,7 +813,7 @@
     	};
     }
 
-    // (115:20) {#if i === 0}
+    // (119:20) {#if i === 0}
     function create_if_block_9(ctx) {
     	let tr;
     	let t;
@@ -850,7 +850,7 @@
     			append(tr, td);
     		},
     		p(ctx, dirty) {
-    			if (dirty[0] & /*genericCrudTable, table*/ 514) {
+    			if (dirty[0] & /*genericCrudTable, table*/ 513) {
     				each_value_2 = Object.keys(/*tableRow*/ ctx[31]);
     				let i;
 
@@ -880,7 +880,7 @@
     	};
     }
 
-    // (117:28) {#each Object.keys(tableRow) as elem}
+    // (121:28) {#each Object.keys(tableRow) as elem}
     function create_each_block_2(ctx) {
     	let td;
     	let textarea;
@@ -906,17 +906,17 @@
     			append(td, textarea);
     		},
     		p(ctx, dirty) {
-    			if (dirty[0] & /*table*/ 2 && textarea_value_value !== (textarea_value_value = /*genericCrudTable*/ ctx[9].makeCapitalLead(/*elem*/ ctx[34]))) {
+    			if (dirty[0] & /*table*/ 1 && textarea_value_value !== (textarea_value_value = /*genericCrudTable*/ ctx[9].makeCapitalLead(/*elem*/ ctx[34]))) {
     				textarea.value = textarea_value_value;
     			}
 
-    			if (dirty[0] & /*table*/ 2 && td_class_value !== (td_class_value = "headline " + (/*genericCrudTable*/ ctx[9].isShowField(/*elem*/ ctx[34]) === false
+    			if (dirty[0] & /*table*/ 1 && td_class_value !== (td_class_value = "headline " + (/*genericCrudTable*/ ctx[9].isShowField(/*elem*/ ctx[34]) === false
     			? "hidden"
     			: "shown"))) {
     				attr(td, "class", td_class_value);
     			}
 
-    			if (dirty[0] & /*table*/ 2 && td_width_value !== (td_width_value = /*genericCrudTable*/ ctx[9].getShowFieldWidth(/*elem*/ ctx[34]))) {
+    			if (dirty[0] & /*table*/ 1 && td_width_value !== (td_width_value = /*genericCrudTable*/ ctx[9].getShowFieldWidth(/*elem*/ ctx[34]))) {
     				attr(td, "width", td_width_value);
     			}
     		},
@@ -926,7 +926,7 @@
     	};
     }
 
-    // (137:28) {#if Object.entries(tableRow).length - 1 === j}
+    // (144:28) {#if Object.entries(tableRow).length - 1 === j}
     function create_if_block_3(ctx) {
     	let td;
     	let div0;
@@ -966,11 +966,11 @@
     			t3 = space();
     			div2 = element("div");
     			if (if_block4) if_block4.c();
-    			attr(div0, "id", div0_id_value = "" + (/*name*/ ctx[0] + "options-default" + /*i*/ ctx[33]));
+    			attr(div0, "id", div0_id_value = "" + (/*name*/ ctx[1] + "options-default" + /*i*/ ctx[33]));
     			attr(div0, "class", "options shown");
-    			attr(div1, "id", div1_id_value = "" + (/*name*/ ctx[0] + "options-edit" + /*i*/ ctx[33]));
+    			attr(div1, "id", div1_id_value = "" + (/*name*/ ctx[1] + "options-edit" + /*i*/ ctx[33]));
     			attr(div1, "class", "options hidden");
-    			attr(div2, "id", div2_id_value = "" + (/*name*/ ctx[0] + "options-delete" + /*i*/ ctx[33]));
+    			attr(div2, "id", div2_id_value = "" + (/*name*/ ctx[1] + "options-delete" + /*i*/ ctx[33]));
     			attr(div2, "class", "options hidden");
     		},
     		m(target, anchor) {
@@ -1065,7 +1065,7 @@
     				check_outros();
     			}
 
-    			if (!current || dirty[0] & /*name*/ 1 && div0_id_value !== (div0_id_value = "" + (/*name*/ ctx[0] + "options-default" + /*i*/ ctx[33]))) {
+    			if (!current || dirty[0] & /*name*/ 2 && div0_id_value !== (div0_id_value = "" + (/*name*/ ctx[1] + "options-default" + /*i*/ ctx[33]))) {
     				attr(div0, "id", div0_id_value);
     			}
 
@@ -1094,7 +1094,7 @@
     				check_outros();
     			}
 
-    			if (!current || dirty[0] & /*name*/ 1 && div1_id_value !== (div1_id_value = "" + (/*name*/ ctx[0] + "options-edit" + /*i*/ ctx[33]))) {
+    			if (!current || dirty[0] & /*name*/ 2 && div1_id_value !== (div1_id_value = "" + (/*name*/ ctx[1] + "options-edit" + /*i*/ ctx[33]))) {
     				attr(div1, "id", div1_id_value);
     			}
 
@@ -1123,7 +1123,7 @@
     				check_outros();
     			}
 
-    			if (!current || dirty[0] & /*name*/ 1 && div2_id_value !== (div2_id_value = "" + (/*name*/ ctx[0] + "options-delete" + /*i*/ ctx[33]))) {
+    			if (!current || dirty[0] & /*name*/ 2 && div2_id_value !== (div2_id_value = "" + (/*name*/ ctx[1] + "options-delete" + /*i*/ ctx[33]))) {
     				attr(div2, "id", div2_id_value);
     			}
     		},
@@ -1155,9 +1155,10 @@
     	};
     }
 
-    // (140:40) {#if options.includes(DELETE)}
+    // (147:40) {#if options.includes(DELETE)}
     function create_if_block_8(ctx) {
     	let div;
+    	let div_aria_label_value;
     	let current;
     	let dispose;
     	const icon = new Icon({ props: { icon: /*iconTrash*/ ctx[3] } });
@@ -1172,6 +1173,7 @@
     			create_component(icon.$$.fragment);
     			attr(div, "class", "options red");
     			attr(div, "title", "Delete");
+    			attr(div, "aria-label", div_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[34]) + /*i*/ ctx[33] + "delete"));
     		},
     		m(target, anchor, remount) {
     			insert(target, div, anchor);
@@ -1182,6 +1184,10 @@
     		},
     		p(new_ctx, dirty) {
     			ctx = new_ctx;
+
+    			if (!current || dirty[0] & /*name, table*/ 3 && div_aria_label_value !== (div_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[34]) + /*i*/ ctx[33] + "delete"))) {
+    				attr(div, "aria-label", div_aria_label_value);
+    			}
     		},
     		i(local) {
     			if (current) return;
@@ -1200,7 +1206,7 @@
     	};
     }
 
-    // (145:40) {#if options.includes(EDIT)}
+    // (154:40) {#if options.includes(EDIT)}
     function create_if_block_7(ctx) {
     	let div;
     	let current;
@@ -1245,7 +1251,7 @@
     	};
     }
 
-    // (151:40) {#if options.includes(DETAILS)}
+    // (160:40) {#if options.includes(DETAILS)}
     function create_if_block_6(ctx) {
     	let div;
     	let current;
@@ -1290,11 +1296,12 @@
     	};
     }
 
-    // (158:40) {#if options.includes(EDIT)}
+    // (167:40) {#if options.includes(EDIT)}
     function create_if_block_5(ctx) {
     	let div0;
     	let t;
     	let div1;
+    	let div1_aria_label_value;
     	let current;
     	let dispose;
     	const icon0 = new Icon({ props: { icon: /*iconSend*/ ctx[5] } });
@@ -1320,6 +1327,7 @@
     			attr(div0, "title", "Update");
     			attr(div1, "class", "options red");
     			attr(div1, "title", "Cancel");
+    			attr(div1, "aria-label", div1_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[34]) + /*i*/ ctx[33] + "editCancel"));
     		},
     		m(target, anchor, remount) {
     			insert(target, div0, anchor);
@@ -1337,6 +1345,10 @@
     		},
     		p(new_ctx, dirty) {
     			ctx = new_ctx;
+
+    			if (!current || dirty[0] & /*name, table*/ 3 && div1_aria_label_value !== (div1_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[34]) + /*i*/ ctx[33] + "editCancel"))) {
+    				attr(div1, "aria-label", div1_aria_label_value);
+    			}
     		},
     		i(local) {
     			if (current) return;
@@ -1360,11 +1372,13 @@
     	};
     }
 
-    // (169:40) {#if options.includes(DELETE)}
+    // (180:40) {#if options.includes(DELETE)}
     function create_if_block_4(ctx) {
     	let div0;
+    	let div0_aria_label_value;
     	let t;
     	let div1;
+    	let div1_aria_label_value;
     	let current;
     	let dispose;
     	const icon0 = new Icon({ props: { icon: /*iconSend*/ ctx[5] } });
@@ -1388,8 +1402,10 @@
     			create_component(icon1.$$.fragment);
     			attr(div0, "class", "options green");
     			attr(div0, "title", "Delete");
+    			attr(div0, "aria-label", div0_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[34]) + /*i*/ ctx[33] + "deleteConfirmation"));
     			attr(div1, "class", "options red");
     			attr(div1, "title", "Cancel");
+    			attr(div1, "aria-label", div1_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[34]) + /*i*/ ctx[33] + "deleteCancel"));
     		},
     		m(target, anchor, remount) {
     			insert(target, div0, anchor);
@@ -1407,6 +1423,14 @@
     		},
     		p(new_ctx, dirty) {
     			ctx = new_ctx;
+
+    			if (!current || dirty[0] & /*name, table*/ 3 && div0_aria_label_value !== (div0_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[34]) + /*i*/ ctx[33] + "deleteConfirmation"))) {
+    				attr(div0, "aria-label", div0_aria_label_value);
+    			}
+
+    			if (!current || dirty[0] & /*name, table*/ 3 && div1_aria_label_value !== (div1_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[34]) + /*i*/ ctx[33] + "deleteCancel"))) {
+    				attr(div1, "aria-label", div1_aria_label_value);
+    			}
     		},
     		i(local) {
     			if (current) return;
@@ -1430,17 +1454,19 @@
     	};
     }
 
-    // (129:24) {#each Object.entries(tableRow) as elem, j}
+    // (133:24) {#each Object.entries(tableRow) as elem, j}
     function create_each_block_1(ctx) {
     	let td;
     	let textarea;
     	let textarea_id_value;
+    	let textarea_aria_label_value;
     	let textarea_value_value;
     	let t0;
     	let div;
     	let t1_value = /*genericCrudTable*/ ctx[9].getValue(/*elem*/ ctx[34]) + "";
     	let t1;
     	let div_id_value;
+    	let div_aria_label_value;
     	let td_class_value;
     	let td_width_value;
     	let t2;
@@ -1459,11 +1485,13 @@
     			t2 = space();
     			if (if_block) if_block.c();
     			if_block_anchor = empty();
-    			attr(textarea, "id", textarea_id_value = "" + (/*name*/ ctx[0] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[34]) + /*i*/ ctx[33]));
+    			attr(textarea, "id", textarea_id_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[34]) + /*i*/ ctx[33]));
+    			attr(textarea, "aria-label", textarea_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[34]) + /*i*/ ctx[33]));
     			textarea.value = textarea_value_value = /*genericCrudTable*/ ctx[9].getValue(/*elem*/ ctx[34]);
     			textarea.disabled = true;
     			attr(div, "class", "hidden");
-    			attr(div, "id", div_id_value = "" + (/*name*/ ctx[0] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[34]) + /*i*/ ctx[33] + "copy"));
+    			attr(div, "id", div_id_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[34]) + /*i*/ ctx[33] + "copy"));
+    			attr(div, "aria-label", div_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[34]) + /*i*/ ctx[33] + "copy"));
 
     			attr(td, "class", td_class_value = /*genericCrudTable*/ ctx[9].isShowField(/*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[34])) === false
     			? "hidden"
@@ -1483,37 +1511,45 @@
     			current = true;
     		},
     		p(ctx, dirty) {
-    			if (!current || dirty[0] & /*name, table*/ 3 && textarea_id_value !== (textarea_id_value = "" + (/*name*/ ctx[0] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[34]) + /*i*/ ctx[33]))) {
+    			if (!current || dirty[0] & /*name, table*/ 3 && textarea_id_value !== (textarea_id_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[34]) + /*i*/ ctx[33]))) {
     				attr(textarea, "id", textarea_id_value);
     			}
 
-    			if (!current || dirty[0] & /*table*/ 2 && textarea_value_value !== (textarea_value_value = /*genericCrudTable*/ ctx[9].getValue(/*elem*/ ctx[34]))) {
+    			if (!current || dirty[0] & /*name, table*/ 3 && textarea_aria_label_value !== (textarea_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[34]) + /*i*/ ctx[33]))) {
+    				attr(textarea, "aria-label", textarea_aria_label_value);
+    			}
+
+    			if (!current || dirty[0] & /*table*/ 1 && textarea_value_value !== (textarea_value_value = /*genericCrudTable*/ ctx[9].getValue(/*elem*/ ctx[34]))) {
     				textarea.value = textarea_value_value;
     			}
 
-    			if ((!current || dirty[0] & /*table*/ 2) && t1_value !== (t1_value = /*genericCrudTable*/ ctx[9].getValue(/*elem*/ ctx[34]) + "")) set_data(t1, t1_value);
+    			if ((!current || dirty[0] & /*table*/ 1) && t1_value !== (t1_value = /*genericCrudTable*/ ctx[9].getValue(/*elem*/ ctx[34]) + "")) set_data(t1, t1_value);
 
-    			if (!current || dirty[0] & /*name, table*/ 3 && div_id_value !== (div_id_value = "" + (/*name*/ ctx[0] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[34]) + /*i*/ ctx[33] + "copy"))) {
+    			if (!current || dirty[0] & /*name, table*/ 3 && div_id_value !== (div_id_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[34]) + /*i*/ ctx[33] + "copy"))) {
     				attr(div, "id", div_id_value);
     			}
 
-    			if (!current || dirty[0] & /*table*/ 2 && td_class_value !== (td_class_value = /*genericCrudTable*/ ctx[9].isShowField(/*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[34])) === false
+    			if (!current || dirty[0] & /*name, table*/ 3 && div_aria_label_value !== (div_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[34]) + /*i*/ ctx[33] + "copy"))) {
+    				attr(div, "aria-label", div_aria_label_value);
+    			}
+
+    			if (!current || dirty[0] & /*table*/ 1 && td_class_value !== (td_class_value = /*genericCrudTable*/ ctx[9].isShowField(/*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[34])) === false
     			? "hidden"
     			: "shown")) {
     				attr(td, "class", td_class_value);
     			}
 
-    			if (!current || dirty[0] & /*table*/ 2 && td_width_value !== (td_width_value = /*genericCrudTable*/ ctx[9].getShowFieldWidth(/*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[34])))) {
+    			if (!current || dirty[0] & /*table*/ 1 && td_width_value !== (td_width_value = /*genericCrudTable*/ ctx[9].getShowFieldWidth(/*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[34])))) {
     				attr(td, "width", td_width_value);
     			}
 
-    			if (dirty[0] & /*table*/ 2) show_if = Object.entries(/*tableRow*/ ctx[31]).length - 1 === /*j*/ ctx[36];
+    			if (dirty[0] & /*table*/ 1) show_if = Object.entries(/*tableRow*/ ctx[31]).length - 1 === /*j*/ ctx[36];
 
     			if (show_if) {
     				if (if_block) {
     					if_block.p(ctx, dirty);
 
-    					if (dirty[0] & /*table*/ 2) {
+    					if (dirty[0] & /*table*/ 1) {
     						transition_in(if_block, 1);
     					}
     				} else {
@@ -1550,7 +1586,7 @@
     	};
     }
 
-    // (114:16) {#each table as tableRow, i}
+    // (118:16) {#each table as tableRow, i}
     function create_each_block(ctx) {
     	let t0;
     	let tr;
@@ -1596,7 +1632,7 @@
     		p(ctx, dirty) {
     			if (/*i*/ ctx[33] === 0) if_block.p(ctx, dirty);
 
-    			if (dirty[0] & /*name, handleCancelDelete, iconCancel, handleDeleteConfirmation, iconSend, options, handleCancelEdit, handleEditConfirmation, handleDetails, iconDetail, handleEdit, iconEdit, handleDelete, iconTrash, table, genericCrudTable*/ 196351) {
+    			if (dirty[0] & /*name, genericCrudTable, table, handleCancelDelete, iconCancel, handleDeleteConfirmation, iconSend, options, handleCancelEdit, handleEditConfirmation, handleDetails, iconDetail, handleEdit, iconEdit, handleDelete, iconTrash*/ 196351) {
     				each_value_1 = Object.entries(/*tableRow*/ ctx[31]);
     				let i;
 
@@ -1650,7 +1686,7 @@
     	};
     }
 
-    // (186:12) {#if options.includes(CREATE)}
+    // (200:12) {#if options.includes(CREATE)}
     function create_if_block_2(ctx) {
     	let div;
     	let t;
@@ -1705,7 +1741,7 @@
     function create_fragment$1(ctx) {
     	let main;
     	let current;
-    	let if_block = /*table*/ ctx[1] !== undefined && create_if_block(ctx);
+    	let if_block = /*table*/ ctx[0] !== undefined && create_if_block(ctx);
 
     	return {
     		c() {
@@ -1719,11 +1755,11 @@
     			current = true;
     		},
     		p(ctx, dirty) {
-    			if (/*table*/ ctx[1] !== undefined) {
+    			if (/*table*/ ctx[0] !== undefined) {
     				if (if_block) {
     					if_block.p(ctx, dirty);
 
-    					if (dirty[0] & /*table*/ 2) {
+    					if (dirty[0] & /*table*/ 1) {
     						transition_in(if_block, 1);
     					}
     				} else {
@@ -1811,6 +1847,7 @@
     		const body = genericCrudTable.gatherUpdates(id, table);
     		dispatch("update", { id, body });
     		genericCrudTable.resetEditMode(id);
+    		$$invalidate(0, table);
     	}
 
     	function handleDelete(id) {
@@ -1829,6 +1866,9 @@
     		const body = genericCrudTable.gatherUpdates(id, table);
     		dispatch("delete", { id, body });
     		genericCrudTable.resetDeleteMode(id);
+    		table.splice(id, 1);
+    		cursor = NO_ROW_IN_EDIT_MODE;
+    		$$invalidate(0, table);
     	}
 
     	function handleCreate() {
@@ -1856,16 +1896,16 @@
     	const click_handler_6 = i => handleCancelDelete(i);
 
     	$$self.$set = $$props => {
-    		if ("name" in $$props) $$invalidate(0, name = $$props.name);
+    		if ("name" in $$props) $$invalidate(1, name = $$props.name);
     		if ("show_fields" in $$props) $$invalidate(18, show_fields = $$props.show_fields);
     		if ("editable_fields" in $$props) $$invalidate(19, editable_fields = $$props.editable_fields);
-    		if ("table" in $$props) $$invalidate(1, table = $$props.table);
+    		if ("table" in $$props) $$invalidate(0, table = $$props.table);
     		if ("options" in $$props) $$invalidate(2, options = $$props.options);
     	};
 
     	return [
-    		name,
     		table,
+    		name,
     		options,
     		iconTrash,
     		iconEdit,
@@ -1910,10 +1950,10 @@
     			create_fragment$1,
     			safe_not_equal,
     			{
-    				name: 0,
+    				name: 1,
     				show_fields: 18,
     				editable_fields: 19,
-    				table: 1,
+    				table: 0,
     				options: 2
     			},
     			[-1, -1]
@@ -1936,7 +1976,7 @@
     	}
 
     	get name() {
-    		return this.$$.ctx[0];
+    		return this.$$.ctx[1];
     	}
 
     	set name(name) {
@@ -1963,7 +2003,7 @@
     	}
 
     	get table() {
-    		return this.$$.ctx[1];
+    		return this.$$.ctx[0];
     	}
 
     	set table(table) {
