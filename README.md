@@ -42,51 +42,53 @@ All parameters are optional.
     function handleDelete(event) {
         const id = event.detail.id; // position in myObjectArray
         const body = event.detail.body; // object to delete
-        // refer id with event.detail.body.id for database operations!
-        // your code here
         console.log(JSON.stringify(event.detail.body));
+        myObjectArray.slice(id,1);
     }
 
     function handleUpdate(event) {
-        const id = event.detail.id;
+        const id = event.detail.id; // position in table
         const body = event.detail.body;
-
         console.log(JSON.stringify(body));
+        myObjectArray[id] = body;
     }
 
     function handleCreate(event) {
-        // better integration in SvelteGenericCrudTable not finished yet.
-        console.log(JSON.stringify(event.detail));
+        console.log(JSON.stringify(event.detail)); // empty object is passed by now
+        myObjectArray.push({id: -1, name:'new Element', sthg:'2345', why:'1234'})
+        myObjectArray = myObjectArray;
     }
 
     function handleDetails(event) {
-        const id = event.detail.id;
+        const id = event.detail.id; // position in table
         const body = event.detail.body;
         console.log(JSON.stringify(body));
     }
 
     // example object array. This should be your db query result.
-    const myObjectArray = [
+    let myObjectArray = [
         {id: 1, name: "A_NAME", sthg: "A_STHG", why: 'because'},
         {id: 2, name: "ANOTHER_NAME", sthg: "ANOTHER_STHG", why: 'I can'},
         {id: 3, name: "svelte-generic-crud-table", sthg: "Awesome !", why: '!'}
     ]
+    export let name;
 </script>
 
+
 <main>
-    <SvelteGenericCrudTable  on:delete={handleDelete}
-                             on:update={handleUpdate}
-                             on:create={handleCreate}
-                             on:details={handleDetails}
-                             name="tableName"
-                             show_fields={[             //optional: not set = show all
+    <h1>Generic CRUD Table</h1>
+    <SvelteGenericCrudTable on:delete={handleDelete}
+                            on:update={handleUpdate}
+                            on:create={handleCreate}
+                            on:details={handleDetails}
+                            name="tableName"
+                            show_fields={[
                                 {name: '200px'},
                                 {sthg: '20%'},
                                 {why: '100px'}
-                             ]}
-                             editable_fields={['name', 'why']}
-                             options={['CREATE', 'EDIT', 'DELETE', 'DETAILS']}
-                             table={myObjectArray}/>
+                            ]}
+                            editable_fields={['name', 'why']}
+                            options={['CREATE', 'EDIT', 'DELETE', 'DETAILS']}
+                            table={myObjectArray}/>
 </main>
-...
 ```

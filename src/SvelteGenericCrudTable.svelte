@@ -40,7 +40,6 @@
     }
 
     function handleCancelEdit(id) {
-        console.log(id);
         Object.entries(table[id]).forEach((elem) => {
             document.getElementById(name + genericCrudTable.getKey(elem) + id).value =
                     document.getElementById(name + genericCrudTable.getKey(elem) + id + 'copy').innerText;
@@ -62,6 +61,7 @@
             body: body
         });
         genericCrudTable.resetEditMode(id);
+        table = table;
     }
 
     function handleDelete(id) {
@@ -82,10 +82,10 @@
             id: id,
             body: body
         });
-        table.splice(id, 1);
-        table = table;
         genericCrudTable.resetDeleteMode(id);
+        table.splice(id, 1);
         cursor = NO_ROW_IN_EDIT_MODE;
+        table = table;
     }
 
     function handleCreate() {
