@@ -6,6 +6,7 @@
     import {SvelteGenericCrudTableService} from "./SvelteGenericCrudTableService";
 
     const dispatch = createEventDispatcher();
+    const sortStore = [];
 
     const iconTrash = faTrash;
     const iconEdit = faEdit;
@@ -108,6 +109,28 @@
         }
     }
 
+    function handleSort(elem) {
+        if (sortStore[elem] === undefined || sortStore[elem] === 'DESC') {
+            sortStore[elem] = 'ASC';
+        } else {
+            sortStore[elem] = 'DESC';
+        }
+
+        const tableSort = (a, b) => {
+            var keyA = a[elem];
+            var keyB = b[elem];
+            if (sortStore[elem] === 'ASC') {
+                if (keyA < keyB) return -1;
+                if (keyA > keyB) return 1;
+            } else {
+                if (keyA < keyB) return 1;
+                if (keyA > keyB) return -1;
+            }
+            return 0;
+        };
+
+        table = table.sort(tableSort)
+    }
 
 </script>
 
@@ -120,8 +143,10 @@
                         <tr>
                             {#each Object.keys(tableRow) as elem}
                                 <td class="headline {genericCrudTable.isShowField(elem) === false ? 'hidden' : 'shown'}"
-                                    width="{genericCrudTable.getShowFieldWidth(elem)}">
-                                    <textarea value={genericCrudTable.makeCapitalLead(elem)} disabled></textarea>
+                                    width="{genericCrudTable.getShowFieldWidth(elem)}"
+                                    on:click={() => {
+                                    handleSort(elem)}}>
+                                    <textarea class="sortable" value={genericCrudTable.makeCapitalLead(elem)} disabled></textarea>
                                 </td>
                             {/each}
                             <td id="labelOptions" class="headline">
@@ -235,6 +260,11 @@
 
     .headline {
         border-bottom: 1px solid #dddddd;
+        cursor: pointer;
+    }
+
+    .sortable {
+        cursor:pointer;
     }
 
     td {

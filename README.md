@@ -1,6 +1,6 @@
 # svelte-generic-crud-table
 
-A self-containing svelte table component with inline edit option.
+A self-containing sortable table component with inline edit option.
 
 Allows CRUD-operations for Object-Arrays.
 
