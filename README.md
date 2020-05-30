@@ -1,4 +1,6 @@
 # svelte-generic-crud-table
+[![Build Status](https://travis-ci.com/ivosdc/svelte-generic-crud-table.svg?branch=master)](https://travis-ci.com/ivosdc/svelte-generic-crud-table)
+
 
 A self-containing sortable table component with inline edit option.
 
