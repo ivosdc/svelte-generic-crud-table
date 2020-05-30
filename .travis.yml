@@ -1,6 +1,8 @@
 language: node_js
 sudo: false
 install:
-  - cd svelte-generic-crud-table && npm install
+  - cd svelte-generic-crud-table
+  - npm install
 script:
-  - cd svelte-generic-crud-table && npm test
+  - cd svelte-generic-crud-table
+  - npm test
