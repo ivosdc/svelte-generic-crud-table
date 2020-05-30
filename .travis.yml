@@ -1,7 +1,4 @@
 language: node_js
 sudo: false
-install:
-  - pwd
-  - npm install
 script:
   - npm test
