@@ -1,3 +1,16 @@
 language: node_js
 node_js:
   - "10"
+jobs:
+  include:
+    - script: npm install
+    - script: npm test
+    - script: npm build
+    - stage: GitHub Release
+      script: echo "Deploying to GitHub releases ..."
+      deploy:
+        provider: releases
+        api_key: $GITHUB_OAUTH_TOKEN
+        skip_cleanup: true
+        on:
+          tags: true
