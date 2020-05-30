@@ -39,7 +39,8 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-svelte": "^5.2.2",
     "svelte": "^3.22.3",
-    "svelte-jester": "^1.0.6"
+    "svelte-jester": "^1.0.6",
+    "node-gyp": "^6.1.0"
   },
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^5.13.0",
