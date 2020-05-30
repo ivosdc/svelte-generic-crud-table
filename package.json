@@ -36,12 +36,12 @@
     "jest-mock": "^26.0.1",
     "jest-svelte-resolver": "^1.0.0",
     "rollup": "^2.10.8",
-    "@rollup/plugin-node-resolve": "^8.0.0",
+    "@rollup/plugin-node-resolve": "^6.1.0",
     "rollup-plugin-svelte": "^5.2.2",
     "svelte": "^3.22.3",
     "svelte-jester": "^1.0.6",
     "node-gyp": "^6.1.0",
-    "node-gyp-build": "^6.1.0"
+    "node-gyp-build": "^4.2.2"
   },
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^5.13.0",
