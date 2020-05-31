@@ -1,5 +1,4 @@
 import SvelteGenericCrudTable from './SvelteGenericCrudTable.svelte';
-import Icon from 'fa-svelte'
 
 const genericTable = new SvelteGenericCrudTable({
     target: document.body,

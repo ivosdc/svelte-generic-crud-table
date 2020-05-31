@@ -14,7 +14,7 @@ export default {
             customElement: true,
             tag: null,
             css: css => {
-                css.write('dist/index.css');
+                css.write('dist/build/bundle.css');
             }
         }),
         resolve({
