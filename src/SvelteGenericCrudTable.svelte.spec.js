@@ -1,8 +1,6 @@
 import SvelteGenericCrudTable from './SvelteGenericCrudTable.svelte'
 import {render, fireEvent} from '@testing-library/svelte'
 
-const Icon = require('fa-svelte');
-
 
 describe('Test SvelteGenericCrudTable', () => {
 

@@ -1,19 +1,16 @@
-<svelte:options tag={'svelte-generic-crud-table'}/>
+<svelte:options tag={'crud-table'}/>
 <script>
     import {createEventDispatcher} from 'svelte';
-    import {faTrash, faEdit, faPaperPlane, faTimes, faInfo, faPlus} from '@fortawesome/free-solid-svg-icons'
     import {SvelteGenericCrudTableService} from "./SvelteGenericCrudTableService";
-    import Icon from 'fa-svelte'
+    import icontrash from './icons/bin2.svg';
+    import iconedit from './icons/pencil2.svg';
+    import iconsend from './icons/save.svg';
+    import iconcancel from './icons/cross.svg';
+    import icondetail from './icons/info.svg';
+    import iconcreate from './icons/plus.svg';
 
     const dispatch = createEventDispatcher();
     const sortStore = [];
-
-    const iconTrash = faTrash;
-    const iconEdit = faEdit;
-    const iconSend = faPaperPlane;
-    const iconCancel = faTimes;
-    const iconDetail = faInfo;
-    const iconCreate = faPlus;
 
     const EDIT = 'EDIT';
     const DELETE = 'DELETE';
@@ -146,8 +143,7 @@
                             {#each Object.keys(tableRow) as elem}
                                 <td class="headline {genericCrudTable.isShowField(elem) === false ? 'hidden' : 'shown'}"
                                     width="{genericCrudTable.getShowFieldWidth(elem)}"
-                                    on:click={() => {
-                                    handleSort(elem)}}>
+                                    on:click={() => handleSort(elem)}>
                                     <textarea class="sortable" value={genericCrudTable.makeCapitalLead(elem)}
                                               disabled></textarea>
                                 </td>
@@ -178,18 +174,18 @@
                                             <div class="options red" on:click={() => handleDelete(i)}
                                                  title="Delete"
                                                  aria-label="{name}{genericCrudTable.getKey(elem)}{i}delete">
-                                                <Icon icon={iconTrash}/>
+                                                {@html icontrash}
                                             </div>
                                         {/if}
                                         {#if options.includes(EDIT)}
                                             <div class="options green"
                                                  on:click={() => handleEdit(i)} title="Edit">
-                                                <Icon icon={iconEdit}/>
+                                            {@html iconedit}
                                             </div>
                                         {/if}
                                         {#if options.includes(DETAILS)}
                                             <div class="options blue" on:click={() => handleDetails(i)} title="Details">
-                                                <Icon icon={iconDetail}/>
+                                            {@html icondetail}
                                             </div>
                                         {/if}
                                     </div>
@@ -197,12 +193,12 @@
                                         {#if options.includes(EDIT)}
                                             <div class="options green" on:click={() => handleEditConfirmation(i)}
                                                  title="Update">
-                                                <Icon icon={iconSend}/>
+                                            {@html iconsend}
                                             </div>
                                             <div class="options red" on:click={() => handleCancelEdit(i)}
                                                  title="Cancel"
                                                  aria-label="{name}{genericCrudTable.getKey(elem)}{i}editCancel">
-                                                <Icon icon={iconCancel}/>
+                                            {@html iconcancel}
                                             </div>
                                         {/if}
                                     </div>
@@ -213,12 +209,12 @@
                                             <div class="options green" on:click={() => handleDeleteConfirmation(i)}
                                                  title="Delete"
                                                  aria-label="{name}{genericCrudTable.getKey(elem)}{i}deleteConfirmation">
-                                                <Icon icon={iconSend}/>
+                                            {@html iconsend}
                                             </div>
                                             <div class="options red" on:click={() => handleCancelDelete(i)}
                                                  title="Cancel"
                                                  aria-label="{name}{genericCrudTable.getKey(elem)}{i}deleteCancel">
-                                                <Icon icon={iconCancel}/>
+                                            {@html iconcancel}
                                             </div>
                                         {/if}
                                     </div>
@@ -231,7 +227,7 @@
             </table>
             {#if options.includes(CREATE)}
                 <div class="options" id="options-create" on:click={handleCreate} title="Create">
-                    <Icon icon={iconCreate}/>
+                {@html iconcreate}
                 </div>
                 <br><br>
             {/if}
@@ -254,6 +250,7 @@
     .blue:hover {
         color: dodgerblue;
     }
+
 
     h3 {
         color: #5f5f5f;
@@ -291,6 +288,12 @@
         color: #aaaaaa;
         font-weight: 100;
         width: 100px;
+    }
+
+    .options:first-child svg {
+        color: inherit;
+        max-width: 0.5em;
+        max-height: 0.5em;
     }
 
     .options {

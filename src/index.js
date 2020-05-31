@@ -1,6 +1,6 @@
 import SvelteGenericCrudTable from './SvelteGenericCrudTable.svelte';
 
-const genericTable = new SvelteGenericCrudTable({
+const generictable = new SvelteGenericCrudTable({
     target: document.body,
     props: {
         name : '',
@@ -8,7 +8,7 @@ const genericTable = new SvelteGenericCrudTable({
         editable_fields: [],
         table: [],
         options: [],
-    },
+    }
 });
 
-export default genericTable;
+export {generictable as SvelteGenericCrudTable};
