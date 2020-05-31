@@ -1,16 +1,7 @@
-(function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-    typeof define === 'function' && define.amd ? define(factory) :
-    (global = global || self, global.GenericCrudTable = factory());
-}(this, (function () { 'use strict';
+var SvelteGenericCrudTable = (function (exports) {
+    'use strict';
 
     function noop() { }
-    function assign(tar, src) {
-        // @ts-ignore
-        for (const k in src)
-            tar[k] = src[k];
-        return tar;
-    }
     function run(fn) {
         return fn();
     }
@@ -25,13 +16,6 @@
     }
     function safe_not_equal(a, b) {
         return a != a ? b == b : a !== b || ((a && typeof a === 'object') || typeof a === 'function');
-    }
-    function exclude_internal_props(props) {
-        const result = {};
-        for (const k in props)
-            if (k[0] !== '$')
-                result[k] = props[k];
-        return result;
     }
 
     function append(target, node) {
@@ -51,9 +35,6 @@
     }
     function element(name) {
         return document.createElement(name);
-    }
-    function svg_element(name) {
-        return document.createElementNS('http://www.w3.org/2000/svg', name);
     }
     function text(data) {
         return document.createTextNode(data);
@@ -175,44 +156,11 @@
         }
     }
     const outroing = new Set();
-    let outros;
-    function group_outros() {
-        outros = {
-            r: 0,
-            c: [],
-            p: outros // parent group
-        };
-    }
-    function check_outros() {
-        if (!outros.r) {
-            run_all(outros.c);
-        }
-        outros = outros.p;
-    }
     function transition_in(block, local) {
         if (block && block.i) {
             outroing.delete(block);
             block.i(local);
         }
-    }
-    function transition_out(block, local, detach, callback) {
-        if (block && block.o) {
-            if (outroing.has(block))
-                return;
-            outroing.add(block);
-            outros.c.push(() => {
-                outroing.delete(block);
-                if (callback) {
-                    if (detach)
-                        block.d(1);
-                    callback();
-                }
-            });
-            block.o(local);
-        }
-    }
-    function create_component(block) {
-        block && block.c();
     }
     function mount_component(component, target, anchor) {
         const { fragment, on_mount, on_destroy, after_update } = component.$$;
@@ -346,37 +294,6 @@
         };
     }
 
-    var faEdit = {
-      prefix: 'fas',
-      iconName: 'edit',
-      icon: [576, 512, [], "f044", "M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z"]
-    };
-    var faInfo = {
-      prefix: 'fas',
-      iconName: 'info',
-      icon: [192, 512, [], "f129", "M20 424.229h20V279.771H20c-11.046 0-20-8.954-20-20V212c0-11.046 8.954-20 20-20h112c11.046 0 20 8.954 20 20v212.229h20c11.046 0 20 8.954 20 20V492c0 11.046-8.954 20-20 20H20c-11.046 0-20-8.954-20-20v-47.771c0-11.046 8.954-20 20-20zM96 0C56.235 0 24 32.235 24 72s32.235 72 72 72 72-32.235 72-72S135.764 0 96 0z"]
-    };
-    var faPaperPlane = {
-      prefix: 'fas',
-      iconName: 'paper-plane',
-      icon: [512, 512, [], "f1d8", "M476 3.2L12.5 270.6c-18.1 10.4-15.8 35.6 2.2 43.2L121 358.4l287.3-253.2c5.5-4.9 13.3 2.6 8.6 8.3L176 407v80.5c0 23.6 28.5 32.9 42.5 15.8L282 426l124.6 52.2c14.2 6 30.4-2.9 33-18.2l72-432C515 7.8 493.3-6.8 476 3.2z"]
-    };
-    var faPlus = {
-      prefix: 'fas',
-      iconName: 'plus',
-      icon: [448, 512, [], "f067", "M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"]
-    };
-    var faTimes = {
-      prefix: 'fas',
-      iconName: 'times',
-      icon: [352, 512, [], "f00d", "M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"]
-    };
-    var faTrash = {
-      prefix: 'fas',
-      iconName: 'trash',
-      icon: [448, 512, [], "f1f8", "M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"]
-    };
-
     class SvelteGenericCrudTableService {
 
         constructor(name, editable_fields, show_fields){
@@ -468,149 +385,53 @@
 
     }
 
-    /* node_modules/fa-svelte/src/Icon.svelte generated by Svelte v3.22.3 */
+    var icontrash = "<svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 32 32\">\n<title>bin2</title>\n<path d=\"M6 32h20l2-22h-24zM20 4v-4h-8v4h-10v6l2-2h24l2 2v-6h-10zM18 4h-4v-2h4v2z\"></path>\n</svg>";
 
-    function create_fragment(ctx) {
-    	let svg;
-    	let path_1;
+    var iconedit = "<svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 32 32\">\n<title>pencil2</title>\n<path d=\"M12 20l4-2 14-14-2-2-14 14-2 4zM9.041 27.097c-0.989-2.085-2.052-3.149-4.137-4.137l3.097-8.525 4-2.435 12-12h-6l-12 12-6 20 20-6 12-12v-6l-12 12-2.435 4z\"></path>\n</svg>";
 
-    	return {
-    		c() {
-    			svg = svg_element("svg");
-    			path_1 = svg_element("path");
-    			this.c = noop;
-    			attr(path_1, "fill", "currentColor");
-    			attr(path_1, "d", /*path*/ ctx[0]);
-    			attr(svg, "aria-hidden", "true");
-    			attr(svg, "class", /*classes*/ ctx[1]);
-    			attr(svg, "role", "img");
-    			attr(svg, "xmlns", "http://www.w3.org/2000/svg");
-    			attr(svg, "viewBox", /*viewBox*/ ctx[2]);
-    		},
-    		m(target, anchor) {
-    			insert(target, svg, anchor);
-    			append(svg, path_1);
-    		},
-    		p(ctx, [dirty]) {
-    			if (dirty & /*path*/ 1) {
-    				attr(path_1, "d", /*path*/ ctx[0]);
-    			}
+    var iconsend = "<svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 32 32\">\n<title>floppy-disk</title>\n<path d=\"M28 0h-28v32h32v-28l-4-4zM16 4h4v8h-4v-8zM28 28h-24v-24h2v10h18v-10h2.343l1.657 1.657v22.343z\"></path>\n</svg>";
 
-    			if (dirty & /*classes*/ 2) {
-    				attr(svg, "class", /*classes*/ ctx[1]);
-    			}
+    var iconcancel = "<svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 32 32\">\n<title>cross</title>\n<path d=\"M31.708 25.708c-0-0-0-0-0-0l-9.708-9.708 9.708-9.708c0-0 0-0 0-0 0.105-0.105 0.18-0.227 0.229-0.357 0.133-0.356 0.057-0.771-0.229-1.057l-4.586-4.586c-0.286-0.286-0.702-0.361-1.057-0.229-0.13 0.048-0.252 0.124-0.357 0.228 0 0-0 0-0 0l-9.708 9.708-9.708-9.708c-0-0-0-0-0-0-0.105-0.104-0.227-0.18-0.357-0.228-0.356-0.133-0.771-0.057-1.057 0.229l-4.586 4.586c-0.286 0.286-0.361 0.702-0.229 1.057 0.049 0.13 0.124 0.252 0.229 0.357 0 0 0 0 0 0l9.708 9.708-9.708 9.708c-0 0-0 0-0 0-0.104 0.105-0.18 0.227-0.229 0.357-0.133 0.355-0.057 0.771 0.229 1.057l4.586 4.586c0.286 0.286 0.702 0.361 1.057 0.229 0.13-0.049 0.252-0.124 0.357-0.229 0-0 0-0 0-0l9.708-9.708 9.708 9.708c0 0 0 0 0 0 0.105 0.105 0.227 0.18 0.357 0.229 0.356 0.133 0.771 0.057 1.057-0.229l4.586-4.586c0.286-0.286 0.362-0.702 0.229-1.057-0.049-0.13-0.124-0.252-0.229-0.357z\"></path>\n</svg>";
 
-    			if (dirty & /*viewBox*/ 4) {
-    				attr(svg, "viewBox", /*viewBox*/ ctx[2]);
-    			}
-    		},
-    		i: noop,
-    		o: noop,
-    		d(detaching) {
-    			if (detaching) detach(svg);
-    		}
-    	};
-    }
+    var icondetail = "<svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 32 32\">\n<title>info</title>\n<path d=\"M14 9.5c0-0.825 0.675-1.5 1.5-1.5h1c0.825 0 1.5 0.675 1.5 1.5v1c0 0.825-0.675 1.5-1.5 1.5h-1c-0.825 0-1.5-0.675-1.5-1.5v-1z\"></path>\n<path d=\"M20 24h-8v-2h2v-6h-2v-2h6v8h2z\"></path>\n<path d=\"M16 0c-8.837 0-16 7.163-16 16s7.163 16 16 16 16-7.163 16-16-7.163-16-16-16zM16 29c-7.18 0-13-5.82-13-13s5.82-13 13-13 13 5.82 13 13-5.82 13-13 13z\"></path>\n</svg>";
 
-    function instance($$self, $$props, $$invalidate) {
-    	let { icon } = $$props;
-    	let path = [];
-    	let classes = "";
-    	let viewBox = "";
-
-    	$$self.$set = $$new_props => {
-    		$$invalidate(4, $$props = assign(assign({}, $$props), exclude_internal_props($$new_props)));
-    		if ("icon" in $$new_props) $$invalidate(3, icon = $$new_props.icon);
-    	};
-
-    	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*icon*/ 8) {
-    			 $$invalidate(2, viewBox = "0 0 " + icon.icon[0] + " " + icon.icon[1]);
-    		}
-
-    		 $$invalidate(1, classes = "fa-svelte " + ($$props.class ? $$props.class : ""));
-
-    		if ($$self.$$.dirty & /*icon*/ 8) {
-    			 $$invalidate(0, path = icon.icon[4]);
-    		}
-    	};
-
-    	$$props = exclude_internal_props($$props);
-    	return [path, classes, viewBox, icon];
-    }
-
-    class Icon extends SvelteElement {
-    	constructor(options) {
-    		super();
-    		this.shadowRoot.innerHTML = `<style>.fa-svelte{width:1em;height:1em;overflow:visible;display:inline-block}</style>`;
-    		init(this, { target: this.shadowRoot }, instance, create_fragment, safe_not_equal, { icon: 3 });
-
-    		if (options) {
-    			if (options.target) {
-    				insert(options.target, this, options.anchor);
-    			}
-
-    			if (options.props) {
-    				this.$set(options.props);
-    				flush();
-    			}
-    		}
-    	}
-
-    	static get observedAttributes() {
-    		return ["icon"];
-    	}
-
-    	get icon() {
-    		return this.$$.ctx[3];
-    	}
-
-    	set icon(icon) {
-    		this.$set({ icon });
-    		flush();
-    	}
-    }
+    var iconcreate = "<svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 32 32\">\n<title>plus</title>\n<path d=\"M31 12h-11v-11c0-0.552-0.448-1-1-1h-6c-0.552 0-1 0.448-1 1v11h-11c-0.552 0-1 0.448-1 1v6c0 0.552 0.448 1 1 1h11v11c0 0.552 0.448 1 1 1h6c0.552 0 1-0.448 1-1v-11h11c0.552 0 1-0.448 1-1v-6c0-0.552-0.448-1-1-1z\"></path>\n</svg>";
 
     /* src/SvelteGenericCrudTable.svelte generated by Svelte v3.22.3 */
 
     function get_each_context_1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[37] = list[i];
-    	child_ctx[39] = i;
+    	child_ctx[31] = list[i];
+    	child_ctx[33] = i;
     	return child_ctx;
     }
 
     function get_each_context_2(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[37] = list[i];
+    	child_ctx[31] = list[i];
     	return child_ctx;
     }
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[34] = list[i];
-    	child_ctx[36] = i;
+    	child_ctx[28] = list[i];
+    	child_ctx[30] = i;
     	return child_ctx;
     }
 
-    // (140:4) {#if (table !== undefined)}
+    // (137:4) {#if (table !== undefined)}
     function create_if_block(ctx) {
     	let show_if;
-    	let current_block_type_index;
-    	let if_block;
     	let if_block_anchor;
-    	let current;
-    	const if_block_creators = [create_if_block_1, create_else_block];
-    	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
-    		if (dirty[0] & /*table*/ 1) show_if = !!Array.isArray(/*table*/ ctx[0]);
-    		if (show_if) return 0;
-    		return 1;
+    		if (show_if == null || dirty[0] & /*table*/ 1) show_if = !!Array.isArray(/*table*/ ctx[0]);
+    		if (show_if) return create_if_block_1;
+    		return create_else_block;
     	}
 
-    	current_block_type_index = select_block_type(ctx, [-1]);
-    	if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    	let current_block_type = select_block_type(ctx, [-1]);
+    	let if_block = current_block_type(ctx);
 
     	return {
     		c() {
@@ -618,52 +439,30 @@
     			if_block_anchor = empty();
     		},
     		m(target, anchor) {
-    			if_blocks[current_block_type_index].m(target, anchor);
+    			if_block.m(target, anchor);
     			insert(target, if_block_anchor, anchor);
-    			current = true;
     		},
     		p(ctx, dirty) {
-    			let previous_block_index = current_block_type_index;
-    			current_block_type_index = select_block_type(ctx, dirty);
-
-    			if (current_block_type_index === previous_block_index) {
-    				if_blocks[current_block_type_index].p(ctx, dirty);
+    			if (current_block_type === (current_block_type = select_block_type(ctx, dirty)) && if_block) {
+    				if_block.p(ctx, dirty);
     			} else {
-    				group_outros();
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
 
-    				transition_out(if_blocks[previous_block_index], 1, 1, () => {
-    					if_blocks[previous_block_index] = null;
-    				});
-
-    				check_outros();
-    				if_block = if_blocks[current_block_type_index];
-
-    				if (!if_block) {
-    					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    				if (if_block) {
     					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
     				}
-
-    				transition_in(if_block, 1);
-    				if_block.m(if_block_anchor.parentNode, if_block_anchor);
     			}
     		},
-    		i(local) {
-    			if (current) return;
-    			transition_in(if_block);
-    			current = true;
-    		},
-    		o(local) {
-    			transition_out(if_block);
-    			current = false;
-    		},
     		d(detaching) {
-    			if_blocks[current_block_type_index].d(detaching);
+    			if_block.d(detaching);
     			if (detaching) detach(if_block_anchor);
     		}
     	};
     }
 
-    // (238:8) {:else}
+    // (234:8) {:else}
     function create_else_block(ctx) {
     	let br;
     	let t0;
@@ -683,8 +482,6 @@
     		p(ctx, dirty) {
     			if (dirty[0] & /*table*/ 1) set_data(t1, /*table*/ ctx[0]);
     		},
-    		i: noop,
-    		o: noop,
     		d(detaching) {
     			if (detaching) detach(br);
     			if (detaching) detach(t0);
@@ -693,23 +490,18 @@
     	};
     }
 
-    // (141:8) {#if Array.isArray(table)}
+    // (138:8) {#if Array.isArray(table)}
     function create_if_block_1(ctx) {
     	let table_1;
     	let t;
     	let show_if = /*options*/ ctx[2].includes(CREATE);
     	let if_block_anchor;
-    	let current;
     	let each_value = /*table*/ ctx[0];
     	let each_blocks = [];
 
     	for (let i = 0; i < each_value.length; i += 1) {
     		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
     	}
-
-    	const out = i => transition_out(each_blocks[i], 1, 1, () => {
-    		each_blocks[i] = null;
-    	});
 
     	let if_block = show_if && create_if_block_2(ctx);
 
@@ -735,10 +527,9 @@
     			insert(target, t, anchor);
     			if (if_block) if_block.m(target, anchor);
     			insert(target, if_block_anchor, anchor);
-    			current = true;
     		},
     		p(ctx, dirty) {
-    			if (dirty[0] & /*table, name, genericCrudTable, handleCancelDelete, iconCancel, handleDeleteConfirmation, iconSend, options, handleCancelEdit, handleEditConfirmation, handleDetails, iconDetail, handleEdit, iconEdit, handleDelete, iconTrash, handleSort*/ 458495) {
+    			if (dirty[0] & /*table, name, genericCrudTable, handleCancelDelete, handleDeleteConfirmation, options, handleCancelEdit, handleEditConfirmation, handleDetails, handleEdit, handleDelete, handleSort*/ 7167) {
     				each_value = /*table*/ ctx[0];
     				let i;
 
@@ -747,22 +538,18 @@
 
     					if (each_blocks[i]) {
     						each_blocks[i].p(child_ctx, dirty);
-    						transition_in(each_blocks[i], 1);
     					} else {
     						each_blocks[i] = create_each_block(child_ctx);
     						each_blocks[i].c();
-    						transition_in(each_blocks[i], 1);
     						each_blocks[i].m(table_1, null);
     					}
     				}
 
-    				group_outros();
-
-    				for (i = each_value.length; i < each_blocks.length; i += 1) {
-    					out(i);
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
     				}
 
-    				check_outros();
+    				each_blocks.length = each_value.length;
     			}
 
     			if (dirty[0] & /*options*/ 4) show_if = /*options*/ ctx[2].includes(CREATE);
@@ -770,45 +557,15 @@
     			if (show_if) {
     				if (if_block) {
     					if_block.p(ctx, dirty);
-
-    					if (dirty[0] & /*options*/ 4) {
-    						transition_in(if_block, 1);
-    					}
     				} else {
     					if_block = create_if_block_2(ctx);
     					if_block.c();
-    					transition_in(if_block, 1);
     					if_block.m(if_block_anchor.parentNode, if_block_anchor);
     				}
     			} else if (if_block) {
-    				group_outros();
-
-    				transition_out(if_block, 1, 1, () => {
-    					if_block = null;
-    				});
-
-    				check_outros();
+    				if_block.d(1);
+    				if_block = null;
     			}
-    		},
-    		i(local) {
-    			if (current) return;
-
-    			for (let i = 0; i < each_value.length; i += 1) {
-    				transition_in(each_blocks[i]);
-    			}
-
-    			transition_in(if_block);
-    			current = true;
-    		},
-    		o(local) {
-    			each_blocks = each_blocks.filter(Boolean);
-
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				transition_out(each_blocks[i]);
-    			}
-
-    			transition_out(if_block);
-    			current = false;
     		},
     		d(detaching) {
     			if (detaching) detach(table_1);
@@ -820,12 +577,12 @@
     	};
     }
 
-    // (144:20) {#if i === 0}
+    // (141:20) {#if i === 0}
     function create_if_block_9(ctx) {
     	let tr;
     	let t;
     	let td;
-    	let each_value_2 = Object.keys(/*tableRow*/ ctx[34]);
+    	let each_value_2 = Object.keys(/*tableRow*/ ctx[28]);
     	let each_blocks = [];
 
     	for (let i = 0; i < each_value_2.length; i += 1) {
@@ -857,8 +614,8 @@
     			append(tr, td);
     		},
     		p(ctx, dirty) {
-    			if (dirty[0] & /*genericCrudTable, table, handleSort*/ 262657) {
-    				each_value_2 = Object.keys(/*tableRow*/ ctx[34]);
+    			if (dirty[0] & /*genericCrudTable, table, handleSort*/ 4105) {
+    				each_value_2 = Object.keys(/*tableRow*/ ctx[28]);
     				let i;
 
     				for (i = 0; i < each_value_2.length; i += 1) {
@@ -887,7 +644,7 @@
     	};
     }
 
-    // (146:28) {#each Object.keys(tableRow) as elem}
+    // (143:28) {#each Object.keys(tableRow) as elem}
     function create_each_block_2(ctx) {
     	let td;
     	let textarea;
@@ -897,7 +654,7 @@
     	let dispose;
 
     	function click_handler(...args) {
-    		return /*click_handler*/ ctx[26](/*elem*/ ctx[37], ...args);
+    		return /*click_handler*/ ctx[20](/*elem*/ ctx[31], ...args);
     	}
 
     	return {
@@ -905,14 +662,14 @@
     			td = element("td");
     			textarea = element("textarea");
     			attr(textarea, "class", "sortable");
-    			textarea.value = textarea_value_value = /*genericCrudTable*/ ctx[9].makeCapitalLead(/*elem*/ ctx[37]);
+    			textarea.value = textarea_value_value = /*genericCrudTable*/ ctx[3].makeCapitalLead(/*elem*/ ctx[31]);
     			textarea.disabled = true;
 
-    			attr(td, "class", td_class_value = "headline " + (/*genericCrudTable*/ ctx[9].isShowField(/*elem*/ ctx[37]) === false
+    			attr(td, "class", td_class_value = "headline " + (/*genericCrudTable*/ ctx[3].isShowField(/*elem*/ ctx[31]) === false
     			? "hidden"
     			: "shown"));
 
-    			attr(td, "width", td_width_value = /*genericCrudTable*/ ctx[9].getShowFieldWidth(/*elem*/ ctx[37]));
+    			attr(td, "width", td_width_value = /*genericCrudTable*/ ctx[3].getShowFieldWidth(/*elem*/ ctx[31]));
     		},
     		m(target, anchor, remount) {
     			insert(target, td, anchor);
@@ -923,17 +680,17 @@
     		p(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (dirty[0] & /*table*/ 1 && textarea_value_value !== (textarea_value_value = /*genericCrudTable*/ ctx[9].makeCapitalLead(/*elem*/ ctx[37]))) {
+    			if (dirty[0] & /*table*/ 1 && textarea_value_value !== (textarea_value_value = /*genericCrudTable*/ ctx[3].makeCapitalLead(/*elem*/ ctx[31]))) {
     				textarea.value = textarea_value_value;
     			}
 
-    			if (dirty[0] & /*table*/ 1 && td_class_value !== (td_class_value = "headline " + (/*genericCrudTable*/ ctx[9].isShowField(/*elem*/ ctx[37]) === false
+    			if (dirty[0] & /*table*/ 1 && td_class_value !== (td_class_value = "headline " + (/*genericCrudTable*/ ctx[3].isShowField(/*elem*/ ctx[31]) === false
     			? "hidden"
     			: "shown"))) {
     				attr(td, "class", td_class_value);
     			}
 
-    			if (dirty[0] & /*table*/ 1 && td_width_value !== (td_width_value = /*genericCrudTable*/ ctx[9].getShowFieldWidth(/*elem*/ ctx[37]))) {
+    			if (dirty[0] & /*table*/ 1 && td_width_value !== (td_width_value = /*genericCrudTable*/ ctx[3].getShowFieldWidth(/*elem*/ ctx[31]))) {
     				attr(td, "width", td_width_value);
     			}
     		},
@@ -944,7 +701,7 @@
     	};
     }
 
-    // (172:28) {#if Object.entries(tableRow).length - 1 === j}
+    // (168:28) {#if Object.entries(tableRow).length - 1 === j}
     function create_if_block_3(ctx) {
     	let td;
     	let div0;
@@ -964,7 +721,6 @@
     	let show_if = /*options*/ ctx[2].includes(DELETE);
     	let div2_id_value;
     	let div2_aria_label_value;
-    	let current;
     	let if_block0 = show_if_4 && create_if_block_8(ctx);
     	let if_block1 = show_if_3 && create_if_block_7(ctx);
     	let if_block2 = show_if_2 && create_if_block_6(ctx);
@@ -986,13 +742,13 @@
     			t3 = space();
     			div2 = element("div");
     			if (if_block4) if_block4.c();
-    			attr(div0, "id", div0_id_value = "" + (/*name*/ ctx[1] + "options-default" + /*i*/ ctx[36]));
-    			attr(div0, "aria-label", div0_aria_label_value = "" + (/*name*/ ctx[1] + "options-default" + /*i*/ ctx[36]));
+    			attr(div0, "id", div0_id_value = "" + (/*name*/ ctx[1] + "options-default" + /*i*/ ctx[30]));
+    			attr(div0, "aria-label", div0_aria_label_value = "" + (/*name*/ ctx[1] + "options-default" + /*i*/ ctx[30]));
     			attr(div0, "class", "options shown");
-    			attr(div1, "id", div1_id_value = "" + (/*name*/ ctx[1] + "options-edit" + /*i*/ ctx[36]));
+    			attr(div1, "id", div1_id_value = "" + (/*name*/ ctx[1] + "options-edit" + /*i*/ ctx[30]));
     			attr(div1, "class", "options hidden");
-    			attr(div2, "id", div2_id_value = "" + (/*name*/ ctx[1] + "options-delete" + /*i*/ ctx[36]));
-    			attr(div2, "aria-label", div2_aria_label_value = "" + (/*name*/ ctx[1] + "options-delete" + /*i*/ ctx[36]));
+    			attr(div2, "id", div2_id_value = "" + (/*name*/ ctx[1] + "options-delete" + /*i*/ ctx[30]));
+    			attr(div2, "aria-label", div2_aria_label_value = "" + (/*name*/ ctx[1] + "options-delete" + /*i*/ ctx[30]));
     			attr(div2, "class", "options hidden");
     		},
     		m(target, anchor) {
@@ -1009,7 +765,6 @@
     			append(td, t3);
     			append(td, div2);
     			if (if_block4) if_block4.m(div2, null);
-    			current = true;
     		},
     		p(ctx, dirty) {
     			if (dirty[0] & /*options*/ 4) show_if_4 = /*options*/ ctx[2].includes(DELETE);
@@ -1017,24 +772,14 @@
     			if (show_if_4) {
     				if (if_block0) {
     					if_block0.p(ctx, dirty);
-
-    					if (dirty[0] & /*options*/ 4) {
-    						transition_in(if_block0, 1);
-    					}
     				} else {
     					if_block0 = create_if_block_8(ctx);
     					if_block0.c();
-    					transition_in(if_block0, 1);
     					if_block0.m(div0, t0);
     				}
     			} else if (if_block0) {
-    				group_outros();
-
-    				transition_out(if_block0, 1, 1, () => {
-    					if_block0 = null;
-    				});
-
-    				check_outros();
+    				if_block0.d(1);
+    				if_block0 = null;
     			}
 
     			if (dirty[0] & /*options*/ 4) show_if_3 = /*options*/ ctx[2].includes(EDIT);
@@ -1042,24 +787,14 @@
     			if (show_if_3) {
     				if (if_block1) {
     					if_block1.p(ctx, dirty);
-
-    					if (dirty[0] & /*options*/ 4) {
-    						transition_in(if_block1, 1);
-    					}
     				} else {
     					if_block1 = create_if_block_7(ctx);
     					if_block1.c();
-    					transition_in(if_block1, 1);
     					if_block1.m(div0, t1);
     				}
     			} else if (if_block1) {
-    				group_outros();
-
-    				transition_out(if_block1, 1, 1, () => {
-    					if_block1 = null;
-    				});
-
-    				check_outros();
+    				if_block1.d(1);
+    				if_block1 = null;
     			}
 
     			if (dirty[0] & /*options*/ 4) show_if_2 = /*options*/ ctx[2].includes(DETAILS);
@@ -1067,31 +802,21 @@
     			if (show_if_2) {
     				if (if_block2) {
     					if_block2.p(ctx, dirty);
-
-    					if (dirty[0] & /*options*/ 4) {
-    						transition_in(if_block2, 1);
-    					}
     				} else {
     					if_block2 = create_if_block_6(ctx);
     					if_block2.c();
-    					transition_in(if_block2, 1);
     					if_block2.m(div0, null);
     				}
     			} else if (if_block2) {
-    				group_outros();
-
-    				transition_out(if_block2, 1, 1, () => {
-    					if_block2 = null;
-    				});
-
-    				check_outros();
+    				if_block2.d(1);
+    				if_block2 = null;
     			}
 
-    			if (!current || dirty[0] & /*name*/ 2 && div0_id_value !== (div0_id_value = "" + (/*name*/ ctx[1] + "options-default" + /*i*/ ctx[36]))) {
+    			if (dirty[0] & /*name*/ 2 && div0_id_value !== (div0_id_value = "" + (/*name*/ ctx[1] + "options-default" + /*i*/ ctx[30]))) {
     				attr(div0, "id", div0_id_value);
     			}
 
-    			if (!current || dirty[0] & /*name*/ 2 && div0_aria_label_value !== (div0_aria_label_value = "" + (/*name*/ ctx[1] + "options-default" + /*i*/ ctx[36]))) {
+    			if (dirty[0] & /*name*/ 2 && div0_aria_label_value !== (div0_aria_label_value = "" + (/*name*/ ctx[1] + "options-default" + /*i*/ ctx[30]))) {
     				attr(div0, "aria-label", div0_aria_label_value);
     			}
 
@@ -1100,27 +825,17 @@
     			if (show_if_1) {
     				if (if_block3) {
     					if_block3.p(ctx, dirty);
-
-    					if (dirty[0] & /*options*/ 4) {
-    						transition_in(if_block3, 1);
-    					}
     				} else {
     					if_block3 = create_if_block_5(ctx);
     					if_block3.c();
-    					transition_in(if_block3, 1);
     					if_block3.m(div1, null);
     				}
     			} else if (if_block3) {
-    				group_outros();
-
-    				transition_out(if_block3, 1, 1, () => {
-    					if_block3 = null;
-    				});
-
-    				check_outros();
+    				if_block3.d(1);
+    				if_block3 = null;
     			}
 
-    			if (!current || dirty[0] & /*name*/ 2 && div1_id_value !== (div1_id_value = "" + (/*name*/ ctx[1] + "options-edit" + /*i*/ ctx[36]))) {
+    			if (dirty[0] & /*name*/ 2 && div1_id_value !== (div1_id_value = "" + (/*name*/ ctx[1] + "options-edit" + /*i*/ ctx[30]))) {
     				attr(div1, "id", div1_id_value);
     			}
 
@@ -1129,50 +844,23 @@
     			if (show_if) {
     				if (if_block4) {
     					if_block4.p(ctx, dirty);
-
-    					if (dirty[0] & /*options*/ 4) {
-    						transition_in(if_block4, 1);
-    					}
     				} else {
     					if_block4 = create_if_block_4(ctx);
     					if_block4.c();
-    					transition_in(if_block4, 1);
     					if_block4.m(div2, null);
     				}
     			} else if (if_block4) {
-    				group_outros();
-
-    				transition_out(if_block4, 1, 1, () => {
-    					if_block4 = null;
-    				});
-
-    				check_outros();
+    				if_block4.d(1);
+    				if_block4 = null;
     			}
 
-    			if (!current || dirty[0] & /*name*/ 2 && div2_id_value !== (div2_id_value = "" + (/*name*/ ctx[1] + "options-delete" + /*i*/ ctx[36]))) {
+    			if (dirty[0] & /*name*/ 2 && div2_id_value !== (div2_id_value = "" + (/*name*/ ctx[1] + "options-delete" + /*i*/ ctx[30]))) {
     				attr(div2, "id", div2_id_value);
     			}
 
-    			if (!current || dirty[0] & /*name*/ 2 && div2_aria_label_value !== (div2_aria_label_value = "" + (/*name*/ ctx[1] + "options-delete" + /*i*/ ctx[36]))) {
+    			if (dirty[0] & /*name*/ 2 && div2_aria_label_value !== (div2_aria_label_value = "" + (/*name*/ ctx[1] + "options-delete" + /*i*/ ctx[30]))) {
     				attr(div2, "aria-label", div2_aria_label_value);
     			}
-    		},
-    		i(local) {
-    			if (current) return;
-    			transition_in(if_block0);
-    			transition_in(if_block1);
-    			transition_in(if_block2);
-    			transition_in(if_block3);
-    			transition_in(if_block4);
-    			current = true;
-    		},
-    		o(local) {
-    			transition_out(if_block0);
-    			transition_out(if_block1);
-    			transition_out(if_block2);
-    			transition_out(if_block3);
-    			transition_out(if_block4);
-    			current = false;
     		},
     		d(detaching) {
     			if (detaching) detach(td);
@@ -1185,187 +873,138 @@
     	};
     }
 
-    // (177:40) {#if options.includes(DELETE)}
+    // (173:40) {#if options.includes(DELETE)}
     function create_if_block_8(ctx) {
     	let div;
     	let div_aria_label_value;
-    	let current;
     	let dispose;
-    	const icon = new Icon({ props: { icon: /*iconTrash*/ ctx[3] } });
 
     	function click_handler_1(...args) {
-    		return /*click_handler_1*/ ctx[27](/*i*/ ctx[36], ...args);
+    		return /*click_handler_1*/ ctx[21](/*i*/ ctx[30], ...args);
     	}
 
     	return {
     		c() {
     			div = element("div");
-    			create_component(icon.$$.fragment);
     			attr(div, "class", "options red");
     			attr(div, "title", "Delete");
-    			attr(div, "aria-label", div_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[37]) + /*i*/ ctx[36] + "delete"));
+    			attr(div, "aria-label", div_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[3].getKey(/*elem*/ ctx[31]) + /*i*/ ctx[30] + "delete"));
     		},
     		m(target, anchor, remount) {
     			insert(target, div, anchor);
-    			mount_component(icon, div, null);
-    			current = true;
+    			div.innerHTML = icontrash;
     			if (remount) dispose();
     			dispose = listen(div, "click", click_handler_1);
     		},
     		p(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (!current || dirty[0] & /*name, table*/ 3 && div_aria_label_value !== (div_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[37]) + /*i*/ ctx[36] + "delete"))) {
+    			if (dirty[0] & /*name, table*/ 3 && div_aria_label_value !== (div_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[3].getKey(/*elem*/ ctx[31]) + /*i*/ ctx[30] + "delete"))) {
     				attr(div, "aria-label", div_aria_label_value);
     			}
     		},
-    		i(local) {
-    			if (current) return;
-    			transition_in(icon.$$.fragment, local);
-    			current = true;
-    		},
-    		o(local) {
-    			transition_out(icon.$$.fragment, local);
-    			current = false;
-    		},
     		d(detaching) {
     			if (detaching) detach(div);
-    			destroy_component(icon);
     			dispose();
     		}
     	};
     }
 
-    // (184:40) {#if options.includes(EDIT)}
+    // (180:40) {#if options.includes(EDIT)}
     function create_if_block_7(ctx) {
     	let div;
-    	let current;
     	let dispose;
-    	const icon = new Icon({ props: { icon: /*iconEdit*/ ctx[4] } });
 
     	function click_handler_2(...args) {
-    		return /*click_handler_2*/ ctx[28](/*i*/ ctx[36], ...args);
+    		return /*click_handler_2*/ ctx[22](/*i*/ ctx[30], ...args);
     	}
 
     	return {
     		c() {
     			div = element("div");
-    			create_component(icon.$$.fragment);
     			attr(div, "class", "options green");
     			attr(div, "title", "Edit");
     		},
     		m(target, anchor, remount) {
     			insert(target, div, anchor);
-    			mount_component(icon, div, null);
-    			current = true;
+    			div.innerHTML = iconedit;
     			if (remount) dispose();
     			dispose = listen(div, "click", click_handler_2);
     		},
     		p(new_ctx, dirty) {
     			ctx = new_ctx;
     		},
-    		i(local) {
-    			if (current) return;
-    			transition_in(icon.$$.fragment, local);
-    			current = true;
-    		},
-    		o(local) {
-    			transition_out(icon.$$.fragment, local);
-    			current = false;
-    		},
     		d(detaching) {
     			if (detaching) detach(div);
-    			destroy_component(icon);
     			dispose();
     		}
     	};
     }
 
-    // (190:40) {#if options.includes(DETAILS)}
+    // (186:40) {#if options.includes(DETAILS)}
     function create_if_block_6(ctx) {
     	let div;
-    	let current;
     	let dispose;
-    	const icon = new Icon({ props: { icon: /*iconDetail*/ ctx[7] } });
 
     	function click_handler_3(...args) {
-    		return /*click_handler_3*/ ctx[29](/*i*/ ctx[36], ...args);
+    		return /*click_handler_3*/ ctx[23](/*i*/ ctx[30], ...args);
     	}
 
     	return {
     		c() {
     			div = element("div");
-    			create_component(icon.$$.fragment);
     			attr(div, "class", "options blue");
     			attr(div, "title", "Details");
     		},
     		m(target, anchor, remount) {
     			insert(target, div, anchor);
-    			mount_component(icon, div, null);
-    			current = true;
+    			div.innerHTML = icondetail;
     			if (remount) dispose();
     			dispose = listen(div, "click", click_handler_3);
     		},
     		p(new_ctx, dirty) {
     			ctx = new_ctx;
     		},
-    		i(local) {
-    			if (current) return;
-    			transition_in(icon.$$.fragment, local);
-    			current = true;
-    		},
-    		o(local) {
-    			transition_out(icon.$$.fragment, local);
-    			current = false;
-    		},
     		d(detaching) {
     			if (detaching) detach(div);
-    			destroy_component(icon);
     			dispose();
     		}
     	};
     }
 
-    // (197:40) {#if options.includes(EDIT)}
+    // (193:40) {#if options.includes(EDIT)}
     function create_if_block_5(ctx) {
     	let div0;
     	let t;
     	let div1;
     	let div1_aria_label_value;
-    	let current;
     	let dispose;
-    	const icon0 = new Icon({ props: { icon: /*iconSend*/ ctx[5] } });
 
     	function click_handler_4(...args) {
-    		return /*click_handler_4*/ ctx[30](/*i*/ ctx[36], ...args);
+    		return /*click_handler_4*/ ctx[24](/*i*/ ctx[30], ...args);
     	}
 
-    	const icon1 = new Icon({ props: { icon: /*iconCancel*/ ctx[6] } });
-
     	function click_handler_5(...args) {
-    		return /*click_handler_5*/ ctx[31](/*i*/ ctx[36], ...args);
+    		return /*click_handler_5*/ ctx[25](/*i*/ ctx[30], ...args);
     	}
 
     	return {
     		c() {
     			div0 = element("div");
-    			create_component(icon0.$$.fragment);
     			t = space();
     			div1 = element("div");
-    			create_component(icon1.$$.fragment);
     			attr(div0, "class", "options green");
     			attr(div0, "title", "Update");
     			attr(div1, "class", "options red");
     			attr(div1, "title", "Cancel");
-    			attr(div1, "aria-label", div1_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[37]) + /*i*/ ctx[36] + "editCancel"));
+    			attr(div1, "aria-label", div1_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[3].getKey(/*elem*/ ctx[31]) + /*i*/ ctx[30] + "editCancel"));
     		},
     		m(target, anchor, remount) {
     			insert(target, div0, anchor);
-    			mount_component(icon0, div0, null);
+    			div0.innerHTML = iconsend;
     			insert(target, t, anchor);
     			insert(target, div1, anchor);
-    			mount_component(icon1, div1, null);
-    			current = true;
+    			div1.innerHTML = iconcancel;
     			if (remount) run_all(dispose);
 
     			dispose = [
@@ -1376,74 +1015,54 @@
     		p(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (!current || dirty[0] & /*name, table*/ 3 && div1_aria_label_value !== (div1_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[37]) + /*i*/ ctx[36] + "editCancel"))) {
+    			if (dirty[0] & /*name, table*/ 3 && div1_aria_label_value !== (div1_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[3].getKey(/*elem*/ ctx[31]) + /*i*/ ctx[30] + "editCancel"))) {
     				attr(div1, "aria-label", div1_aria_label_value);
     			}
     		},
-    		i(local) {
-    			if (current) return;
-    			transition_in(icon0.$$.fragment, local);
-    			transition_in(icon1.$$.fragment, local);
-    			current = true;
-    		},
-    		o(local) {
-    			transition_out(icon0.$$.fragment, local);
-    			transition_out(icon1.$$.fragment, local);
-    			current = false;
-    		},
     		d(detaching) {
     			if (detaching) detach(div0);
-    			destroy_component(icon0);
     			if (detaching) detach(t);
     			if (detaching) detach(div1);
-    			destroy_component(icon1);
     			run_all(dispose);
     		}
     	};
     }
 
-    // (212:40) {#if options.includes(DELETE)}
+    // (208:40) {#if options.includes(DELETE)}
     function create_if_block_4(ctx) {
     	let div0;
     	let div0_aria_label_value;
     	let t;
     	let div1;
     	let div1_aria_label_value;
-    	let current;
     	let dispose;
-    	const icon0 = new Icon({ props: { icon: /*iconSend*/ ctx[5] } });
 
     	function click_handler_6(...args) {
-    		return /*click_handler_6*/ ctx[32](/*i*/ ctx[36], ...args);
+    		return /*click_handler_6*/ ctx[26](/*i*/ ctx[30], ...args);
     	}
 
-    	const icon1 = new Icon({ props: { icon: /*iconCancel*/ ctx[6] } });
-
     	function click_handler_7(...args) {
-    		return /*click_handler_7*/ ctx[33](/*i*/ ctx[36], ...args);
+    		return /*click_handler_7*/ ctx[27](/*i*/ ctx[30], ...args);
     	}
 
     	return {
     		c() {
     			div0 = element("div");
-    			create_component(icon0.$$.fragment);
     			t = space();
     			div1 = element("div");
-    			create_component(icon1.$$.fragment);
     			attr(div0, "class", "options green");
     			attr(div0, "title", "Delete");
-    			attr(div0, "aria-label", div0_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[37]) + /*i*/ ctx[36] + "deleteConfirmation"));
+    			attr(div0, "aria-label", div0_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[3].getKey(/*elem*/ ctx[31]) + /*i*/ ctx[30] + "deleteConfirmation"));
     			attr(div1, "class", "options red");
     			attr(div1, "title", "Cancel");
-    			attr(div1, "aria-label", div1_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[37]) + /*i*/ ctx[36] + "deleteCancel"));
+    			attr(div1, "aria-label", div1_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[3].getKey(/*elem*/ ctx[31]) + /*i*/ ctx[30] + "deleteCancel"));
     		},
     		m(target, anchor, remount) {
     			insert(target, div0, anchor);
-    			mount_component(icon0, div0, null);
+    			div0.innerHTML = iconsend;
     			insert(target, t, anchor);
     			insert(target, div1, anchor);
-    			mount_component(icon1, div1, null);
-    			current = true;
+    			div1.innerHTML = iconcancel;
     			if (remount) run_all(dispose);
 
     			dispose = [
@@ -1454,37 +1073,24 @@
     		p(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (!current || dirty[0] & /*name, table*/ 3 && div0_aria_label_value !== (div0_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[37]) + /*i*/ ctx[36] + "deleteConfirmation"))) {
+    			if (dirty[0] & /*name, table*/ 3 && div0_aria_label_value !== (div0_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[3].getKey(/*elem*/ ctx[31]) + /*i*/ ctx[30] + "deleteConfirmation"))) {
     				attr(div0, "aria-label", div0_aria_label_value);
     			}
 
-    			if (!current || dirty[0] & /*name, table*/ 3 && div1_aria_label_value !== (div1_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[37]) + /*i*/ ctx[36] + "deleteCancel"))) {
+    			if (dirty[0] & /*name, table*/ 3 && div1_aria_label_value !== (div1_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[3].getKey(/*elem*/ ctx[31]) + /*i*/ ctx[30] + "deleteCancel"))) {
     				attr(div1, "aria-label", div1_aria_label_value);
     			}
     		},
-    		i(local) {
-    			if (current) return;
-    			transition_in(icon0.$$.fragment, local);
-    			transition_in(icon1.$$.fragment, local);
-    			current = true;
-    		},
-    		o(local) {
-    			transition_out(icon0.$$.fragment, local);
-    			transition_out(icon1.$$.fragment, local);
-    			current = false;
-    		},
     		d(detaching) {
     			if (detaching) detach(div0);
-    			destroy_component(icon0);
     			if (detaching) detach(t);
     			if (detaching) detach(div1);
-    			destroy_component(icon1);
     			run_all(dispose);
     		}
     	};
     }
 
-    // (161:24) {#each Object.entries(tableRow) as elem, j}
+    // (157:24) {#each Object.entries(tableRow) as elem, j}
     function create_each_block_1(ctx) {
     	let td;
     	let textarea;
@@ -1493,16 +1099,15 @@
     	let textarea_value_value;
     	let t0;
     	let div;
-    	let t1_value = /*genericCrudTable*/ ctx[9].getValue(/*elem*/ ctx[37]) + "";
+    	let t1_value = /*genericCrudTable*/ ctx[3].getValue(/*elem*/ ctx[31]) + "";
     	let t1;
     	let div_id_value;
     	let div_aria_label_value;
     	let td_class_value;
     	let td_width_value;
     	let t2;
-    	let show_if = Object.entries(/*tableRow*/ ctx[34]).length - 1 === /*j*/ ctx[39];
+    	let show_if = Object.entries(/*tableRow*/ ctx[28]).length - 1 === /*j*/ ctx[33];
     	let if_block_anchor;
-    	let current;
     	let if_block = show_if && create_if_block_3(ctx);
 
     	return {
@@ -1515,19 +1120,19 @@
     			t2 = space();
     			if (if_block) if_block.c();
     			if_block_anchor = empty();
-    			attr(textarea, "id", textarea_id_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[37]) + /*i*/ ctx[36]));
-    			attr(textarea, "aria-label", textarea_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[37]) + /*i*/ ctx[36]));
-    			textarea.value = textarea_value_value = /*genericCrudTable*/ ctx[9].getValue(/*elem*/ ctx[37]);
+    			attr(textarea, "id", textarea_id_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[3].getKey(/*elem*/ ctx[31]) + /*i*/ ctx[30]));
+    			attr(textarea, "aria-label", textarea_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[3].getKey(/*elem*/ ctx[31]) + /*i*/ ctx[30]));
+    			textarea.value = textarea_value_value = /*genericCrudTable*/ ctx[3].getValue(/*elem*/ ctx[31]);
     			textarea.disabled = true;
     			attr(div, "class", "hidden");
-    			attr(div, "id", div_id_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[37]) + /*i*/ ctx[36] + "copy"));
-    			attr(div, "aria-label", div_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[37]) + /*i*/ ctx[36] + "copy"));
+    			attr(div, "id", div_id_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[3].getKey(/*elem*/ ctx[31]) + /*i*/ ctx[30] + "copy"));
+    			attr(div, "aria-label", div_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[3].getKey(/*elem*/ ctx[31]) + /*i*/ ctx[30] + "copy"));
 
-    			attr(td, "class", td_class_value = /*genericCrudTable*/ ctx[9].isShowField(/*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[37])) === false
+    			attr(td, "class", td_class_value = /*genericCrudTable*/ ctx[3].isShowField(/*genericCrudTable*/ ctx[3].getKey(/*elem*/ ctx[31])) === false
     			? "hidden"
     			: "shown");
 
-    			attr(td, "width", td_width_value = /*genericCrudTable*/ ctx[9].getShowFieldWidth(/*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[37])));
+    			attr(td, "width", td_width_value = /*genericCrudTable*/ ctx[3].getShowFieldWidth(/*genericCrudTable*/ ctx[3].getKey(/*elem*/ ctx[31])));
     		},
     		m(target, anchor) {
     			insert(target, td, anchor);
@@ -1538,74 +1143,54 @@
     			insert(target, t2, anchor);
     			if (if_block) if_block.m(target, anchor);
     			insert(target, if_block_anchor, anchor);
-    			current = true;
     		},
     		p(ctx, dirty) {
-    			if (!current || dirty[0] & /*name, table*/ 3 && textarea_id_value !== (textarea_id_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[37]) + /*i*/ ctx[36]))) {
+    			if (dirty[0] & /*name, table*/ 3 && textarea_id_value !== (textarea_id_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[3].getKey(/*elem*/ ctx[31]) + /*i*/ ctx[30]))) {
     				attr(textarea, "id", textarea_id_value);
     			}
 
-    			if (!current || dirty[0] & /*name, table*/ 3 && textarea_aria_label_value !== (textarea_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[37]) + /*i*/ ctx[36]))) {
+    			if (dirty[0] & /*name, table*/ 3 && textarea_aria_label_value !== (textarea_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[3].getKey(/*elem*/ ctx[31]) + /*i*/ ctx[30]))) {
     				attr(textarea, "aria-label", textarea_aria_label_value);
     			}
 
-    			if (!current || dirty[0] & /*table*/ 1 && textarea_value_value !== (textarea_value_value = /*genericCrudTable*/ ctx[9].getValue(/*elem*/ ctx[37]))) {
+    			if (dirty[0] & /*table*/ 1 && textarea_value_value !== (textarea_value_value = /*genericCrudTable*/ ctx[3].getValue(/*elem*/ ctx[31]))) {
     				textarea.value = textarea_value_value;
     			}
 
-    			if ((!current || dirty[0] & /*table*/ 1) && t1_value !== (t1_value = /*genericCrudTable*/ ctx[9].getValue(/*elem*/ ctx[37]) + "")) set_data(t1, t1_value);
+    			if (dirty[0] & /*table*/ 1 && t1_value !== (t1_value = /*genericCrudTable*/ ctx[3].getValue(/*elem*/ ctx[31]) + "")) set_data(t1, t1_value);
 
-    			if (!current || dirty[0] & /*name, table*/ 3 && div_id_value !== (div_id_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[37]) + /*i*/ ctx[36] + "copy"))) {
+    			if (dirty[0] & /*name, table*/ 3 && div_id_value !== (div_id_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[3].getKey(/*elem*/ ctx[31]) + /*i*/ ctx[30] + "copy"))) {
     				attr(div, "id", div_id_value);
     			}
 
-    			if (!current || dirty[0] & /*name, table*/ 3 && div_aria_label_value !== (div_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[37]) + /*i*/ ctx[36] + "copy"))) {
+    			if (dirty[0] & /*name, table*/ 3 && div_aria_label_value !== (div_aria_label_value = "" + (/*name*/ ctx[1] + /*genericCrudTable*/ ctx[3].getKey(/*elem*/ ctx[31]) + /*i*/ ctx[30] + "copy"))) {
     				attr(div, "aria-label", div_aria_label_value);
     			}
 
-    			if (!current || dirty[0] & /*table*/ 1 && td_class_value !== (td_class_value = /*genericCrudTable*/ ctx[9].isShowField(/*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[37])) === false
+    			if (dirty[0] & /*table*/ 1 && td_class_value !== (td_class_value = /*genericCrudTable*/ ctx[3].isShowField(/*genericCrudTable*/ ctx[3].getKey(/*elem*/ ctx[31])) === false
     			? "hidden"
     			: "shown")) {
     				attr(td, "class", td_class_value);
     			}
 
-    			if (!current || dirty[0] & /*table*/ 1 && td_width_value !== (td_width_value = /*genericCrudTable*/ ctx[9].getShowFieldWidth(/*genericCrudTable*/ ctx[9].getKey(/*elem*/ ctx[37])))) {
+    			if (dirty[0] & /*table*/ 1 && td_width_value !== (td_width_value = /*genericCrudTable*/ ctx[3].getShowFieldWidth(/*genericCrudTable*/ ctx[3].getKey(/*elem*/ ctx[31])))) {
     				attr(td, "width", td_width_value);
     			}
 
-    			if (dirty[0] & /*table*/ 1) show_if = Object.entries(/*tableRow*/ ctx[34]).length - 1 === /*j*/ ctx[39];
+    			if (dirty[0] & /*table*/ 1) show_if = Object.entries(/*tableRow*/ ctx[28]).length - 1 === /*j*/ ctx[33];
 
     			if (show_if) {
     				if (if_block) {
     					if_block.p(ctx, dirty);
-
-    					if (dirty[0] & /*table*/ 1) {
-    						transition_in(if_block, 1);
-    					}
     				} else {
     					if_block = create_if_block_3(ctx);
     					if_block.c();
-    					transition_in(if_block, 1);
     					if_block.m(if_block_anchor.parentNode, if_block_anchor);
     				}
     			} else if (if_block) {
-    				group_outros();
-
-    				transition_out(if_block, 1, 1, () => {
-    					if_block = null;
-    				});
-
-    				check_outros();
+    				if_block.d(1);
+    				if_block = null;
     			}
-    		},
-    		i(local) {
-    			if (current) return;
-    			transition_in(if_block);
-    			current = true;
-    		},
-    		o(local) {
-    			transition_out(if_block);
-    			current = false;
     		},
     		d(detaching) {
     			if (detaching) detach(td);
@@ -1616,23 +1201,18 @@
     	};
     }
 
-    // (143:16) {#each table as tableRow, i}
+    // (140:16) {#each table as tableRow, i}
     function create_each_block(ctx) {
     	let t0;
     	let tr;
     	let t1;
-    	let current;
-    	let if_block = /*i*/ ctx[36] === 0 && create_if_block_9(ctx);
-    	let each_value_1 = Object.entries(/*tableRow*/ ctx[34]);
+    	let if_block = /*i*/ ctx[30] === 0 && create_if_block_9(ctx);
+    	let each_value_1 = Object.entries(/*tableRow*/ ctx[28]);
     	let each_blocks = [];
 
     	for (let i = 0; i < each_value_1.length; i += 1) {
     		each_blocks[i] = create_each_block_1(get_each_context_1(ctx, each_value_1, i));
     	}
-
-    	const out = i => transition_out(each_blocks[i], 1, 1, () => {
-    		each_blocks[i] = null;
-    	});
 
     	return {
     		c() {
@@ -1657,13 +1237,12 @@
     			}
 
     			append(tr, t1);
-    			current = true;
     		},
     		p(ctx, dirty) {
-    			if (/*i*/ ctx[36] === 0) if_block.p(ctx, dirty);
+    			if (/*i*/ ctx[30] === 0) if_block.p(ctx, dirty);
 
-    			if (dirty[0] & /*name, genericCrudTable, table, handleCancelDelete, iconCancel, handleDeleteConfirmation, iconSend, options, handleCancelEdit, handleEditConfirmation, handleDetails, iconDetail, handleEdit, iconEdit, handleDelete, iconTrash*/ 196351) {
-    				each_value_1 = Object.entries(/*tableRow*/ ctx[34]);
+    			if (dirty[0] & /*name, genericCrudTable, table, handleCancelDelete, handleDeleteConfirmation, options, handleCancelEdit, handleEditConfirmation, handleDetails, handleEdit, handleDelete*/ 3071) {
+    				each_value_1 = Object.entries(/*tableRow*/ ctx[28]);
     				let i;
 
     				for (i = 0; i < each_value_1.length; i += 1) {
@@ -1671,41 +1250,19 @@
 
     					if (each_blocks[i]) {
     						each_blocks[i].p(child_ctx, dirty);
-    						transition_in(each_blocks[i], 1);
     					} else {
     						each_blocks[i] = create_each_block_1(child_ctx);
     						each_blocks[i].c();
-    						transition_in(each_blocks[i], 1);
     						each_blocks[i].m(tr, t1);
     					}
     				}
 
-    				group_outros();
-
-    				for (i = each_value_1.length; i < each_blocks.length; i += 1) {
-    					out(i);
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
     				}
 
-    				check_outros();
+    				each_blocks.length = each_value_1.length;
     			}
-    		},
-    		i(local) {
-    			if (current) return;
-
-    			for (let i = 0; i < each_value_1.length; i += 1) {
-    				transition_in(each_blocks[i]);
-    			}
-
-    			current = true;
-    		},
-    		o(local) {
-    			each_blocks = each_blocks.filter(Boolean);
-
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				transition_out(each_blocks[i]);
-    			}
-
-    			current = false;
     		},
     		d(detaching) {
     			if (if_block) if_block.d(detaching);
@@ -1716,20 +1273,17 @@
     	};
     }
 
-    // (232:12) {#if options.includes(CREATE)}
+    // (228:12) {#if options.includes(CREATE)}
     function create_if_block_2(ctx) {
     	let div;
     	let t;
     	let br0;
     	let br1;
-    	let current;
     	let dispose;
-    	const icon = new Icon({ props: { icon: /*iconCreate*/ ctx[8] } });
 
     	return {
     		c() {
     			div = element("div");
-    			create_component(icon.$$.fragment);
     			t = space();
     			br0 = element("br");
     			br1 = element("br");
@@ -1739,27 +1293,16 @@
     		},
     		m(target, anchor, remount) {
     			insert(target, div, anchor);
-    			mount_component(icon, div, null);
+    			div.innerHTML = iconcreate;
     			insert(target, t, anchor);
     			insert(target, br0, anchor);
     			insert(target, br1, anchor);
-    			current = true;
     			if (remount) dispose();
-    			dispose = listen(div, "click", /*handleCreate*/ ctx[16]);
+    			dispose = listen(div, "click", /*handleCreate*/ ctx[10]);
     		},
     		p: noop,
-    		i(local) {
-    			if (current) return;
-    			transition_in(icon.$$.fragment, local);
-    			current = true;
-    		},
-    		o(local) {
-    			transition_out(icon.$$.fragment, local);
-    			current = false;
-    		},
     		d(detaching) {
     			if (detaching) detach(div);
-    			destroy_component(icon);
     			if (detaching) detach(t);
     			if (detaching) detach(br0);
     			if (detaching) detach(br1);
@@ -1768,12 +1311,11 @@
     	};
     }
 
-    function create_fragment$1(ctx) {
+    function create_fragment(ctx) {
     	let main;
     	let h3;
     	let t0;
     	let t1;
-    	let current;
     	let if_block = /*table*/ ctx[0] !== undefined && create_if_block(ctx);
 
     	return {
@@ -1791,43 +1333,25 @@
     			append(h3, t0);
     			append(main, t1);
     			if (if_block) if_block.m(main, null);
-    			current = true;
     		},
     		p(ctx, dirty) {
-    			if (!current || dirty[0] & /*name*/ 2) set_data(t0, /*name*/ ctx[1]);
+    			if (dirty[0] & /*name*/ 2) set_data(t0, /*name*/ ctx[1]);
 
     			if (/*table*/ ctx[0] !== undefined) {
     				if (if_block) {
     					if_block.p(ctx, dirty);
-
-    					if (dirty[0] & /*table*/ 1) {
-    						transition_in(if_block, 1);
-    					}
     				} else {
     					if_block = create_if_block(ctx);
     					if_block.c();
-    					transition_in(if_block, 1);
     					if_block.m(main, null);
     				}
     			} else if (if_block) {
-    				group_outros();
-
-    				transition_out(if_block, 1, 1, () => {
-    					if_block = null;
-    				});
-
-    				check_outros();
+    				if_block.d(1);
+    				if_block = null;
     			}
     		},
-    		i(local) {
-    			if (current) return;
-    			transition_in(if_block);
-    			current = true;
-    		},
-    		o(local) {
-    			transition_out(if_block);
-    			current = false;
-    		},
+    		i: noop,
+    		o: noop,
     		d(detaching) {
     			if (detaching) detach(main);
     			if (if_block) if_block.d();
@@ -1840,15 +1364,9 @@
     const CREATE = "CREATE";
     const DETAILS = "DETAILS";
 
-    function instance$1($$self, $$props, $$invalidate) {
+    function instance($$self, $$props, $$invalidate) {
     	const dispatch = createEventDispatcher();
     	const sortStore = [];
-    	const iconTrash = faTrash;
-    	const iconEdit = faEdit;
-    	const iconSend = faPaperPlane;
-    	const iconCancel = faTimes;
-    	const iconDetail = faInfo;
-    	const iconCreate = faPlus;
     	let { name = "" } = $$props;
     	let { show_fields = [] } = $$props;
     	let { editable_fields = [] } = $$props;
@@ -1954,10 +1472,7 @@
     		$$invalidate(0, table = JSON.stringify(table.sort(tableSort)));
     	}
 
-    	const click_handler = elem => {
-    		handleSort(elem);
-    	};
-
+    	const click_handler = elem => handleSort(elem);
     	const click_handler_1 = i => handleDelete(i);
     	const click_handler_2 = i => handleEdit(i);
     	const click_handler_3 = i => handleDetails(i);
@@ -1968,8 +1483,8 @@
 
     	$$self.$set = $$props => {
     		if ("name" in $$props) $$invalidate(1, name = $$props.name);
-    		if ("show_fields" in $$props) $$invalidate(19, show_fields = $$props.show_fields);
-    		if ("editable_fields" in $$props) $$invalidate(20, editable_fields = $$props.editable_fields);
+    		if ("show_fields" in $$props) $$invalidate(13, show_fields = $$props.show_fields);
+    		if ("editable_fields" in $$props) $$invalidate(14, editable_fields = $$props.editable_fields);
     		if ("table" in $$props) $$invalidate(0, table = $$props.table);
     		if ("options" in $$props) $$invalidate(2, options = $$props.options);
     	};
@@ -1984,12 +1499,6 @@
     		table,
     		name,
     		options,
-    		iconTrash,
-    		iconEdit,
-    		iconSend,
-    		iconCancel,
-    		iconDetail,
-    		iconCreate,
     		genericCrudTable,
     		handleEdit,
     		handleCancelEdit,
@@ -2026,13 +1535,13 @@
     		init(
     			this,
     			{ target: this.shadowRoot },
-    			instance$1,
-    			create_fragment$1,
+    			instance,
+    			create_fragment,
     			safe_not_equal,
     			{
     				name: 1,
-    				show_fields: 19,
-    				editable_fields: 20,
+    				show_fields: 13,
+    				editable_fields: 14,
     				table: 0,
     				options: 2
     			},
@@ -2065,7 +1574,7 @@
     	}
 
     	get show_fields() {
-    		return this.$$.ctx[19];
+    		return this.$$.ctx[13];
     	}
 
     	set show_fields(show_fields) {
@@ -2074,7 +1583,7 @@
     	}
 
     	get editable_fields() {
-    		return this.$$.ctx[20];
+    		return this.$$.ctx[14];
     	}
 
     	set editable_fields(editable_fields) {
@@ -2101,8 +1610,21 @@
     	}
     }
 
-    customElements.define("svelte-generic-crud-table", SvelteGenericCrudTable);
+    customElements.define("crud-table", SvelteGenericCrudTable);
 
-    return SvelteGenericCrudTable;
+    const generictable = new SvelteGenericCrudTable({
+        target: document.body,
+        props: {
+            name : '',
+            show_fields: [],
+            editable_fields: [],
+            table: [],
+            options: [],
+        }
+    });
 
-})));
+    exports.SvelteGenericCrudTable = generictable;
+
+    return exports;
+
+}({}));
