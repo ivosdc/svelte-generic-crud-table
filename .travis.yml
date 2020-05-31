@@ -14,4 +14,4 @@ jobs:
         keep_history: true
         edge: true
         on:
-          tags: false
+          tags: true
