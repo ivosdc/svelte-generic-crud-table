@@ -60,7 +60,7 @@
         cursor = NO_ROW_IN_EDIT_MODE;
     }
 
-    function handleEditConfirmation(id) {
+    function handleEditConfirmation(id, event) {
         resetRawInEditMode(id);
         Object.entries(table[id]).forEach((elem) => {
             if (shadowed) {
@@ -72,12 +72,12 @@
             }
         });
         const body = genericCrudTable.gatherUpdates(id, table);
-        dispatch('update', {
+        const details = {
             id: id,
             body: body
-        });
+        };
         genericCrudTable.resetEditMode(id);
-        table = JSON.stringify(table);
+        dispatcher('update', details, event);
     }
 
     function handleDelete(id) {
@@ -92,16 +92,15 @@
         genericCrudTable.resetDeleteMode(id);
     }
 
-    function handleDeleteConfirmation(id) {
+    function handleDeleteConfirmation(id, event) {
         const body = genericCrudTable.gatherUpdates(id, table);
-        dispatch('delete', {
+        const details = {
             id: id,
             body: body
-        });
+        };
         genericCrudTable.resetDeleteMode(id);
-        table.splice(id, 1);
         cursor = NO_ROW_IN_EDIT_MODE;
-        table = JSON.stringify(table);
+        dispatcher('delete', details, event);
     }
 
     function handleCreate(event) {
@@ -159,7 +158,7 @@
             return 0;
         };
 
-        table = JSON.stringify(table.sort(tableSort));
+        table = table.sort(tableSort);
     }
 
 </script>
@@ -211,7 +210,7 @@
                                         {/if}
                                         {#if options.includes(EDIT)}
                                             <div class="options green"
-                                                 on:click={() => handleEdit(i)} title="Edit">
+                                                 on:click={(e) => handleEdit(i, e)} title="Edit">
                                                 {@html iconedit}
                                             </div>
                                         {/if}
@@ -224,7 +223,7 @@
                                     </div>
                                     <div id="{name}options-edit{i}" class="options hidden">
                                         {#if options.includes(EDIT)}
-                                            <div class="options green" on:click="{() => {handleEditConfirmation(i)}}"
+                                            <div class="options green" on:click="{(e) => {handleEditConfirmation(i, e)}}"
                                                  title="Update">
                                                 {@html iconsend}
                                             </div>
@@ -239,12 +238,12 @@
                                          aria-label="{name}options-delete{i}"
                                          class="options hidden">
                                         {#if options.includes(DELETE)}
-                                            <div class="options green" on:click={() => handleDeleteConfirmation(i)}
+                                            <div class="options green" on:click={(e) => handleDeleteConfirmation(i, e)}
                                                  title="Delete"
                                                  aria-label="{name}{genericCrudTable.getKey(elem)}{i}deleteConfirmation">
                                                 {@html iconsend}
                                             </div>
-                                            <div class="options red" on:click={() => handleCancelDelete(i)}
+                                            <div class="options red" on:click={(e) => handleCancelDelete(i)}
                                                  title="Cancel"
                                                  aria-label="{name}{genericCrudTable.getKey(elem)}{i}deleteCancel">
                                                 {@html iconcancel}

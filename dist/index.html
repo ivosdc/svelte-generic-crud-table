@@ -27,6 +27,7 @@
     genericCrudTable.setAttribute('editable_fields', JSON.stringify(editable_fields));
     genericCrudTable.setAttribute('options', JSON.stringify(options));
     genericCrudTable.setAttribute('table', JSON.stringify(table));
+
     genericCrudTable.addEventListener('create', () => {
         console.log('create');
         table.push({name: 'myName', job: 'code', private: 'not editable'});
@@ -36,5 +37,19 @@
         console.log('details');
         console.log(e.detail.body);
     });
+    genericCrudTable.addEventListener('update', (e) => {
+        console.log('update');
+        console.log(e.detail.body);
+        table[e.detail.id] = e.detail.body;
+        genericCrudTable.setAttribute('table', JSON.stringify(table));
+    });
+    genericCrudTable.addEventListener('delete', (e) => {
+        console.log('delete');
+        console.log(e.detail.body);
+        console.log(e.detail.id)
+        table = arrayRemove(table, e.detail.id);
+        genericCrudTable.setAttribute('table', JSON.stringify(table));
+    });
+    function arrayRemove(arr, value) { return arr.filter(function(ele, i){ return i != value; });}
 </script>
 </html>

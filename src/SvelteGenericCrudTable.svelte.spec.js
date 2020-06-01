@@ -115,7 +115,7 @@ describe('Test SvelteGenericCrudTable', () => {
         const deleteConfirmationButton = dom.getByLabelText(tableName + `A_FIELD` + 0 + 'deleteConfirmation');
         await fireEvent.click(deleteConfirmationButton);
 
-        expect(config.table).toStrictEqual([]);
+        expect(config.table.length).toBe(1);
     })
 
     it('testSvelteGenericCrudTable_delete_otherDelete_resetOptions', async () => {

@@ -44,7 +44,7 @@ All parameters are optional.
 - `table`: The object-array. Your data to show.
 
 
-###  Set options:
+###  Set options - Svelte-Component:
 ```
 <script>
     import SvelteGenericCrudTable from "svelte-generic-crud-table";
@@ -102,6 +102,8 @@ All parameters are optional.
                             table={myObjectArray}/>
 </main>
 ```
+
+
 ### As Web-Component `<crud-table></crud-table>`
 ```
 <!DOCTYPE html>
@@ -111,9 +113,8 @@ All parameters are optional.
     <meta name='viewport' content='width=device-width,initial-scale=1'>
     <title>Generic Crud Table</title>
     <link rel='icon' type='image/png' href='favicon.png'>
-    <link rel='stylesheet' href='global.css'>
-    <link rel='stylesheet' href='index.css'>
-    <script defer src='index.js'></script>
+    <link rel='stylesheet' href='build/bundle.css'>
+    <script defer src='build/bundle.js'></script>
 </head>
 
 <body>
@@ -134,6 +135,7 @@ All parameters are optional.
     genericCrudTable.setAttribute('editable_fields', JSON.stringify(editable_fields));
     genericCrudTable.setAttribute('options', JSON.stringify(options));
     genericCrudTable.setAttribute('table', JSON.stringify(table));
+
     genericCrudTable.addEventListener('create', () => {
         console.log('create');
         table.push({name: 'myName', job: 'code', private: 'not editable'});
@@ -143,6 +145,20 @@ All parameters are optional.
         console.log('details');
         console.log(e.detail.body);
     });
+    genericCrudTable.addEventListener('update', (e) => {
+        console.log('update');
+        console.log(e.detail.body);
+        table[e.detail.id] = e.detail.body;
+        genericCrudTable.setAttribute('table', JSON.stringify(table));
+    });
+    genericCrudTable.addEventListener('delete', (e) => {
+        console.log('delete');
+        console.log(e.detail.body);
+        console.log(e.detail.id)
+        table = arrayRemove(table, e.detail.id);
+        genericCrudTable.setAttribute('table', JSON.stringify(table));
+    });
+    function arrayRemove(arr, value) { return arr.filter(function(ele, i){ return i != value; });}
 </script>
 </html>
 ```
