@@ -18,8 +18,8 @@
         {name: 'myName', job: 'code', private: 'not editable'},
         {name: 'myName2', job: 'code2', private: 'not editable'}];
     let options = ['CREATE', 'EDIT', 'DELETE', 'DETAILS'];
-    let name = 'Awesome table name';
-    let show_fields = [];
+    let name = 'Awesome';
+    let show_fields = [{name: '200px'},{job: '200px'}];
     let editable_fields = ['name', 'job'];
     let genericCrudTable = document.querySelector('crud-table');
     genericCrudTable.setAttribute('name', name);
