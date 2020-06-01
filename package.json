@@ -32,17 +32,16 @@
     "@babel/preset-env": "^7.10.0",
     "@testing-library/svelte": "^3.0.0",
     "babel-jest": "^26.0.1",
-    "fa-svelte": "^3.1.0",
     "jest": "^26.0.1",
     "jest-mock": "^26.0.1",
     "jest-svelte-resolver": "^1.0.0",
     "rollup": "^2.10.8",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-svelte": "^5.2.2",
-    "rollup-plugin-svelte-svg": "^0.2.2",
-    "rollup-plugin-svg": "^2.0.0",
     "svelte": "^3.22.3",
     "svelte-jester": "^1.0.6"
   },
-  "dependencies": {}
+  "dependencies": {
+    "rollup-plugin-svg": "^2.0.0"
+  }
 }
