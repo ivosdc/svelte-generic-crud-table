@@ -460,7 +460,7 @@ var SvelteGenericCrudTable = (function () {
     	return child_ctx;
     }
 
-    // (169:4) {#if (table !== undefined)}
+    // (168:4) {#if (table !== undefined)}
     function create_if_block(ctx) {
     	let show_if;
     	let if_block_anchor;
@@ -503,7 +503,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (267:8) {:else}
+    // (266:8) {:else}
     function create_else_block(ctx) {
     	let br;
     	let t0;
@@ -531,7 +531,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (170:8) {#if Array.isArray(table)}
+    // (169:8) {#if Array.isArray(table)}
     function create_if_block_1(ctx) {
     	let table_1;
     	let t;
@@ -618,7 +618,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (173:20) {#if i === 0}
+    // (172:20) {#if i === 0}
     function create_if_block_9(ctx) {
     	let tr;
     	let t;
@@ -685,7 +685,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (175:28) {#each Object.keys(tableRow) as elem}
+    // (174:28) {#each Object.keys(tableRow) as elem}
     function create_each_block_2(ctx) {
     	let td;
     	let textarea;
@@ -742,7 +742,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (200:28) {#if Object.entries(tableRow).length - 1 === j}
+    // (199:28) {#if Object.entries(tableRow).length - 1 === j}
     function create_if_block_3(ctx) {
     	let td;
     	let div0;
@@ -914,7 +914,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (205:40) {#if options.includes(DELETE)}
+    // (204:40) {#if options.includes(DELETE)}
     function create_if_block_8(ctx) {
     	let div;
     	let div_aria_label_value;
@@ -951,7 +951,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (212:40) {#if options.includes(EDIT)}
+    // (211:40) {#if options.includes(EDIT)}
     function create_if_block_7(ctx) {
     	let div;
     	let dispose;
@@ -982,7 +982,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (218:40) {#if options.includes(DETAILS)}
+    // (217:40) {#if options.includes(DETAILS)}
     function create_if_block_6(ctx) {
     	let div;
     	let dispose;
@@ -1013,7 +1013,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (226:40) {#if options.includes(EDIT)}
+    // (225:40) {#if options.includes(EDIT)}
     function create_if_block_5(ctx) {
     	let div0;
     	let t;
@@ -1069,7 +1069,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (241:40) {#if options.includes(DELETE)}
+    // (240:40) {#if options.includes(DELETE)}
     function create_if_block_4(ctx) {
     	let div0;
     	let div0_aria_label_value;
@@ -1131,7 +1131,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (189:24) {#each Object.entries(tableRow) as elem, j}
+    // (188:24) {#each Object.entries(tableRow) as elem, j}
     function create_each_block_1(ctx) {
     	let td;
     	let textarea;
@@ -1242,7 +1242,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (172:16) {#each table as tableRow, i}
+    // (171:16) {#each table as tableRow, i}
     function create_each_block(ctx) {
     	let t0;
     	let tr;
@@ -1314,7 +1314,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (261:12) {#if options.includes(CREATE)}
+    // (260:12) {#if options.includes(CREATE)}
     function create_if_block_2(ctx) {
     	let div;
     	let t;
@@ -1448,7 +1448,7 @@ var SvelteGenericCrudTable = (function () {
     		cursor = NO_ROW_IN_EDIT_MODE;
     	}
 
-    	function handleEditConfirmation(id) {
+    	function handleEditConfirmation(id, event) {
     		resetRawInEditMode(id);
 
     		Object.entries(table[id]).forEach(elem => {
@@ -1460,9 +1460,9 @@ var SvelteGenericCrudTable = (function () {
     		});
 
     		const body = genericCrudTable.gatherUpdates(id, table);
-    		dispatch("update", { id, body });
+    		const details = { id, body };
     		genericCrudTable.resetEditMode(id);
-    		$$invalidate(0, table = JSON.stringify(table));
+    		dispatcher("update", details, event);
     	}
 
     	function handleDelete(id) {
@@ -1477,13 +1477,12 @@ var SvelteGenericCrudTable = (function () {
     		genericCrudTable.resetDeleteMode(id);
     	}
 
-    	function handleDeleteConfirmation(id) {
+    	function handleDeleteConfirmation(id, event) {
     		const body = genericCrudTable.gatherUpdates(id, table);
-    		dispatch("delete", { id, body });
+    		const details = { id, body };
     		genericCrudTable.resetDeleteMode(id);
-    		table.splice(id, 1);
     		cursor = NO_ROW_IN_EDIT_MODE;
-    		$$invalidate(0, table = JSON.stringify(table));
+    		dispatcher("delete", details, event);
     	}
 
     	function handleCreate(event) {
@@ -1534,27 +1533,27 @@ var SvelteGenericCrudTable = (function () {
     			return 0;
     		};
 
-    		$$invalidate(0, table = JSON.stringify(table.sort(tableSort)));
+    		$$invalidate(0, table = table.sort(tableSort));
     	}
 
     	const click_handler = elem => handleSort(elem);
     	const click_handler_1 = i => handleDelete(i);
-    	const click_handler_2 = i => handleEdit(i);
+    	const click_handler_2 = (i, e) => handleEdit(i);
 
     	const click_handler_3 = (i, e) => {
     		handleDetails(i, e);
     	};
 
-    	const click_handler_4 = i => {
-    		handleEditConfirmation(i);
+    	const click_handler_4 = (i, e) => {
+    		handleEditConfirmation(i, e);
     	};
 
     	const click_handler_5 = i => {
     		handleCancelEdit(i);
     	};
 
-    	const click_handler_6 = i => handleDeleteConfirmation(i);
-    	const click_handler_7 = i => handleCancelDelete(i);
+    	const click_handler_6 = (i, e) => handleDeleteConfirmation(i, e);
+    	const click_handler_7 = (i, e) => handleCancelDelete(i);
 
     	$$self.$set = $$props => {
     		if ("name" in $$props) $$invalidate(1, name = $$props.name);
