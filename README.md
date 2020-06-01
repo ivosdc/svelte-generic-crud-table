@@ -1,4 +1,11 @@
 # svelte-generic-crud-table
+Use as:
+- Web-component: `<crud-table></crud-table>`
+- or Svelte-component: `import SvelteGenericCrudTable from 'svelte-generic-crud-table`
+
+See examples below...
+
+
 [![Build Status](https://travis-ci.com/ivosdc/svelte-generic-crud-table.svg?branch=master)](https://travis-ci.com/ivosdc/svelte-generic-crud-table)
 
 
@@ -95,7 +102,7 @@ All parameters are optional.
                             table={myObjectArray}/>
 </main>
 ```
-### As Web-Component
+### As Web-Component `<crud-table></crud-table>`
 ```
 <!DOCTYPE html>
 <html lang="en">
@@ -110,22 +117,32 @@ All parameters are optional.
 </head>
 
 <body>
-<svelte-generic-crud-table></svelte-generic-crud-table>
+<crud-table></crud-table>
 </body>
+
 <script>
     let table = [
         {name: 'myName', job: 'code', private: 'not editable'},
         {name: 'myName2', job: 'code2', private: 'not editable'}];
     let options = ['CREATE', 'EDIT', 'DELETE', 'DETAILS'];
-    let name = 'Awesome table name';
-    let show_fields = [];
+    let name = 'Awesome';
+    let show_fields = [{name: '200px'},{job: '200px'}];
     let editable_fields = ['name', 'job'];
-    let genericCrudTable = document.querySelector('svelte-generic-crud-table');
+    let genericCrudTable = document.querySelector('crud-table');
     genericCrudTable.setAttribute('name', name);
     genericCrudTable.setAttribute('show_fields', JSON.stringify(show_fields));
     genericCrudTable.setAttribute('editable_fields', JSON.stringify(editable_fields));
     genericCrudTable.setAttribute('options', JSON.stringify(options));
     genericCrudTable.setAttribute('table', JSON.stringify(table));
+    genericCrudTable.addEventListener('create', () => {
+        console.log('create');
+        table.push({name: 'myName', job: 'code', private: 'not editable'});
+        genericCrudTable.setAttribute('table', JSON.stringify(table));
+    });
+    genericCrudTable.addEventListener('details', (e) => {
+        console.log('details');
+        console.log(e.detail.body);
+    });
 </script>
 </html>
 ```
