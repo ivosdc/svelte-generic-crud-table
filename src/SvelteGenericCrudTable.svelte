@@ -9,6 +9,11 @@
     import icondetail from './icons/info.svg';
     import iconcreate from './icons/plus.svg';
 
+    let shadowed = false;
+    if (document.querySelector('crud-table')) {
+        shadowed = true;
+    }
+
     const dispatch = createEventDispatcher();
     const sortStore = [];
 
@@ -23,11 +28,13 @@
     export let table = [];
     export let options = [];
     $: table = (Array.isArray(table)) ? table : JSON.parse(table);
-
+    $: editable_fields = (Array.isArray(editable_fields)) ? editable_fields : JSON.parse(editable_fields);
+    $: show_fields = (Array.isArray(show_fields)) ? show_fields : JSON.parse(show_fields);
 
     const NO_ROW_IN_EDIT_MODE = -1;
     let cursor = NO_ROW_IN_EDIT_MODE;
-    const genericCrudTable = new SvelteGenericCrudTableService(name, editable_fields, show_fields);
+    let genericCrudTable = new SvelteGenericCrudTableService(name, editable_fields, show_fields, shadowed);
+    $: genericCrudTable = new SvelteGenericCrudTableService(name, editable_fields, show_fields, shadowed);
 
     function handleEdit(id) {
         resetRawInEditMode(id);
@@ -40,8 +47,13 @@
 
     function handleCancelEdit(id) {
         Object.entries(table[id]).forEach((elem) => {
-            document.getElementById(name + genericCrudTable.getKey(elem) + id).value =
-                    document.getElementById(name + genericCrudTable.getKey(elem) + id + 'copy').innerText;
+            if (shadowed) {
+                document.querySelector('crud-table').shadowRoot.getElementById(name + genericCrudTable.getKey(elem) + id).value =
+                        document.querySelector('crud-table').shadowRoot.getElementById(name + genericCrudTable.getKey(elem) + id + 'copy').innerText;
+            } else {
+                document.getElementById(name + genericCrudTable.getKey(elem) + id).value =
+                        document.getElementById(name + genericCrudTable.getKey(elem) + id + 'copy').innerText;
+            }
         });
         genericCrudTable.resetEditMode(id);
         genericCrudTable.resetDeleteMode(id);
@@ -51,8 +63,13 @@
     function handleEditConfirmation(id) {
         resetRawInEditMode(id);
         Object.entries(table[id]).forEach((elem) => {
-            document.getElementById(name + genericCrudTable.getKey(elem) + id + 'copy').innerText =
-                    document.getElementById(name + genericCrudTable.getKey(elem) + id).value;
+            if (shadowed) {
+                document.querySelector('crud-table').shadowRoot.getElementById(name + genericCrudTable.getKey(elem) + id + 'copy').innerText =
+                        document.querySelector('crud-table').shadowRoot.getElementById(name + genericCrudTable.getKey(elem) + id).value;
+            }else {
+                document.getElementById(name + genericCrudTable.getKey(elem) + id + 'copy').innerText =
+                        document.getElementById(name + genericCrudTable.getKey(elem) + id).value;
+            }
         });
         const body = genericCrudTable.gatherUpdates(id, table);
         dispatch('update', {
@@ -173,32 +190,33 @@
                                         {#if options.includes(DELETE)}
                                             <div class="options red" on:click={() => handleDelete(i)}
                                                  title="Delete"
-                                                 aria-label="{name}{genericCrudTable.getKey(elem)}{i}delete">
+                                                 aria-label={name + genericCrudTable.getKey(elem) + i + 'delete'} >
                                                 {@html icontrash}
                                             </div>
                                         {/if}
                                         {#if options.includes(EDIT)}
                                             <div class="options green"
                                                  on:click={() => handleEdit(i)} title="Edit">
-                                            {@html iconedit}
+                                                {@html iconedit}
                                             </div>
                                         {/if}
                                         {#if options.includes(DETAILS)}
-                                            <div class="options blue" on:click={() => handleDetails(i)} title="Details">
-                                            {@html icondetail}
+                                            <div class="options blue" on:click="{() => {handleDetails(i)}}"
+                                                 title="Details">
+                                                {@html icondetail}
                                             </div>
                                         {/if}
                                     </div>
                                     <div id="{name}options-edit{i}" class="options hidden">
                                         {#if options.includes(EDIT)}
-                                            <div class="options green" on:click={() => handleEditConfirmation(i)}
+                                            <div class="options green" on:click="{() => {handleEditConfirmation(i)}}"
                                                  title="Update">
-                                            {@html iconsend}
+                                                {@html iconsend}
                                             </div>
-                                            <div class="options red" on:click={() => handleCancelEdit(i)}
+                                            <div class="options red" on:click="{() => {handleCancelEdit(i)}}"
                                                  title="Cancel"
                                                  aria-label="{name}{genericCrudTable.getKey(elem)}{i}editCancel">
-                                            {@html iconcancel}
+                                                {@html iconcancel}
                                             </div>
                                         {/if}
                                     </div>
@@ -209,12 +227,12 @@
                                             <div class="options green" on:click={() => handleDeleteConfirmation(i)}
                                                  title="Delete"
                                                  aria-label="{name}{genericCrudTable.getKey(elem)}{i}deleteConfirmation">
-                                            {@html iconsend}
+                                                {@html iconsend}
                                             </div>
                                             <div class="options red" on:click={() => handleCancelDelete(i)}
                                                  title="Cancel"
                                                  aria-label="{name}{genericCrudTable.getKey(elem)}{i}deleteCancel">
-                                            {@html iconcancel}
+                                                {@html iconcancel}
                                             </div>
                                         {/if}
                                     </div>
@@ -227,7 +245,7 @@
             </table>
             {#if options.includes(CREATE)}
                 <div class="options" id="options-create" on:click={handleCreate} title="Create">
-                {@html iconcreate}
+                    {@html iconcreate}
                 </div>
                 <br><br>
             {/if}
@@ -240,15 +258,18 @@
 
 <style>
     .red:hover {
-        color: red;
+        fill: red;
+        fill-opacity: 80%;
     }
 
     .green:hover {
-        color: limegreen;
+        fill: limegreen;
+        fill-opacity: 80%;
     }
 
     .blue:hover {
-        color: dodgerblue;
+        fill: dodgerblue;
+        fill-opacity: 80%;
     }
 
 
@@ -288,12 +309,6 @@
         color: #aaaaaa;
         font-weight: 100;
         width: 100px;
-    }
-
-    .options:first-child svg {
-        color: inherit;
-        max-width: 0.5em;
-        max-height: 0.5em;
     }
 
     .options {
