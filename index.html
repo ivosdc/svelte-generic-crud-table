@@ -27,5 +27,14 @@
     genericCrudTable.setAttribute('editable_fields', JSON.stringify(editable_fields));
     genericCrudTable.setAttribute('options', JSON.stringify(options));
     genericCrudTable.setAttribute('table', JSON.stringify(table));
+    genericCrudTable.addEventListener('create', () => {
+        console.log('create');
+        table.push({name: 'myName', job: 'code', private: 'not editable'});
+        genericCrudTable.setAttribute('table', JSON.stringify(table));
+    });
+    genericCrudTable.addEventListener('details', (e) => {
+        console.log('details');
+        console.log(e.detail.body);
+    });
 </script>
 </html>
