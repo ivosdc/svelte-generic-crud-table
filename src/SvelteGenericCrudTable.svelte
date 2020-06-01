@@ -66,7 +66,7 @@
             if (shadowed) {
                 document.querySelector('crud-table').shadowRoot.getElementById(name + genericCrudTable.getKey(elem) + id + 'copy').innerText =
                         document.querySelector('crud-table').shadowRoot.getElementById(name + genericCrudTable.getKey(elem) + id).value;
-            }else {
+            } else {
                 document.getElementById(name + genericCrudTable.getKey(elem) + id + 'copy').innerText =
                         document.getElementById(name + genericCrudTable.getKey(elem) + id).value;
             }
@@ -104,17 +104,32 @@
         table = JSON.stringify(table);
     }
 
-    function handleCreate() {
-        dispatch('create', {});
+    function handleCreate(event) {
+        let details = event.detail;
+        dispatcher('create', details, event);
     }
 
-    function handleDetails(id) {
+    function dispatcher(name, details, event) {
+        if (shadowed) {
+            event.target.dispatchEvent(
+                    new CustomEvent(name, {
+                        composed: true,
+                        detail: details
+                    }))
+        } else {
+            dispatch(name, details);
+        }
+    }
+
+
+    function handleDetails(id, event) {
         resetRawInEditMode(id);
         const body = genericCrudTable.gatherUpdates(id, table);
-        dispatch('details', {
+        const details = {
             id: id,
             body: body
-        });
+        };
+        dispatcher('details', details, event);
     }
 
 
@@ -201,7 +216,7 @@
                                             </div>
                                         {/if}
                                         {#if options.includes(DETAILS)}
-                                            <div class="options blue" on:click="{() => {handleDetails(i)}}"
+                                            <div class="options blue" on:click="{(e) => {handleDetails(i, e)}}"
                                                  title="Details">
                                                 {@html icondetail}
                                             </div>
