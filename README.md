@@ -23,6 +23,46 @@ Allows CRUD-operations for Object-Arrays.
 npm install -save svelte-generic-crud-table
 ```
 
+The package `rollup-plugin-svg` is mapped as dependency, cause you need it to compile the component with svelte.
+Add following lines to your App.svelte corresponding rollup.config.json.
+
+## rollup.config.js
+
+- add `svg()` to plugin section
+- `import svg from "rollup-plugin-svg";`
+
+
+```
+...
+import svg from "rollup-plugin-svg";
+
+
+export default {
+    ...,
+    plugins: [
+        ...,
+        svg()
+    ]
+};
+
+```
+
+I struggled two days with the several Awesomefont implementations, but the Awesomefont base packet can not handle shadowroot. Hope this will change in future.
+So I decided to pack the SVG icons as class to the component with the tricky "rollup-plugin-svg".
+
+As I have noticed, every user of the crud-table has to configure it's rollup.config to avoid the error message:
+```
+[!] Error: Unexpected token (Note that you need plugins to import files that are not JavaScript)
+src/icons/pencil2.svg (1:0)
+1: <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 32 32">
+...
+```
+
+I'm currently thinking about linking the icons from an assets folder.
+- Bad: It is not the whole content in the build.js package.
+- Good: No dependency
+
+
 # Usage
 Use the svelte-generic-crud-table in your component to show and, if you like, edit,update and delete it's content.
 Just include the table as seen in the example below.
@@ -43,6 +83,7 @@ All parameters are optional.
 - `options`: set the options for your table. Displays/hides button for `'CREATE', 'EDIT', 'DELETE', 'DETAILS'`.
 - `table`: The object-array. Your data to show.
 
+*There is an issue to change the settings configuration in a further release.*
 
 ###  Set options - Svelte-Component:
 ```
@@ -163,42 +204,4 @@ All parameters are optional.
 </html>
 ```
 
-## rollup.config.js
 
-- add `svg()` to plugin section
-- `import svg from "rollup-plugin-svg";`
-
-
-```
-import svelte from 'rollup-plugin-svelte';
-import resolve from 'rollup-plugin-node-resolve';
-import svg from "rollup-plugin-svg";
-
-const pkg = require('./package.json');
-
-export default {
-    input: [
-        'src/index.js'
-    ],
-    output: [
-        {file: pkg.module, format: 'iife', name: 'SvelteGenericCrudTable'},
-        {file: pkg.main, format: 'iife', name: 'SvelteGenericCrudTable'},
-    ],
-    plugins: [
-        svelte({
-            customElement: true,
-            tag: null,
-            css: css => {
-                css.write('dist/build/bundle.css');
-            }
-        }),
-        resolve({
-                extensions: ['.svelte', '.mjs', '.js', '.jsx', '.json'],
-                mainFields: ['jsnext:main', 'module', 'main']
-            }
-        ),
-        svg()
-    ]
-};
-
-```

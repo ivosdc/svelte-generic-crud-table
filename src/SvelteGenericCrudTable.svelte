@@ -15,7 +15,6 @@
     }
 
     const dispatch = createEventDispatcher();
-    const sortStore = [];
 
     const EDIT = 'EDIT';
     const DELETE = 'DELETE';
@@ -138,27 +137,9 @@
         }
     }
 
-    function handleSort(elem) {
-        if (sortStore[elem] === undefined || sortStore[elem] === 'DESC') {
-            sortStore[elem] = 'ASC';
-        } else {
-            sortStore[elem] = 'DESC';
-        }
-
-        const tableSort = (a, b) => {
-            var keyA = a[elem];
-            var keyB = b[elem];
-            if (sortStore[elem] === 'ASC') {
-                if (keyA < keyB) return -1;
-                if (keyA > keyB) return 1;
-            } else {
-                if (keyA < keyB) return 1;
-                if (keyA > keyB) return -1;
-            }
-            return 0;
-        };
-
-        table = table.sort(tableSort);
+    function handleSort(elem, event) {
+        let column = {column: elem};
+        dispatcher('sort', column, event);
     }
 
 </script>
@@ -174,7 +155,7 @@
                             {#each Object.keys(tableRow) as elem}
                                 <td class="headline {genericCrudTable.isShowField(elem) === false ? 'hidden' : 'shown'}"
                                     width="{genericCrudTable.getShowFieldWidth(elem)}"
-                                    on:click={() => handleSort(elem)}>
+                                    on:click={(e) => handleSort(elem, e)}>
                                     <textarea class="sortable" value={genericCrudTable.makeCapitalLead(elem)}
                                               disabled></textarea>
                                 </td>
