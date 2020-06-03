@@ -99,6 +99,10 @@ Just include the table as seen in the example below.
         console.log(JSON.stringify(body));
     }
 
+    function handleSort(event) {
+        console.log('sort: ' + e.detail.column);
+    }
+
     // example object array. This should be your db query result.
     const myObjectArray = [
         {id: 1, name: "A_NAME_1", sthg: "A_STHG_1", why: "because"},
@@ -111,7 +115,8 @@ Just include the table as seen in the example below.
                             on:update={handleUpdate}
                             on:create={handleCreate}
                             on:details={handleDetails}
-                            table_config={{
+                            on:sort={handleSort}
+                              table_config={{
                                 name: 'Awesome',
                                 options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
                                 columns_setting: [
