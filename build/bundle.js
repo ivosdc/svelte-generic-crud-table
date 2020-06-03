@@ -438,7 +438,9 @@ var SvelteGenericCrudTable = (function () {
 
     var iconedit = "<svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 32 32\">\n<title>Edit</title>\n<path d=\"M12 20l4-2 14-14-2-2-14 14-2 4zM9.041 27.097c-0.989-2.085-2.052-3.149-4.137-4.137l3.097-8.525 4-2.435 12-12h-6l-12 12-6 20 20-6 12-12v-6l-12 12-2.435 4z\"></path>\n</svg>";
 
-    var iconsend = "<svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 32 32\">\n<title>Save</title>\n<path d=\"M28 0h-28v32h32v-28l-4-4zM16 4h4v8h-4v-8zM28 28h-24v-24h2v10h18v-10h2.343l1.657 1.657v22.343z\"></path>\n</svg>";
+    var iconsave = "<svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 32 32\">\n<title>Save</title>\n<path d=\"M28 0h-28v32h32v-28l-4-4zM16 4h4v8h-4v-8zM28 28h-24v-24h2v10h18v-10h2.343l1.657 1.657v22.343z\"></path>\n</svg>";
+
+    var iconsend = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 512 512\"><path d=\"M476 3.2L12.5 270.6c-18.1 10.4-15.8 35.6 2.2 43.2L121 358.4l287.3-253.2c5.5-4.9 13.3 2.6 8.6 8.3L176 407v80.5c0 23.6 28.5 32.9 42.5 15.8L282 426l124.6 52.2c14.2 6 30.4-2.9 33-18.2l72-432C515 7.8 493.3-6.8 476 3.2z\"/></svg>\n<!--\nFont Awesome Free 5.2.0 by @fontawesome - https://fontawesome.com\nLicense - https://fontawesome.com/license (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)\n-->";
 
     var iconcancel = "<svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 32 32\">\n<title>Cancel</title>\n<path d=\"M31.708 25.708c-0-0-0-0-0-0l-9.708-9.708 9.708-9.708c0-0 0-0 0-0 0.105-0.105 0.18-0.227 0.229-0.357 0.133-0.356 0.057-0.771-0.229-1.057l-4.586-4.586c-0.286-0.286-0.702-0.361-1.057-0.229-0.13 0.048-0.252 0.124-0.357 0.228 0 0-0 0-0 0l-9.708 9.708-9.708-9.708c-0-0-0-0-0-0-0.105-0.104-0.227-0.18-0.357-0.228-0.356-0.133-0.771-0.057-1.057 0.229l-4.586 4.586c-0.286 0.286-0.361 0.702-0.229 1.057 0.049 0.13 0.124 0.252 0.229 0.357 0 0 0 0 0 0l9.708 9.708-9.708 9.708c-0 0-0 0-0 0-0.104 0.105-0.18 0.227-0.229 0.357-0.133 0.355-0.057 0.771 0.229 1.057l4.586 4.586c0.286 0.286 0.702 0.361 1.057 0.229 0.13-0.049 0.252-0.124 0.357-0.229 0-0 0-0 0-0l9.708-9.708 9.708 9.708c0 0 0 0 0 0 0.105 0.105 0.227 0.18 0.357 0.229 0.356 0.133 0.771 0.057 1.057-0.229l4.586-4.586c0.286-0.286 0.362-0.702 0.229-1.057-0.049-0.13-0.124-0.252-0.229-0.357z\"></path>\n</svg>";
 
@@ -475,7 +477,7 @@ var SvelteGenericCrudTable = (function () {
     	return child_ctx;
     }
 
-    // (158:4) {#if (table_data !== undefined)}
+    // (159:4) {#if (table_data !== undefined)}
     function create_if_block(ctx) {
     	let show_if;
     	let if_block_anchor;
@@ -518,7 +520,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (262:8) {:else}
+    // (264:8) {:else}
     function create_else_block(ctx) {
     	let br;
     	let t0;
@@ -546,7 +548,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (159:8) {#if Array.isArray(table_data)}
+    // (160:8) {#if Array.isArray(table_data)}
     function create_if_block_1(ctx) {
     	let table;
     	let t;
@@ -633,7 +635,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (162:20) {#if i === 0}
+    // (163:20) {#if i === 0}
     function create_if_block_10(ctx) {
     	let tr;
     	let t;
@@ -700,7 +702,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (164:28) {#each table_config.columns_setting as elem}
+    // (165:28) {#each table_config.columns_setting as elem}
     function create_each_block_3(ctx) {
     	let td;
     	let textarea;
@@ -757,7 +759,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (180:32) {#if (column_order.name === genericCrudTable.getKey(elem))}
+    // (181:32) {#if (column_order.name === genericCrudTable.getKey(elem))}
     function create_if_block_9(ctx) {
     	let td;
     	let textarea;
@@ -840,7 +842,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (192:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
+    // (193:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
     function create_if_block_3(ctx) {
     	let td;
     	let div0;
@@ -883,12 +885,12 @@ var SvelteGenericCrudTable = (function () {
     			if (if_block4) if_block4.c();
     			attr(div0, "id", div0_id_value = "" + (/*name*/ ctx[2] + "options-default" + /*i*/ ctx[31]));
     			attr(div0, "aria-label", div0_aria_label_value = "" + (/*name*/ ctx[2] + "options-default" + /*i*/ ctx[31]));
-    			attr(div0, "class", "options shown");
+    			attr(div0, "class", "options-field shown");
     			attr(div1, "id", div1_id_value = "" + (/*name*/ ctx[2] + "options-edit" + /*i*/ ctx[31]));
-    			attr(div1, "class", "options hidden");
+    			attr(div1, "class", "options-field hidden");
     			attr(div2, "id", div2_id_value = "" + (/*name*/ ctx[2] + "options-delete" + /*i*/ ctx[31]));
     			attr(div2, "aria-label", div2_aria_label_value = "" + (/*name*/ ctx[2] + "options-delete" + /*i*/ ctx[31]));
-    			attr(div2, "class", "options hidden");
+    			attr(div2, "class", "options-field hidden");
     		},
     		m(target, anchor) {
     			insert(target, td, anchor);
@@ -1012,7 +1014,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (197:44) {#if options.includes(DELETE)}
+    // (198:44) {#if options.includes(DELETE)}
     function create_if_block_8(ctx) {
     	let div;
     	let div_aria_label_value;
@@ -1049,7 +1051,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (204:44) {#if options.includes(EDIT)}
+    // (205:44) {#if options.includes(EDIT)}
     function create_if_block_7(ctx) {
     	let div;
     	let dispose;
@@ -1080,7 +1082,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (210:44) {#if options.includes(DETAILS)}
+    // (211:44) {#if options.includes(DETAILS)}
     function create_if_block_6(ctx) {
     	let div;
     	let dispose;
@@ -1111,7 +1113,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (218:44) {#if options.includes(EDIT)}
+    // (220:44) {#if options.includes(EDIT)}
     function create_if_block_5(ctx) {
     	let div0;
     	let t;
@@ -1140,7 +1142,7 @@ var SvelteGenericCrudTable = (function () {
     		},
     		m(target, anchor, remount) {
     			insert(target, div0, anchor);
-    			div0.innerHTML = iconsend;
+    			div0.innerHTML = iconsave;
     			insert(target, t, anchor);
     			insert(target, div1, anchor);
     			div1.innerHTML = iconcancel;
@@ -1167,7 +1169,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (234:44) {#if options.includes(DELETE)}
+    // (236:44) {#if options.includes(DELETE)}
     function create_if_block_4(ctx) {
     	let div0;
     	let div0_aria_label_value;
@@ -1229,7 +1231,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (179:28) {#each Object.entries(tableRow) as elem, k}
+    // (180:28) {#each Object.entries(tableRow) as elem, k}
     function create_each_block_2(ctx) {
     	let show_if_1 = /*column_order*/ ctx[32].name === /*genericCrudTable*/ ctx[4].getKey(/*elem*/ ctx[35]);
     	let t;
@@ -1291,7 +1293,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (178:24) {#each table_config.columns_setting as column_order, j}
+    // (179:24) {#each table_config.columns_setting as column_order, j}
     function create_each_block_1(ctx) {
     	let each_1_anchor;
     	let each_value_2 = Object.entries(/*tableRow*/ ctx[29]);
@@ -1347,7 +1349,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (161:16) {#each table_data as tableRow, i}
+    // (162:16) {#each table_data as tableRow, i}
     function create_each_block(ctx) {
     	let t0;
     	let tr;
@@ -1419,7 +1421,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (256:12) {#if options.includes(CREATE)}
+    // (258:12) {#if options.includes(CREATE)}
     function create_if_block_2(ctx) {
     	let div;
     	let t;
@@ -1714,7 +1716,7 @@ var SvelteGenericCrudTable = (function () {
     class SvelteGenericCrudTable extends SvelteElement {
     	constructor(options) {
     		super();
-    		this.shadowRoot.innerHTML = `<style>.red:hover{fill:red;fill-opacity:80%}.green:hover{fill:limegreen;fill-opacity:80%}.blue:hover{fill:dodgerblue;fill-opacity:80%}h3{color:#5f5f5f;font-size:0.85em;font-weight:200;padding-left:0.2em}table{text-align:left;border-collapse:collapse;table-layout:fixed;width:100%}.headline{border-bottom:1px solid #dddddd;cursor:pointer}.sortable{cursor:pointer}td{color:#5f5f5f;border:none;font-size:0.85em;font-weight:200;padding-left:0.2em;float:left}#labelOptions{color:#aaaaaa;font-weight:100;width:100px}.options{padding:0.2em 0.2em 0em;float:left;min-height:1.3em;font-size:1em;cursor:pointer;opacity:60%}.options:hover{opacity:100%}#options-create{text-align:left;height:1.3em;padding-bottom:1em;max-width:0px}.hidden{display:none}.shown{display:block}.row{margin-top:0px;margin-bottom:1px}.row:hover{background-color:#efefef}textarea{position:relative;resize:none;top:0.4em;width:100%;min-height:1.3em;max-height:1.6em;padding:1px 0px 0px;background-color:#ffffff;border:none;font-size:0.85em;font-weight:300;text-overflow:ellipsis;white-space:pre;overflow:hidden;-webkit-transition:box-shadow 0.3s;transition:box-shadow 0.3s;box-shadow:-6px 6px 0px -5px #aaaaaa, 6px 6px 0px -5px #aaaaaa}textarea:not(:disabled){height:1.6em;min-height:1.6em;padding-left:0.3em}textarea:disabled{color:#5f5f5f;background-color:inherit;font-size:0.85em;font-weight:200;box-shadow:none;height:1.3em;max-height:1.3em}textarea:focus{outline:none;font-weight:300;box-shadow:-6px 6px 0px -5px #5f5f5f, 6px 6px 0px -5px #5f5f5f;white-space:normal;overflow:auto;padding-top:1px}textarea:not(:focus){max-height:1.3em}</style>`;
+    		this.shadowRoot.innerHTML = `<style>.red:hover{fill:red;fill-opacity:80%}.green:hover{fill:limegreen;fill-opacity:80%}.blue:hover{fill:dodgerblue;fill-opacity:80%}h3{color:#5f5f5f;font-size:0.85em;font-weight:200;padding-left:0.2em;text-align:left}table{text-align:left;border-collapse:collapse;table-layout:fixed;width:100%}.headline{border-bottom:1px solid #dddddd;cursor:pointer}.sortable{cursor:pointer}tr{padding:0;margin:0}td{color:#5f5f5f;border:none;font-size:0.95em;font-weight:200;padding:1px 0 1px 0.4em;float:left}#labelOptions{color:#aaaaaa;font-weight:100;width:100px}.options-field{min-height:1.3em;min-width:100px;max-width:100px;width:100px;opacity:60%}.options{float:left;position:relative;width:12px;height:12px;padding:0.2em 0.4em;cursor:pointer;opacity:60%}.options:hover{opacity:100%}#options-create{text-align:left;height:1.3em;padding-bottom:1em;max-width:0px}.hidden{display:none}.shown{display:block}.row{margin-top:0px;margin-bottom:1px}.row:hover{background-color:#efefef}textarea{position:relative;resize:none;top:0.1em;width:100%;min-height:1.3em;max-height:2.3em;padding:1px 1px;background-color:#ffffff;border:none;font-size:0.95em;font-weight:300;text-overflow:ellipsis;white-space:pre;overflow:hidden;-webkit-transition:box-shadow 0.3s}textarea:not(:disabled){height:2.3em;min-height:2.3em;border-bottom:0.5px solid #5f5f5f}textarea:disabled{color:#5f5f5f;background-color:inherit;font-size:0.95em;font-weight:200;box-shadow:none;height:1.3em;max-height:1.3em}textarea:focus{outline:none;font-weight:300;white-space:normal;overflow:auto;padding-top:1px}textarea:not(:focus){max-height:1.3em}</style>`;
     		init(this, { target: this.shadowRoot }, instance, create_fragment, safe_not_equal, { table_data: 0, table_config: 1 }, [-1, -1]);
 
     		if (options) {
