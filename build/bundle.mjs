@@ -395,12 +395,12 @@ var SvelteGenericCrudTable = (function () {
 
         gatherUpdates(id, table) {
             const body = {};
-            table_config.columns_setting.forEach((elem) => {
+            this.table_config.columns_setting.forEach((elem) => {
                 if (this.shadowed) {
-                    body[this.getKey(elem)] = document.querySelector('crud-table').shadowRoot
+                    body[elem.name] = document.querySelector('crud-table').shadowRoot
                         .getElementById(this.name + elem.name + id).value;
                 } else {
-                    body[this.getKey(elem)] = document.getElementById(this.name + elem.name + id).value;
+                    body[elem.name] = document.getElementById(this.name + elem.name + id).value;
                 }
             });
             return body;
@@ -1573,9 +1573,9 @@ var SvelteGenericCrudTable = (function () {
 
     		table_config.columns_setting.forEach(elem => {
     			if (shadowed) {
-    				document.querySelector("crud-table").shadowRoot.getElementById(name + genericCrudTable.getKey(elem.name) + id + "copy").innerText = document.querySelector("crud-table").shadowRoot.getElementById(name + genericCrudTable.getKey(elem.name) + id).value;
+    				document.querySelector("crud-table").shadowRoot.getElementById(name + elem.name + id + "copy").innerText = document.querySelector("crud-table").shadowRoot.getElementById(name + elem.name + id).value;
     			} else {
-    				document.getElementById(name + genericCrudTable.getKey(elem.name) + id + "copy").innerText = document.getElementById(name + genericCrudTable.getKey(elem.name) + id).value;
+    				document.getElementById(name + elem.name + id + "copy").innerText = document.getElementById(name + elem.name + id).value;
     			}
     		});
 
