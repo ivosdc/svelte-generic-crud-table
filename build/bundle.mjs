@@ -587,7 +587,7 @@ var SvelteGenericCrudTable = (function () {
     			insert(target, if_block_anchor, anchor);
     		},
     		p(ctx, dirty) {
-    			if (dirty[0] & /*table_config, table_data, name, genericCrudTable, handleCancelDelete, handleDeleteConfirmation, options, handleCancelEdit, handleEditConfirmation, handleDetails, handleEdit, handleDelete, handleSort*/ 14335) {
+    			if (dirty[0] & /*table_config, table_data, name, genericCrudTable, handleDeleteConfirmation, handleCancelDelete, options, handleCancelEdit, handleEditConfirmation, handleDetails, handleEdit, handleDelete, handleSort*/ 14335) {
     				each_value = /*table_data*/ ctx[0];
     				let i;
 
@@ -1191,19 +1191,19 @@ var SvelteGenericCrudTable = (function () {
     			div0 = element("div");
     			t = space();
     			div1 = element("div");
-    			attr(div0, "class", "options green");
-    			attr(div0, "title", "Delete");
-    			attr(div0, "aria-label", div0_aria_label_value = "" + (/*name*/ ctx[2] + /*genericCrudTable*/ ctx[4].getKey(/*elem*/ ctx[35]) + /*i*/ ctx[31] + "deleteConfirmation"));
-    			attr(div1, "class", "options red");
-    			attr(div1, "title", "Cancel");
-    			attr(div1, "aria-label", div1_aria_label_value = "" + (/*name*/ ctx[2] + /*genericCrudTable*/ ctx[4].getKey(/*elem*/ ctx[35]) + /*i*/ ctx[31] + "deleteCancel"));
+    			attr(div0, "class", "options red");
+    			attr(div0, "title", "Cancel");
+    			attr(div0, "aria-label", div0_aria_label_value = "" + (/*name*/ ctx[2] + /*genericCrudTable*/ ctx[4].getKey(/*elem*/ ctx[35]) + /*i*/ ctx[31] + "deleteCancel"));
+    			attr(div1, "class", "options green");
+    			attr(div1, "title", "Delete");
+    			attr(div1, "aria-label", div1_aria_label_value = "" + (/*name*/ ctx[2] + /*genericCrudTable*/ ctx[4].getKey(/*elem*/ ctx[35]) + /*i*/ ctx[31] + "deleteConfirmation"));
     		},
     		m(target, anchor, remount) {
     			insert(target, div0, anchor);
-    			div0.innerHTML = iconsend;
+    			div0.innerHTML = iconcancel;
     			insert(target, t, anchor);
     			insert(target, div1, anchor);
-    			div1.innerHTML = iconcancel;
+    			div1.innerHTML = iconsend;
     			if (remount) run_all(dispose);
 
     			dispose = [
@@ -1214,11 +1214,11 @@ var SvelteGenericCrudTable = (function () {
     		p(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (dirty[0] & /*name, genericCrudTable, table_data*/ 21 && div0_aria_label_value !== (div0_aria_label_value = "" + (/*name*/ ctx[2] + /*genericCrudTable*/ ctx[4].getKey(/*elem*/ ctx[35]) + /*i*/ ctx[31] + "deleteConfirmation"))) {
+    			if (dirty[0] & /*name, genericCrudTable, table_data*/ 21 && div0_aria_label_value !== (div0_aria_label_value = "" + (/*name*/ ctx[2] + /*genericCrudTable*/ ctx[4].getKey(/*elem*/ ctx[35]) + /*i*/ ctx[31] + "deleteCancel"))) {
     				attr(div0, "aria-label", div0_aria_label_value);
     			}
 
-    			if (dirty[0] & /*name, genericCrudTable, table_data*/ 21 && div1_aria_label_value !== (div1_aria_label_value = "" + (/*name*/ ctx[2] + /*genericCrudTable*/ ctx[4].getKey(/*elem*/ ctx[35]) + /*i*/ ctx[31] + "deleteCancel"))) {
+    			if (dirty[0] & /*name, genericCrudTable, table_data*/ 21 && div1_aria_label_value !== (div1_aria_label_value = "" + (/*name*/ ctx[2] + /*genericCrudTable*/ ctx[4].getKey(/*elem*/ ctx[35]) + /*i*/ ctx[31] + "deleteConfirmation"))) {
     				attr(div1, "aria-label", div1_aria_label_value);
     			}
     		},
@@ -1319,7 +1319,7 @@ var SvelteGenericCrudTable = (function () {
     			insert(target, each_1_anchor, anchor);
     		},
     		p(ctx, dirty) {
-    			if (dirty[0] & /*name, genericCrudTable, table_data, handleCancelDelete, handleDeleteConfirmation, options, handleCancelEdit, handleEditConfirmation, handleDetails, handleEdit, handleDelete, table_config*/ 6143) {
+    			if (dirty[0] & /*name, genericCrudTable, table_data, handleDeleteConfirmation, handleCancelDelete, options, handleCancelEdit, handleEditConfirmation, handleDetails, handleEdit, handleDelete, table_config*/ 6143) {
     				each_value_2 = Object.entries(/*tableRow*/ ctx[29]);
     				let i;
 
@@ -1389,7 +1389,7 @@ var SvelteGenericCrudTable = (function () {
     		p(ctx, dirty) {
     			if (/*i*/ ctx[31] === 0) if_block.p(ctx, dirty);
 
-    			if (dirty[0] & /*table_data, name, genericCrudTable, handleCancelDelete, handleDeleteConfirmation, options, handleCancelEdit, handleEditConfirmation, handleDetails, handleEdit, handleDelete, table_config*/ 6143) {
+    			if (dirty[0] & /*table_data, name, genericCrudTable, handleDeleteConfirmation, handleCancelDelete, options, handleCancelEdit, handleEditConfirmation, handleDetails, handleEdit, handleDelete, table_config*/ 6143) {
     				each_value_1 = /*table_config*/ ctx[1].columns_setting;
     				let i;
 
@@ -1644,8 +1644,8 @@ var SvelteGenericCrudTable = (function () {
     		handleCancelEdit(i);
     	};
 
-    	const click_handler_6 = (i, e) => handleDeleteConfirmation(i, e);
-    	const click_handler_7 = (i, e) => handleCancelDelete(i);
+    	const click_handler_6 = (i, e) => handleCancelDelete(i);
+    	const click_handler_7 = (i, e) => handleDeleteConfirmation(i, e);
 
     	$$self.$set = $$props => {
     		if ("table_data" in $$props) $$invalidate(0, table_data = $$props.table_data);
