@@ -1,9 +1,8 @@
 export class SvelteGenericCrudTableService {
 
-    constructor(name, editable_fields, show_fields, shadowed) {
-        this.name = name;
-        this.editable_fields = editable_fields;
-        this.show_fields = show_fields;
+    constructor(table_config, shadowed) {
+        this.name = table_config.name;
+        this.table_config = table_config;
         this.shadowed = shadowed;
     }
 
@@ -22,18 +21,22 @@ export class SvelteGenericCrudTableService {
 
     resetEditMode(id) {
         if (this.shadowed) {
-            this.editable_fields.forEach((toEdit) => {
-                document.querySelector('crud-table').shadowRoot.getElementById(this.name + toEdit + id)
-                    .setAttribute('disabled', 'true');
+            this.table_config.columns_setting.forEach((toEdit) => {
+                if (this.isEditField(toEdit.name)) {
+                    document.querySelector('crud-table').shadowRoot.getElementById(this.name + toEdit.name + id)
+                        .setAttribute('disabled', 'true');
+                }
             })
             document.querySelector('crud-table').shadowRoot.getElementById(this.name + 'options-default' + id).classList.remove('hidden');
             document.querySelector('crud-table').shadowRoot.getElementById(this.name + 'options-default' + id).classList.add('shown');
             document.querySelector('crud-table').shadowRoot.getElementById(this.name + 'options-edit' + id).classList.remove('shown');
             document.querySelector('crud-table').shadowRoot.getElementById(this.name + 'options-edit' + id).classList.add('hidden');
         } else {
-            this.editable_fields.forEach((toEdit) => {
-                document.getElementById(this.name + toEdit + id)
-                    .setAttribute('disabled', 'true');
+            this.table_config.columns_setting.forEach((toEdit) => {
+                if (this.isEditField(toEdit.name)) {
+                    document.getElementById(this.name + toEdit.name + id)
+                        .setAttribute('disabled', 'true');
+                }
             })
             document.getElementById(this.name + 'options-default' + id).classList.remove('hidden');
             document.getElementById(this.name + 'options-default' + id).classList.add('shown');
@@ -58,16 +61,20 @@ export class SvelteGenericCrudTableService {
 
     setEditMode(id) {
         if (this.shadowed) {
-            this.editable_fields.forEach((toEdit) => {
-                document.querySelector('crud-table').shadowRoot.getElementById(this.name + toEdit + id).removeAttribute("disabled");
+            this.table_config.columns_setting.forEach((toEdit) => {
+                if (this.isEditField(toEdit.name)) {
+                    document.querySelector('crud-table').shadowRoot.getElementById(this.name + toEdit.name + id).removeAttribute("disabled");
+                }
             })
             document.querySelector('crud-table').shadowRoot.getElementById(this.name + 'options-default' + id).classList.add('hidden');
             document.querySelector('crud-table').shadowRoot.getElementById(this.name + 'options-default' + id).classList.remove('shown');
             document.querySelector('crud-table').shadowRoot.getElementById(this.name + 'options-edit' + id).classList.remove('hidden');
             document.querySelector('crud-table').shadowRoot.getElementById(this.name + 'options-edit' + id).classList.add('shown');
         } else {
-            this.editable_fields.forEach((toEdit) => {
-                document.getElementById(this.name + toEdit + id).removeAttribute("disabled");
+            this.table_config.columns_setting.forEach((toEdit) => {
+                if (this.isEditField(toEdit.name)) {
+                    document.getElementById(this.name + toEdit.name + id).removeAttribute("disabled");
+                }
             })
             document.getElementById(this.name + 'options-default' + id).classList.add('hidden');
             document.getElementById(this.name + 'options-default' + id).classList.remove('shown');
@@ -104,29 +111,30 @@ export class SvelteGenericCrudTableService {
 
 
     isShowField(field) {
-        let show = false;
-        if (this.show_fields.length === 0) {
-            show = true;
-        }
-        this.show_fields.forEach((showField) => {
-            if (Object.keys(showField)[0] === field) {
-                show = true;
-            }
-        });
+        return (this.getColumnSetting('show', field, false) !== undefined) ? this.getColumnSetting('show', field, false) : false;
+    }
 
-        return show;
+    isEditField(field) {
+        return (this.isShowField(field)) ? this.getColumnSetting('edit', field, false) : false;
     }
 
     getShowFieldWidth(field) {
-        let width = '';
-        this.show_fields.forEach((showField) => {
-            if (Object.keys(showField)[0] === field) {
-                width = showField[field];
-            }
-        });
-
-        return width;
+        const width = (this.getColumnSetting('width', field, '100px') !== undefined) ? this.getColumnSetting('width', field, '100px') : '';
+        return (this.isShowField(field)) ? width : '';
     }
 
+    getColumnSetting(attr, column, preset) {
+        let val = preset;
+        let column_setting = {};
+        this.table_config.columns_setting.forEach((elem) => {
+            if (elem.name === column) {
+                column_setting = elem;
+            }
+        });
+        if (column_setting !== {}) {
+            val = column_setting[attr];
+        }
+        return val;
+    }
 }
 

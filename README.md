@@ -67,23 +67,6 @@ I'm currently thinking about linking the icons from an assets folder.
 Use the svelte-generic-crud-table in your component to show and, if you like, edit,update and delete it's content.
 Just include the table as seen in the example below.
 
-### Displays all data with no options:
-```
-    <SvelteGenericCrudTable table={myObjectArray}/>
-```
-
-All parameters are optional.
-
-
-- dispatches UPDATE, DELETE, CREATE for individual object handling.
-- dispatches DETAILS to handle Object detail handling.
-- `name`: the individual table name. It's an identifier for the elements.
-- `show_fields`: List of fields to display with its width. Type: `{fieldname: 'width'}`. If no fields are set all fields will be shown.
-- `editable_fields`: List the 'editable' fields in your object. E.g. editing the id makes no sense in most cases, so it is not listed here.
-- `options`: set the options for your table. Displays/hides button for `'CREATE', 'EDIT', 'DELETE', 'DETAILS'`.
-- `table`: The object-array. Your data to show.
-
-*There is an issue to change the settings configuration in a further release.*
 
 ###  Set options - Svelte-Component:
 ```
@@ -117,30 +100,28 @@ All parameters are optional.
     }
 
     // example object array. This should be your db query result.
-    let myObjectArray = [
-        {id: 1, name: "A_NAME", sthg: "A_STHG", why: 'because'},
-        {id: 2, name: "ANOTHER_NAME", sthg: "ANOTHER_STHG", why: 'I can'},
-        {id: 3, name: "svelte-generic-crud-table", sthg: "Awesome !", why: '!'}
+    const myObjectArray = [
+        {id: 1, name: "A_NAME_1", sthg: "A_STHG_1", why: "because"},
+        {id: 2, name: "A_NAME_2", sthg: "A_STHG_2", why: "I can"}
     ]
-    export let name;
 </script>
 
-
 <main>
-    <h1>Generic CRUD Table</h1>
     <SvelteGenericCrudTable on:delete={handleDelete}
                             on:update={handleUpdate}
                             on:create={handleCreate}
                             on:details={handleDetails}
-                            name="tableName"
-                            show_fields={[
-                                {name: '200px'},
-                                {sthg: '20%'},
-                                {why: '100px'}
-                            ]}
-                            editable_fields={['name', 'why']}
-                            options={['CREATE', 'EDIT', 'DELETE', 'DETAILS']}
-                            table={myObjectArray}/>
+                            table_config={{
+                                name: 'Awesome',
+                                options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
+                                columns_setting: [
+                                    {name: 'id', show: false, edit: true, size: '200px'},
+                                    {name: 'name', show: true, edit: true, size: '200px'},
+                                    {name: 'why', show: true, edit: true, size: '200px'},
+                                    {name: 'sthg', show: true, edit: false, size: '200px'}
+                                ]
+                            }}
+                            table_data={JSON.stringify(myObjectArray)}></SvelteGenericCrudTable>
 </main>
 ```
 
@@ -163,43 +144,90 @@ All parameters are optional.
 </body>
 
 <script>
-    let table = [
+    let table_data = [
         {name: 'myName', job: 'code', private: 'not editable'},
-        {name: 'myName2', job: 'code2', private: 'not editable'}];
-    let options = ['CREATE', 'EDIT', 'DELETE', 'DETAILS'];
-    let name = 'Awesome';
-    let show_fields = [{name: '200px'},{job: '200px'}];
-    let editable_fields = ['name', 'job'];
+        {name: 'myName2', job: 'code2', private: 'not editable'}
+        ];
+
+    let table_config = {
+        name: 'Awesome',
+        options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
+        columns_setting: [
+            {name: 'name', show: true, edit: true, size: '200px'},
+            {name: 'job', show: true, edit: true, size: '200px'},
+            {name: 'private', show: true, edit: false, size: '200px'}
+        ]
+    }
+
     let genericCrudTable = document.querySelector('crud-table');
-    genericCrudTable.setAttribute('name', name);
-    genericCrudTable.setAttribute('show_fields', JSON.stringify(show_fields));
-    genericCrudTable.setAttribute('editable_fields', JSON.stringify(editable_fields));
-    genericCrudTable.setAttribute('options', JSON.stringify(options));
-    genericCrudTable.setAttribute('table', JSON.stringify(table));
+    const sortStore = [];
+
+    genericCrudTable.setAttribute('table_config', JSON.stringify(table_config));
+    genericCrudTable.setAttribute('table_data', JSON.stringify(table_data));
 
     genericCrudTable.addEventListener('create', () => {
         console.log('create');
-        table.push({name: 'myName', job: 'code', private: 'not editable'});
-        genericCrudTable.setAttribute('table', JSON.stringify(table));
+        console.log(table_data.length);
+        table_data.push({name: 'myName', job: 'code', private: 'not editable'});
+        console.log(table_data.length);
+        refresh();
     });
-    genericCrudTable.addEventListener('details', (e) => {
+
+   genericCrudTable.addEventListener('details', (e) => {
         console.log('details');
         console.log(e.detail.body);
     });
+
     genericCrudTable.addEventListener('update', (e) => {
         console.log('update');
         console.log(e.detail.body);
-        table[e.detail.id] = e.detail.body;
-        genericCrudTable.setAttribute('table', JSON.stringify(table));
+        table_data[e.detail.id] = e.detail.body;
+        refresh();
     });
+
     genericCrudTable.addEventListener('delete', (e) => {
-        console.log('delete');
-        console.log(e.detail.body);
-        console.log(e.detail.id)
-        table = arrayRemove(table, e.detail.id);
-        genericCrudTable.setAttribute('table', JSON.stringify(table));
+        console.log('delete: ' + JSON.stringify(e.detail.body));
+        console.log('offset in view:' + e.detail.id);
+        table_data = arrayRemove(table_data, e.detail.id);
+        refresh();
     });
-    function arrayRemove(arr, value) { return arr.filter(function(ele, i){ return i != value; });}
+
+    genericCrudTable.addEventListener('sort', (e) => {
+        console.log('sort: ' + e.detail.column);
+        const column = e.detail.column;
+        if (sortStore[column] === undefined || sortStore[column] === 'DESC') {
+            sortStore[column] = 'ASC';
+        } else {
+            sortStore[column] = 'DESC';
+        }
+
+        const tableSort = (a, b) => {
+            var keyA = a[column];
+            var keyB = b[column];
+            if (sortStore[column] === 'ASC') {
+                if (keyA < keyB) return -1;
+                if (keyA > keyB) return 1;
+            } else {
+                if (keyA < keyB) return 1;
+                if (keyA > keyB) return -1;
+            }
+            return 0;
+        };
+
+        table_data = table_data.sort(tableSort);
+        refresh();
+    });
+
+    function refresh() {
+        genericCrudTable.setAttribute('table_data', JSON.stringify({}));
+        genericCrudTable.setAttribute('table_data', JSON.stringify(table_data));
+    }
+
+    function arrayRemove(arr, value) {
+        return arr.filter(function (ele, i) {
+            return i !== value;
+        });
+    }
 </script>
 </html>
 ```

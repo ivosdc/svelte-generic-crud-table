@@ -1,6 +1,13 @@
 import {SvelteGenericCrudTableService} from './SvelteGenericCrudTableService'
 
-const genericCrudTable = new SvelteGenericCrudTableService('', [], []);
+const config = {
+    name: '',
+    options: [],
+    columns_setting: [
+        {name: 'name', show: true, edit: true, width: '200px'}
+    ]
+}
+const genericCrudTable = new SvelteGenericCrudTableService(config, false);
 
 describe('Test SvelteGenericCrudTableService', () => {
 
@@ -24,7 +31,14 @@ describe('Test SvelteGenericCrudTableService', () => {
 
     it('testResetEditMode', async () => {
         const toEdit = 'A_FIELD';
-        genericCrudTable.editable_fields = [toEdit];
+        const config = {
+            name: '',
+            options: [],
+            columns_setting: [
+                {name: toEdit, show: true, edit: true, size: '200px'}
+            ]
+        }
+        const genericCrudTable = new SvelteGenericCrudTableService(config, false);
         const documentHTML = '<!doctype html><html><body>' +
             '<div id=' + toEdit + '></div>' +
             '<div id="options-default"></div>' +
@@ -45,7 +59,14 @@ describe('Test SvelteGenericCrudTableService', () => {
 
     it('testSetEditMode', async () => {
         const toEdit = 'A_FIELD';
-        genericCrudTable.editable_fields = [toEdit];
+        const config = {
+            name: '',
+            options: [],
+            columns_setting: [
+                {name: toEdit, show: true, edit: true, size: '200px'}
+            ]
+        }
+        const genericCrudTable = new SvelteGenericCrudTableService(config, false);
         const documentHTML = '<!doctype html><html><body>' +
             '<div id=' + toEdit + ' disabled></div>' +
             '<div id="options-default"></div>' +
@@ -98,8 +119,6 @@ describe('Test SvelteGenericCrudTableService', () => {
     })
 
     it('testGatherUpdates', async () => {
-        const toEdit = 'name';
-        genericCrudTable.editable_fields = [toEdit];
         const table = [{name: 'A_NAME'}];
 
         const documentHTML = '<!doctype html><html><body>' +
@@ -114,8 +133,6 @@ describe('Test SvelteGenericCrudTableService', () => {
 
     it('testIsShowField', async () => {
         const toShow = 'name';
-        genericCrudTable.show_fields = [{'name': '200px'}];
-
         let actual = genericCrudTable.isShowField(toShow);
 
         expect(actual).toBe(true);
@@ -132,29 +149,28 @@ describe('Test SvelteGenericCrudTableService', () => {
 
 
     it('testIsShowField_dontShow', async () => {
-        const toShow = 'name';
-        genericCrudTable.show_fields = [{'noName': '200px'}];
-
-        let actual = genericCrudTable.isShowField(toShow);
+        let actual = genericCrudTable.isShowField('NO_SHOW_FIELD');
 
         expect(actual).toBe(false);
     })
 
     it('testGetShowFieldWidth', async () => {
-        const toShow = 'name';
-        genericCrudTable.show_fields = [{'name': '200px'}];
-
-        let actual = genericCrudTable.getShowFieldWidth(toShow);
+        let actual = genericCrudTable.getShowFieldWidth('name');
 
         expect(actual).toBe('200px');
     })
 
 
     it('testGetShowFieldWidth_noWidth', async () => {
-        const toShow = 'name';
-        genericCrudTable.show_fields = [{'noName': '200px'}];
-
-        let actual = genericCrudTable.getShowFieldWidth(toShow);
+        const config = {
+            name: '',
+            options: [],
+            columns_setting: [
+                {name: 'name', show: true, edit: true}
+            ]
+        }
+        const genericCrudTable = new SvelteGenericCrudTableService(config, false);
+        let actual = genericCrudTable.getShowFieldWidth('name');
 
         expect(actual).toBe('');
     })

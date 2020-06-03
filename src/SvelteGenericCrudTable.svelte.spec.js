@@ -1,14 +1,28 @@
 import SvelteGenericCrudTable from './SvelteGenericCrudTable.svelte'
 import {render, fireEvent} from '@testing-library/svelte'
 
+const table_config = {
+    name: 'tableName',
+    options: ['EDIT'],
+    columns_setting: [
+        {name: 'A_FIELD', show: true, edit: true, width: '200px'}
+    ]
+}
+
+const table_config_delete = {
+    name: 'tableName',
+    options: ['EDIT', 'DELETE'],
+    columns_setting: [
+        {name: 'A_FIELD', show: true, edit: true, width: '200px'}
+    ]
+}
 
 describe('Test SvelteGenericCrudTable', () => {
 
     test('smoke: it should compile and render without throwing', () => {
-        const tableName = 'tableName';
         const config = {
-            name: tableName,
-            table: [{A_FIELD: 'A_FIELDS_VALUE'}]
+            table_config: table_config,
+            table_data: [{A_FIELD: 'A_FIELDS_VALUE'}]
         };
 
         expect(() => render(SvelteGenericCrudTable, config)).not.toThrow();
@@ -16,10 +30,9 @@ describe('Test SvelteGenericCrudTable', () => {
 
 
     it('testSvelteGenericCrudTable_tableName', async () => {
-        const tableName = 'tableName';
         const config = {
-            name: tableName,
-            table: [{A_FIELD: 'A_FIELDS_VALUE'}]
+            table_config: table_config,
+            table_data: [{A_FIELD: 'A_FIELDS_VALUE'}]
         };
         const dom = render(SvelteGenericCrudTable, config)
 
@@ -30,13 +43,11 @@ describe('Test SvelteGenericCrudTable', () => {
 
 
     it('testSvelteGenericCrudTable_editable_fields', async () => {
-        const tableName = 'tableName';
         const config = {
-            editable_fields: ['A_FIELD'],
-            name: tableName,
-            table: [{A_FIELD: 'A_FIELDS_VALUE'}],
-            options: ['EDIT']
+            table_config: table_config,
+            table_data: [{A_FIELD: 'A_FIELDS_VALUE'}]
         };
+
         const dom = render(SvelteGenericCrudTable, config)
 
         const edit = dom.getByTitle('Edit');
@@ -48,12 +59,9 @@ describe('Test SvelteGenericCrudTable', () => {
 
 
     it('testSvelteGenericCrudTable_editCancel', async () => {
-        const tableName = 'tableName';
         const config = {
-            editable_fields: ['A_FIELD'],
-            name: tableName,
-            table: [{A_FIELD: 'A_FIELDS_VALUE'}],
-            options: ['EDIT']
+            table_config: table_config,
+            table_data: [{A_FIELD: 'A_FIELDS_VALUE'}]
         };
         const dom = render(SvelteGenericCrudTable, config)
 
@@ -70,16 +78,13 @@ describe('Test SvelteGenericCrudTable', () => {
     })
 
     it('testSvelteGenericCrudTable_editUpdate', async () => {
-        const tableName = 'tableName';
         const config = {
-            editable_fields: ['A_FIELD'],
-            name: tableName,
-            table: [{A_FIELD: 'A_FIELDS_VALUE'}],
-            options: ['EDIT']
+            table_config: table_config,
+            table_data: [{A_FIELD: 'A_FIELDS_VALUE'}]
         };
         const dom = render(SvelteGenericCrudTable, config)
 
-        const editField = dom.getByLabelText(tableName + `A_FIELD` + 0);
+        const editField = dom.getByLabelText(config.table_config.name + `A_FIELD` + 0);
         expect(editField.getAttribute('disabled')).not.toBeNull();
 
 
@@ -94,55 +99,47 @@ describe('Test SvelteGenericCrudTable', () => {
         const update = dom.getByTitle('Update');
         await fireEvent.click(update);
 
-        const editFieldCopy = dom.getByLabelText(tableName + `A_FIELD` + 0 + 'copy');
+        const editFieldCopy = dom.getByLabelText(config.table_config.name + `A_FIELD` + 0 + 'copy');
 
         expect(editFieldCopy.innerText).toBe('NEW_VALUE');
     })
 
     it('testSvelteGenericCrudTable_deleteConfirmation', async () => {
-        const tableName = 'tableName';
         const config = {
-            editable_fields: ['A_FIELD'],
-            name: tableName,
-            table: [{A_FIELD: 'A_FIELDS_VALUE'}],
-            options: ['EDIT', 'DELETE']
+            table_config: table_config_delete,
+            table_data: [{A_FIELD: 'A_FIELDS_VALUE'}]
         };
         const dom = render(SvelteGenericCrudTable, config)
 
-        const deleteButton = dom.getByLabelText(tableName + `A_FIELD` + 0 + 'delete');
+        const deleteButton = dom.getByLabelText(config.table_config.name + `A_FIELD` + 0 + 'delete');
         await fireEvent.click(deleteButton);
 
-        const deleteConfirmationButton = dom.getByLabelText(tableName + `A_FIELD` + 0 + 'deleteConfirmation');
+        const deleteConfirmationButton = dom.getByLabelText(config.table_config.name + `A_FIELD` + 0 + 'deleteConfirmation');
         await fireEvent.click(deleteConfirmationButton);
 
-        expect(config.table.length).toBe(1);
+        expect(config.table_data.length).toBe(1);
     })
 
     it('testSvelteGenericCrudTable_delete_otherDelete_resetOptions', async () => {
-        const tableName = 'tableName';
         const config = {
-            editable_fields: ['A_FIELD'],
-            name: tableName,
-            table: [
-                {A_FIELD: 'A_FIELDS_VALUE'},
-                {A_FIELD: 'ANOTHER_FIELDS_VALUE'}],
-            options: ['EDIT', 'DELETE']
+            table_config: table_config_delete,
+            table_data: [{A_FIELD: 'A_FIELDS_VALUE'},{A_FIELD: 'A_FIELDS_VALUE'}]
         };
         const dom = render(SvelteGenericCrudTable, config)
 
-        const optionsDefault = dom.getByLabelText(tableName + `options-default` + 0 );
+        const optionsDefault = dom.getByLabelText(config.table_config.name + `options-default` + 0 );
         expect(optionsDefault.classList.contains('shown'))
 
-        const optionsDelete = dom.getByLabelText(tableName + `options-delete` + 0 );
+        const optionsDelete = dom.getByLabelText(config.table_config.name + `options-delete` + 0 );
         expect(optionsDelete.classList.contains('hidden'))
 
-        const deleteButton = dom.getByLabelText(tableName + `A_FIELD` + 0 + 'delete');
+        const deleteButton = dom.getByLabelText(config.table_config.name + `A_FIELD` + 0 + 'delete');
         await fireEvent.click(deleteButton);
 
         expect(optionsDefault.classList.contains('hidden'))
         expect(optionsDelete.classList.contains('shown'))
 
-        const anotherDeleteButton = dom.getByLabelText(tableName + `A_FIELD` + 1 + 'delete');
+        const anotherDeleteButton = dom.getByLabelText(config.table_config.name + `A_FIELD` + 1 + 'delete');
         await fireEvent.click(anotherDeleteButton);
 
         expect(optionsDefault.classList.contains('shown'))
@@ -150,22 +147,19 @@ describe('Test SvelteGenericCrudTable', () => {
     })
 
     it('testSvelteGenericCrudTable_deleteCancel', async () => {
-        const tableName = 'tableName';
         const config = {
-            editable_fields: ['A_FIELD'],
-            name: tableName,
-            table: [{A_FIELD: 'A_FIELDS_VALUE'}],
-            options: ['EDIT', 'DELETE']
+            table_config: table_config_delete,
+            table_data: [{A_FIELD: 'A_FIELDS_VALUE'}]
         };
         const dom = render(SvelteGenericCrudTable, config)
 
-        const deleteButton = dom.getByLabelText(tableName + `A_FIELD` + 0 + 'delete');
+        const deleteButton = dom.getByLabelText(config.table_config.name + `A_FIELD` + 0 + 'delete');
         await fireEvent.click(deleteButton);
 
-        const deleteCancelButton = dom.getByLabelText(tableName + `A_FIELD` + 0 + 'deleteCancel')
+        const deleteCancelButton = dom.getByLabelText(config.table_config.name + `A_FIELD` + 0 + 'deleteCancel')
         await fireEvent.click(deleteCancelButton);
 
-        expect(config.table.length).toBe(1);
+        expect(config.table_data.length).toBe(1);
     })
 
 })

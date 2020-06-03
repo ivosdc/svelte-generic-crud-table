@@ -21,31 +21,40 @@
     const CREATE = 'CREATE';
     const DETAILS = 'DETAILS';
 
-    export let name = '';
-    export let show_fields = [];
-    export let editable_fields = [];
-    export let table = [];
-    export let options = [];
-    $: table = (Array.isArray(table)) ? table : JSON.parse(table);
-    $: editable_fields = (Array.isArray(editable_fields)) ? editable_fields : JSON.parse(editable_fields);
-    $: show_fields = (Array.isArray(show_fields)) ? show_fields : JSON.parse(show_fields);
+    const table_config_default = {
+        name: 'crud-table',
+        options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
+        columns_setting: []
+    }
+
+    export let table_data = {};
+    $: table_data = (typeof table_data === 'string') ? JSON.parse(table_data) : table_data;
+
+    export let table_config = table_config_default;
+    $: table_config = (typeof table_config === 'string') ? JSON.parse(table_config) : table_config;
+
+    let name = '';
+    $: name = table_config.name;
+
+    let options = [];
+    $: options = (typeof table_config.options !== 'undefined' ) ? table_config.options : [];
 
     const NO_ROW_IN_EDIT_MODE = -1;
     let cursor = NO_ROW_IN_EDIT_MODE;
-    let genericCrudTable = new SvelteGenericCrudTableService(name, editable_fields, show_fields, shadowed);
-    $: genericCrudTable = new SvelteGenericCrudTableService(name, editable_fields, show_fields, shadowed);
+    let genericCrudTable = new SvelteGenericCrudTableService(table_config, shadowed);
+    $: genericCrudTable = new SvelteGenericCrudTableService(table_config, shadowed);
 
     function handleEdit(id) {
         resetRawInEditMode(id);
         cursor = id;
-        for (let i = 0; i < table.length; i++) {
+        for (let i = 0; i < table_data.length; i++) {
             genericCrudTable.resetEditMode(i);
         }
         genericCrudTable.setEditMode(id);
     }
 
     function handleCancelEdit(id) {
-        Object.entries(table[id]).forEach((elem) => {
+        Object.entries(table_data[id]).forEach((elem) => {
             if (shadowed) {
                 document.querySelector('crud-table').shadowRoot.getElementById(name + genericCrudTable.getKey(elem) + id).value =
                         document.querySelector('crud-table').shadowRoot.getElementById(name + genericCrudTable.getKey(elem) + id + 'copy').innerText;
@@ -61,7 +70,7 @@
 
     function handleEditConfirmation(id, event) {
         resetRawInEditMode(id);
-        Object.entries(table[id]).forEach((elem) => {
+        Object.entries(table_data[id]).forEach((elem) => {
             if (shadowed) {
                 document.querySelector('crud-table').shadowRoot.getElementById(name + genericCrudTable.getKey(elem) + id + 'copy').innerText =
                         document.querySelector('crud-table').shadowRoot.getElementById(name + genericCrudTable.getKey(elem) + id).value;
@@ -70,7 +79,7 @@
                         document.getElementById(name + genericCrudTable.getKey(elem) + id).value;
             }
         });
-        const body = genericCrudTable.gatherUpdates(id, table);
+        const body = genericCrudTable.gatherUpdates(id, table_data);
         const details = {
             id: id,
             body: body
@@ -92,7 +101,7 @@
     }
 
     function handleDeleteConfirmation(id, event) {
-        const body = genericCrudTable.gatherUpdates(id, table);
+        const body = genericCrudTable.gatherUpdates(id, table_data);
         const details = {
             id: id,
             body: body
@@ -122,7 +131,7 @@
 
     function handleDetails(id, event) {
         resetRawInEditMode(id);
-        const body = genericCrudTable.gatherUpdates(id, table);
+        const body = genericCrudTable.gatherUpdates(id, table_data);
         const details = {
             id: id,
             body: body
@@ -146,10 +155,10 @@
 
 <main>
     <h3>{name}</h3>
-    {#if (table !== undefined)}
-        {#if Array.isArray(table)}
+    {#if (table_data !== undefined)}
+        {#if Array.isArray(table_data)}
             <table>
-                {#each table as tableRow, i}
+                {#each table_data as tableRow, i}
                     {#if i === 0}
                         <tr>
                             {#each Object.keys(tableRow) as elem}
@@ -204,7 +213,8 @@
                                     </div>
                                     <div id="{name}options-edit{i}" class="options hidden">
                                         {#if options.includes(EDIT)}
-                                            <div class="options green" on:click="{(e) => {handleEditConfirmation(i, e)}}"
+                                            <div class="options green"
+                                                 on:click="{(e) => {handleEditConfirmation(i, e)}}"
                                                  title="Update">
                                                 {@html iconsend}
                                             </div>
@@ -246,7 +256,7 @@
             {/if}
         {:else}
             <br>
-            table: {table}
+            table: {table_data}
         {/if}
     {/if}
 </main>
