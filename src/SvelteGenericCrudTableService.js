@@ -99,11 +99,12 @@ export class SvelteGenericCrudTableService {
 
     gatherUpdates(id, table) {
         const body = {};
-        Object.entries(table[0]).forEach((elem) => {
+        table_config.columns_setting.forEach((elem) => {
             if (this.shadowed) {
-                body[this.getKey(elem)] = document.querySelector('crud-table').shadowRoot.getElementById(this.name + this.getKey(elem) + id).value;
+                body[this.getKey(elem)] = document.querySelector('crud-table').shadowRoot
+                    .getElementById(this.name + elem.name + id).value;
             } else {
-                body[this.getKey(elem)] = document.getElementById(this.name + this.getKey(elem) + id).value;
+                body[this.getKey(elem)] = document.getElementById(this.name + elem.name + id).value;
             }
         })
         return body;

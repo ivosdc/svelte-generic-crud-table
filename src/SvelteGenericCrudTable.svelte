@@ -55,15 +55,13 @@
     }
 
     function handleCancelEdit(id) {
-        Object.entries(table_data[id]).forEach((elem) => {
+        table_config.columns_setting.forEach((elem) => {
             if (shadowed) {
-                document.querySelector('crud-table').shadowRoot.getElementById(name + genericCrudTable.getKey(elem) + id).value =
-                        document.querySelector('crud-table').shadowRoot.getElementById(name + genericCrudTable.getKey(elem) + id + 'copy').innerText;
+                document.querySelector('crud-table').shadowRoot.getElementById(name + elem.name + id).value =
+                        document.querySelector('crud-table').shadowRoot.getElementById(name + elem.name + id + 'copy').innerText;
             } else {
-                console.log(name + genericCrudTable.getKey(elem) + id + 'copy');
-                console.log(document.getElementById(name + genericCrudTable.getKey(elem) + id + 'copy'))
-                document.getElementById(name + genericCrudTable.getKey(elem) + id).value =
-                        document.getElementById(name + genericCrudTable.getKey(elem) + id + 'copy').innerText;
+                document.getElementById(name + elem.name + id).value =
+                        document.getElementById(name + elem.name + id + 'copy').innerText;
             }
         });
         genericCrudTable.resetEditMode(id);
@@ -73,13 +71,13 @@
 
     function handleEditConfirmation(id, event) {
         resetRawInEditMode(id);
-        Object.entries(table_data[id]).forEach((elem) => {
+        table_config.columns_setting.forEach((elem) => {
             if (shadowed) {
-                document.querySelector('crud-table').shadowRoot.getElementById(name + genericCrudTable.getKey(elem) + id + 'copy').innerText =
-                        document.querySelector('crud-table').shadowRoot.getElementById(name + genericCrudTable.getKey(elem) + id).value;
+                document.querySelector('crud-table').shadowRoot.getElementById(name + genericCrudTable.getKey(elem.name) + id + 'copy').innerText =
+                        document.querySelector('crud-table').shadowRoot.getElementById(name + genericCrudTable.getKey(elem.name) + id).value;
             } else {
-                document.getElementById(name + genericCrudTable.getKey(elem) + id + 'copy').innerText =
-                        document.getElementById(name + genericCrudTable.getKey(elem) + id).value;
+                document.getElementById(name + genericCrudTable.getKey(elem.name) + id + 'copy').innerText =
+                        document.getElementById(name + genericCrudTable.getKey(elem.name) + id).value;
             }
         });
         const body = genericCrudTable.gatherUpdates(id, table_data);
