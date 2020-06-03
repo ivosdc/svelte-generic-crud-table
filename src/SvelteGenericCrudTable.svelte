@@ -73,11 +73,11 @@
         resetRawInEditMode(id);
         table_config.columns_setting.forEach((elem) => {
             if (shadowed) {
-                document.querySelector('crud-table').shadowRoot.getElementById(name + genericCrudTable.getKey(elem.name) + id + 'copy').innerText =
-                        document.querySelector('crud-table').shadowRoot.getElementById(name + genericCrudTable.getKey(elem.name) + id).value;
+                document.querySelector('crud-table').shadowRoot.getElementById(name + elem.name + id + 'copy').innerText =
+                        document.querySelector('crud-table').shadowRoot.getElementById(name + elem.name + id).value;
             } else {
-                document.getElementById(name + genericCrudTable.getKey(elem.name) + id + 'copy').innerText =
-                        document.getElementById(name + genericCrudTable.getKey(elem.name) + id).value;
+                document.getElementById(name + elem.name + id + 'copy').innerText =
+                        document.getElementById(name + elem.name + id).value;
             }
         });
         const body = genericCrudTable.gatherUpdates(id, table_data);
