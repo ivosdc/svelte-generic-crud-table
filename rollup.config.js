@@ -14,14 +14,18 @@ export default {
     ],
     plugins: [
         svelte({
+            css: css => {
+                css.write('dist/build/bundle.css');
+            },
             customElement: true,
             tag: null
-        }),
-        resolve({
-                extensions: ['.svelte', '.mjs', '.js', '.jsx', '.json'],
-                mainFields: ['jsnext:main', 'module', 'main']
-            }
-        ),
-        svg()
-    ]
-};
+}),
+resolve({
+        extensions: ['.svelte', '.mjs', '.js', '.jsx', '.json'],
+        mainFields: ['jsnext:main', 'module', 'main']
+    }
+),
+    svg()
+]
+}
+;

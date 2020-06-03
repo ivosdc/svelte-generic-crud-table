@@ -60,6 +60,8 @@
                 document.querySelector('crud-table').shadowRoot.getElementById(name + genericCrudTable.getKey(elem) + id).value =
                         document.querySelector('crud-table').shadowRoot.getElementById(name + genericCrudTable.getKey(elem) + id + 'copy').innerText;
             } else {
+                console.log(name + genericCrudTable.getKey(elem) + id + 'copy');
+                console.log(document.getElementById(name + genericCrudTable.getKey(elem) + id + 'copy'))
                 document.getElementById(name + genericCrudTable.getKey(elem) + id).value =
                         document.getElementById(name + genericCrudTable.getKey(elem) + id + 'copy').innerText;
             }
@@ -185,7 +187,7 @@
                                           aria-label="{name}{column_order.name}{i}"
                                           value={genericCrudTable.getValue(elem)} disabled></textarea>
                                         <div class="hidden"
-                                             id="{name}{column_order.name}{i}copy"
+                                             id="{name + column_order.name + i}copy"
                                              aria-label="{name}{column_order.name}{i}copy">
                                             {genericCrudTable.getValue(elem)}</div>
                                     </td>
