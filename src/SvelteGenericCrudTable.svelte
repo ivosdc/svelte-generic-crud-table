@@ -4,7 +4,8 @@
     import {SvelteGenericCrudTableService} from "./SvelteGenericCrudTableService";
     import icontrash from './icons/bin2.svg';
     import iconedit from './icons/pencil2.svg';
-    import iconsend from './icons/save.svg';
+    import iconsave from './icons/save.svg';
+    import iconsend from './icons/paperplane.svg';
     import iconcancel from './icons/cross.svg';
     import icondetail from './icons/info.svg';
     import iconcreate from './icons/plus.svg';
@@ -193,7 +194,7 @@
                                     <td>
                                         <div id="{name}options-default{i}"
                                              aria-label="{name}options-default{i}"
-                                             class="options shown">
+                                             class="options-field shown">
                                             {#if options.includes(DELETE)}
                                                 <div class="options red" on:click={() => handleDelete(i)}
                                                      title="Delete"
@@ -214,12 +215,13 @@
                                                 </div>
                                             {/if}
                                         </div>
-                                        <div id="{name}options-edit{i}" class="options hidden">
+                                        <div id="{name}options-edit{i}"
+                                             class="options-field hidden">
                                             {#if options.includes(EDIT)}
                                                 <div class="options green"
                                                      on:click="{(e) => {handleEditConfirmation(i, e)}}"
                                                      title="Update">
-                                                    {@html iconsend}
+                                                    {@html iconsave}
                                                 </div>
                                                 <div class="options red" on:click="{() => {handleCancelEdit(i)}}"
                                                      title="Cancel"
@@ -230,7 +232,7 @@
                                         </div>
                                         <div id="{name}options-delete{i}"
                                              aria-label="{name}options-delete{i}"
-                                             class="options hidden">
+                                             class="options-field hidden">
                                             {#if options.includes(DELETE)}
                                                 <div class="options green"
                                                      on:click={(e) => handleDeleteConfirmation(i, e)}
@@ -288,6 +290,7 @@
         font-size: 0.85em;
         font-weight: 200;
         padding-left: 0.2em;
+        text-align: left;
     }
 
     table {
@@ -306,12 +309,17 @@
         cursor: pointer;
     }
 
+    tr {
+        padding: 0;
+        margin: 0;
+    }
+
     td {
         color: #5f5f5f;
         border: none;
-        font-size: 0.85em;
+        font-size: 0.95em;
         font-weight: 200;
-        padding-left: 0.2em;
+        padding: 1px 0 1px 0.4em;
         float: left;
     }
 
@@ -321,11 +329,20 @@
         width: 100px;
     }
 
-    .options {
-        padding: 0.2em 0.2em 0em;
-        float: left;
+    .options-field {
         min-height: 1.3em;
-        font-size: 1em;
+        min-width: 100px;
+        max-width: 100px;
+        width: 100px;
+        opacity: 60%;
+    }
+
+    .options {
+        float: left;
+        position: relative;
+        width: 12px;
+        height: 12px;
+        padding: 0.2em 0.4em;
         cursor: pointer;
         opacity: 60%;
     }
@@ -361,33 +378,31 @@
     textarea {
         position: relative;
         resize: none;
-        top: 0.4em;
+        top: 0.1em;
         width: 100%;
         min-height: 1.3em;
-        max-height: 1.6em;
-        padding: 1px 0px 0px;
+        max-height: 2.3em;
+        padding: 1px 1px;
         background-color: #ffffff;
         border: none;
-        font-size: 0.85em;
+        font-size: 0.95em;
         font-weight: 300;
         text-overflow: ellipsis;
         white-space: pre;
         overflow: hidden;
         -webkit-transition: box-shadow 0.3s;
-        transition: box-shadow 0.3s;
-        box-shadow: -6px 6px 0px -5px #aaaaaa, 6px 6px 0px -5px #aaaaaa;
-    }
+   }
 
     textarea:not(:disabled) {
-        height: 1.6em;
-        min-height: 1.6em;
-        padding-left: 0.3em;
+        height: 2.3em;
+        min-height: 2.3em;
+        border-bottom: 0.5px solid #5f5f5f;
     }
 
     textarea:disabled {
         color: #5f5f5f;
         background-color: inherit;
-        font-size: 0.85em;
+        font-size: 0.95em;
         font-weight: 200;
         box-shadow: none;
         height: 1.3em;
@@ -399,7 +414,6 @@
     select:focus {
         outline: none;
         font-weight: 300;
-        box-shadow: -6px 6px 0px -5px #5f5f5f, 6px 6px 0px -5px #5f5f5f;
         white-space: normal;
         overflow: auto;
         padding-top: 1px;

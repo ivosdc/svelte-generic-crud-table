@@ -15,10 +15,7 @@ export default {
     plugins: [
         svelte({
             customElement: true,
-            tag: null,
-            css: css => {
-                css.write('dist/build/bundle.css');
-            }
+            tag: null
         }),
         resolve({
                 extensions: ['.svelte', '.mjs', '.js', '.jsx', '.json'],
