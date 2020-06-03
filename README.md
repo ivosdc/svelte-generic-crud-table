@@ -120,6 +120,7 @@ Just include the table as seen in the example below.
                                 name: 'Awesome',
                                 options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
                                 columns_setting: [
+                                // columns order is relevant
                                     {name: 'id', show: false, edit: true, size: '200px'},
                                     {name: 'name', show: true, edit: true, size: '200px'},
                                     {name: 'why', show: true, edit: true, size: '200px'},
@@ -158,8 +159,9 @@ Just include the table as seen in the example below.
         name: 'Awesome',
         options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
         columns_setting: [
-            {name: 'name', show: true, edit: true, size: '200px'},
+            // columns order is relevant
             {name: 'job', show: true, edit: true, size: '200px'},
+            {name: 'name', show: true, edit: true, size: '200px'},
             {name: 'private', show: true, edit: false, size: '200px'}
         ]
     }

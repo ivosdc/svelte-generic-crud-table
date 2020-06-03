@@ -37,7 +37,7 @@
     $: name = table_config.name;
 
     let options = [];
-    $: options = (typeof table_config.options !== 'undefined' ) ? table_config.options : [];
+    $: options = (typeof table_config.options !== 'undefined') ? table_config.options : [];
 
     const NO_ROW_IN_EDIT_MODE = -1;
     let cursor = NO_ROW_IN_EDIT_MODE;
@@ -161,11 +161,11 @@
                 {#each table_data as tableRow, i}
                     {#if i === 0}
                         <tr>
-                            {#each Object.keys(tableRow) as elem}
-                                <td class="headline {genericCrudTable.isShowField(elem) === false ? 'hidden' : 'shown'}"
-                                    width="{genericCrudTable.getShowFieldWidth(elem)}"
-                                    on:click={(e) => handleSort(elem, e)}>
-                                    <textarea class="sortable" value={genericCrudTable.makeCapitalLead(elem)}
+                            {#each table_config.columns_setting as elem}
+                                <td class="headline {genericCrudTable.isShowField(elem.name) === false ? 'hidden' : 'shown'}"
+                                    width="{genericCrudTable.getShowFieldWidth(elem.name)}"
+                                    on:click={(e) => handleSort(elem.name, e)}>
+                                    <textarea class="sortable" value={genericCrudTable.makeCapitalLead(elem.name)}
                                               disabled></textarea>
                                 </td>
                             {/each}
@@ -175,74 +175,79 @@
                         </tr>
                     {/if}
                     <tr class="row">
-                        {#each Object.entries(tableRow) as elem, j}
-                            <td class="{genericCrudTable.isShowField(genericCrudTable.getKey(elem)) === false ? 'hidden' : 'shown'}"
-                                width="{genericCrudTable.getShowFieldWidth(genericCrudTable.getKey(elem))}">
-                                <textarea id="{name}{genericCrudTable.getKey(elem)}{i}"
-                                          aria-label="{name}{genericCrudTable.getKey(elem)}{i}"
+                        {#each table_config.columns_setting as column_order, j}
+                            {#each Object.entries(tableRow) as elem, k}
+                                {#if (column_order.name === genericCrudTable.getKey(elem))}
+                                    <td class="{genericCrudTable.isShowField(column_order.name) === false ? 'hidden' : 'shown'}"
+                                        width="{genericCrudTable.getShowFieldWidth(column_order.name)}">
+                                <textarea id="{name}{column_order.name}{i}"
+                                          aria-label="{name}{column_order.name}{i}"
                                           value={genericCrudTable.getValue(elem)} disabled></textarea>
-                                <div class="hidden"
-                                     id="{name}{genericCrudTable.getKey(elem)}{i}copy"
-                                     aria-label="{name}{genericCrudTable.getKey(elem)}{i}copy">
-                                    {genericCrudTable.getValue(elem)}</div>
-                            </td>
-                            {#if Object.entries(tableRow).length - 1 === j}
-                                <td>
-                                    <div id="{name}options-default{i}"
-                                         aria-label="{name}options-default{i}"
-                                         class="options shown">
-                                        {#if options.includes(DELETE)}
-                                            <div class="options red" on:click={() => handleDelete(i)}
-                                                 title="Delete"
-                                                 aria-label={name + genericCrudTable.getKey(elem) + i + 'delete'} >
-                                                {@html icontrash}
-                                            </div>
-                                        {/if}
-                                        {#if options.includes(EDIT)}
-                                            <div class="options green"
-                                                 on:click={(e) => handleEdit(i, e)} title="Edit">
-                                                {@html iconedit}
-                                            </div>
-                                        {/if}
-                                        {#if options.includes(DETAILS)}
-                                            <div class="options blue" on:click="{(e) => {handleDetails(i, e)}}"
-                                                 title="Details">
-                                                {@html icondetail}
-                                            </div>
-                                        {/if}
-                                    </div>
-                                    <div id="{name}options-edit{i}" class="options hidden">
-                                        {#if options.includes(EDIT)}
-                                            <div class="options green"
-                                                 on:click="{(e) => {handleEditConfirmation(i, e)}}"
-                                                 title="Update">
-                                                {@html iconsend}
-                                            </div>
-                                            <div class="options red" on:click="{() => {handleCancelEdit(i)}}"
-                                                 title="Cancel"
-                                                 aria-label="{name}{genericCrudTable.getKey(elem)}{i}editCancel">
-                                                {@html iconcancel}
-                                            </div>
-                                        {/if}
-                                    </div>
-                                    <div id="{name}options-delete{i}"
-                                         aria-label="{name}options-delete{i}"
-                                         class="options hidden">
-                                        {#if options.includes(DELETE)}
-                                            <div class="options green" on:click={(e) => handleDeleteConfirmation(i, e)}
-                                                 title="Delete"
-                                                 aria-label="{name}{genericCrudTable.getKey(elem)}{i}deleteConfirmation">
-                                                {@html iconsend}
-                                            </div>
-                                            <div class="options red" on:click={(e) => handleCancelDelete(i)}
-                                                 title="Cancel"
-                                                 aria-label="{name}{genericCrudTable.getKey(elem)}{i}deleteCancel">
-                                                {@html iconcancel}
-                                            </div>
-                                        {/if}
-                                    </div>
-                                </td>
-                            {/if}
+                                        <div class="hidden"
+                                             id="{name}{column_order.name}{i}copy"
+                                             aria-label="{name}{column_order.name}{i}copy">
+                                            {genericCrudTable.getValue(elem)}</div>
+                                    </td>
+                                {/if}
+                                {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
+                                    <td>
+                                        <div id="{name}options-default{i}"
+                                             aria-label="{name}options-default{i}"
+                                             class="options shown">
+                                            {#if options.includes(DELETE)}
+                                                <div class="options red" on:click={() => handleDelete(i)}
+                                                     title="Delete"
+                                                     aria-label={name + genericCrudTable.getKey(elem) + i + 'delete'} >
+                                                    {@html icontrash}
+                                                </div>
+                                            {/if}
+                                            {#if options.includes(EDIT)}
+                                                <div class="options green"
+                                                     on:click={(e) => handleEdit(i, e)} title="Edit">
+                                                    {@html iconedit}
+                                                </div>
+                                            {/if}
+                                            {#if options.includes(DETAILS)}
+                                                <div class="options blue" on:click="{(e) => {handleDetails(i, e)}}"
+                                                     title="Details">
+                                                    {@html icondetail}
+                                                </div>
+                                            {/if}
+                                        </div>
+                                        <div id="{name}options-edit{i}" class="options hidden">
+                                            {#if options.includes(EDIT)}
+                                                <div class="options green"
+                                                     on:click="{(e) => {handleEditConfirmation(i, e)}}"
+                                                     title="Update">
+                                                    {@html iconsend}
+                                                </div>
+                                                <div class="options red" on:click="{() => {handleCancelEdit(i)}}"
+                                                     title="Cancel"
+                                                     aria-label="{name}{genericCrudTable.getKey(elem)}{i}editCancel">
+                                                    {@html iconcancel}
+                                                </div>
+                                            {/if}
+                                        </div>
+                                        <div id="{name}options-delete{i}"
+                                             aria-label="{name}options-delete{i}"
+                                             class="options hidden">
+                                            {#if options.includes(DELETE)}
+                                                <div class="options green"
+                                                     on:click={(e) => handleDeleteConfirmation(i, e)}
+                                                     title="Delete"
+                                                     aria-label="{name}{genericCrudTable.getKey(elem)}{i}deleteConfirmation">
+                                                    {@html iconsend}
+                                                </div>
+                                                <div class="options red" on:click={(e) => handleCancelDelete(i)}
+                                                     title="Cancel"
+                                                     aria-label="{name}{genericCrudTable.getKey(elem)}{i}deleteCancel">
+                                                    {@html iconcancel}
+                                                </div>
+                                            {/if}
+                                        </div>
+                                    </td>
+                                {/if}
+                            {/each}
                         {/each}
 
                     </tr>
