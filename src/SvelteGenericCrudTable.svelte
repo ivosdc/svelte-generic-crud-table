@@ -234,16 +234,16 @@
                                              aria-label="{name}options-delete{i}"
                                              class="options-field hidden">
                                             {#if options.includes(DELETE)}
+                                                <div class="options red" on:click={(e) => handleCancelDelete(i)}
+                                                     title="Cancel"
+                                                     aria-label="{name}{genericCrudTable.getKey(elem)}{i}deleteCancel">
+                                                    {@html iconcancel}
+                                                </div>
                                                 <div class="options green"
                                                      on:click={(e) => handleDeleteConfirmation(i, e)}
                                                      title="Delete"
                                                      aria-label="{name}{genericCrudTable.getKey(elem)}{i}deleteConfirmation">
                                                     {@html iconsend}
-                                                </div>
-                                                <div class="options red" on:click={(e) => handleCancelDelete(i)}
-                                                     title="Cancel"
-                                                     aria-label="{name}{genericCrudTable.getKey(elem)}{i}deleteCancel">
-                                                    {@html iconcancel}
                                                 </div>
                                             {/if}
                                         </div>
