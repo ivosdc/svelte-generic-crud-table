@@ -198,19 +198,19 @@
                                             {#if options.includes(DELETE)}
                                                 <div class="options red" on:click={() => handleDelete(i)}
                                                      title="Delete"
-                                                     aria-label={name + genericCrudTable.getKey(elem) + i + 'delete'} >
+                                                     aria-label={name + genericCrudTable.getKey(elem) + i + 'delete'} tabindex="0">
                                                     {@html icontrash}
                                                 </div>
                                             {/if}
                                             {#if options.includes(EDIT)}
                                                 <div class="options green"
-                                                     on:click={(e) => handleEdit(i, e)} title="Edit">
+                                                     on:click={(e) => handleEdit(i, e)} title="Edit" tabindex="0">
                                                     {@html iconedit}
                                                 </div>
                                             {/if}
                                             {#if options.includes(DETAILS)}
                                                 <div class="options blue" on:click="{(e) => {handleDetails(i, e)}}"
-                                                     title="Details">
+                                                     title="Details" tabindex="0">
                                                     {@html icondetail}
                                                 </div>
                                             {/if}
@@ -220,12 +220,13 @@
                                             {#if options.includes(EDIT)}
                                                 <div class="options green"
                                                      on:click="{(e) => {handleEditConfirmation(i, e)}}"
-                                                     title="Update">
+                                                     title="Update" tabindex="0">
                                                     {@html iconsave}
                                                 </div>
                                                 <div class="options red" on:click="{() => {handleCancelEdit(i)}}"
                                                      title="Cancel"
-                                                     aria-label="{name}{genericCrudTable.getKey(elem)}{i}editCancel">
+                                                     aria-label="{name}{genericCrudTable.getKey(elem)}{i}editCancel"
+                                                     tabindex="0">
                                                     {@html iconcancel}
                                                 </div>
                                             {/if}
@@ -236,13 +237,15 @@
                                             {#if options.includes(DELETE)}
                                                 <div class="options red" on:click={(e) => handleCancelDelete(i)}
                                                      title="Cancel"
-                                                     aria-label="{name}{genericCrudTable.getKey(elem)}{i}deleteCancel">
+                                                     aria-label="{name}{genericCrudTable.getKey(elem)}{i}deleteCancel"
+                                                     tabindex="0">
                                                     {@html iconcancel}
                                                 </div>
                                                 <div class="options green"
                                                      on:click={(e) => handleDeleteConfirmation(i, e)}
                                                      title="Delete"
-                                                     aria-label="{name}{genericCrudTable.getKey(elem)}{i}deleteConfirmation">
+                                                     aria-label="{name}{genericCrudTable.getKey(elem)}{i}deleteConfirmation"
+                                                     tabindex="0">
                                                     {@html iconsend}
                                                 </div>
                                             {/if}
@@ -340,14 +343,20 @@
     .options {
         float: left;
         position: relative;
-        width: 12px;
-        height: 12px;
+        width: 16px;
+        height: 16px;
         padding: 0.2em 0.4em;
         cursor: pointer;
         opacity: 60%;
     }
 
     .options:hover {
+        opacity: 100%;
+    }
+
+    .options:focus {
+        border: none;
+        outline: none;
         opacity: 100%;
     }
 
@@ -391,7 +400,7 @@
         white-space: pre;
         overflow: hidden;
         -webkit-transition: box-shadow 0.3s;
-   }
+    }
 
     textarea:not(:disabled) {
         height: 2.3em;
