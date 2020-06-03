@@ -520,7 +520,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (264:8) {:else}
+    // (267:8) {:else}
     function create_else_block(ctx) {
     	let br;
     	let t0;
@@ -1030,6 +1030,7 @@ var SvelteGenericCrudTable = (function () {
     			attr(div, "class", "options red");
     			attr(div, "title", "Delete");
     			attr(div, "aria-label", div_aria_label_value = /*name*/ ctx[2] + /*genericCrudTable*/ ctx[4].getKey(/*elem*/ ctx[35]) + /*i*/ ctx[31] + "delete");
+    			attr(div, "tabindex", "0");
     		},
     		m(target, anchor, remount) {
     			insert(target, div, anchor);
@@ -1065,6 +1066,7 @@ var SvelteGenericCrudTable = (function () {
     			div = element("div");
     			attr(div, "class", "options green");
     			attr(div, "title", "Edit");
+    			attr(div, "tabindex", "0");
     		},
     		m(target, anchor, remount) {
     			insert(target, div, anchor);
@@ -1096,6 +1098,7 @@ var SvelteGenericCrudTable = (function () {
     			div = element("div");
     			attr(div, "class", "options blue");
     			attr(div, "title", "Details");
+    			attr(div, "tabindex", "0");
     		},
     		m(target, anchor, remount) {
     			insert(target, div, anchor);
@@ -1136,9 +1139,11 @@ var SvelteGenericCrudTable = (function () {
     			div1 = element("div");
     			attr(div0, "class", "options green");
     			attr(div0, "title", "Update");
+    			attr(div0, "tabindex", "0");
     			attr(div1, "class", "options red");
     			attr(div1, "title", "Cancel");
     			attr(div1, "aria-label", div1_aria_label_value = "" + (/*name*/ ctx[2] + /*genericCrudTable*/ ctx[4].getKey(/*elem*/ ctx[35]) + /*i*/ ctx[31] + "editCancel"));
+    			attr(div1, "tabindex", "0");
     		},
     		m(target, anchor, remount) {
     			insert(target, div0, anchor);
@@ -1169,7 +1174,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (236:44) {#if options.includes(DELETE)}
+    // (237:44) {#if options.includes(DELETE)}
     function create_if_block_4(ctx) {
     	let div0;
     	let div0_aria_label_value;
@@ -1194,9 +1199,11 @@ var SvelteGenericCrudTable = (function () {
     			attr(div0, "class", "options red");
     			attr(div0, "title", "Cancel");
     			attr(div0, "aria-label", div0_aria_label_value = "" + (/*name*/ ctx[2] + /*genericCrudTable*/ ctx[4].getKey(/*elem*/ ctx[35]) + /*i*/ ctx[31] + "deleteCancel"));
+    			attr(div0, "tabindex", "0");
     			attr(div1, "class", "options green");
     			attr(div1, "title", "Delete");
     			attr(div1, "aria-label", div1_aria_label_value = "" + (/*name*/ ctx[2] + /*genericCrudTable*/ ctx[4].getKey(/*elem*/ ctx[35]) + /*i*/ ctx[31] + "deleteConfirmation"));
+    			attr(div1, "tabindex", "0");
     		},
     		m(target, anchor, remount) {
     			insert(target, div0, anchor);
@@ -1421,7 +1428,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (258:12) {#if options.includes(CREATE)}
+    // (261:12) {#if options.includes(CREATE)}
     function create_if_block_2(ctx) {
     	let div;
     	let t;
@@ -1716,7 +1723,7 @@ var SvelteGenericCrudTable = (function () {
     class SvelteGenericCrudTable extends SvelteElement {
     	constructor(options) {
     		super();
-    		this.shadowRoot.innerHTML = `<style>.red:hover{fill:red;fill-opacity:80%}.green:hover{fill:limegreen;fill-opacity:80%}.blue:hover{fill:dodgerblue;fill-opacity:80%}h3{color:#5f5f5f;font-size:0.85em;font-weight:200;padding-left:0.2em;text-align:left}table{text-align:left;border-collapse:collapse;table-layout:fixed;width:100%}.headline{border-bottom:1px solid #dddddd;cursor:pointer}.sortable{cursor:pointer}tr{padding:0;margin:0}td{color:#5f5f5f;border:none;font-size:0.95em;font-weight:200;padding:1px 0 1px 0.4em;float:left}#labelOptions{color:#aaaaaa;font-weight:100;width:100px}.options-field{min-height:1.3em;min-width:100px;max-width:100px;width:100px;opacity:60%}.options{float:left;position:relative;width:12px;height:12px;padding:0.2em 0.4em;cursor:pointer;opacity:60%}.options:hover{opacity:100%}#options-create{text-align:left;height:1.3em;padding-bottom:1em;max-width:0px}.hidden{display:none}.shown{display:block}.row{margin-top:0px;margin-bottom:1px}.row:hover{background-color:#efefef}textarea{position:relative;resize:none;top:0.1em;width:100%;min-height:1.3em;max-height:2.3em;padding:1px 1px;background-color:#ffffff;border:none;font-size:0.95em;font-weight:300;text-overflow:ellipsis;white-space:pre;overflow:hidden;-webkit-transition:box-shadow 0.3s}textarea:not(:disabled){height:2.3em;min-height:2.3em;border-bottom:0.5px solid #5f5f5f}textarea:disabled{color:#5f5f5f;background-color:inherit;font-size:0.95em;font-weight:200;box-shadow:none;height:1.3em;max-height:1.3em}textarea:focus{outline:none;font-weight:300;white-space:normal;overflow:auto;padding-top:1px}textarea:not(:focus){max-height:1.3em}</style>`;
+    		this.shadowRoot.innerHTML = `<style>.red:hover{fill:red;fill-opacity:80%}.green:hover{fill:limegreen;fill-opacity:80%}.blue:hover{fill:dodgerblue;fill-opacity:80%}h3{color:#5f5f5f;font-size:0.85em;font-weight:200;padding-left:0.2em;text-align:left}table{text-align:left;border-collapse:collapse;table-layout:fixed;width:100%}.headline{border-bottom:1px solid #dddddd;cursor:pointer}.sortable{cursor:pointer}tr{padding:0;margin:0}td{color:#5f5f5f;border:none;font-size:0.95em;font-weight:200;padding:1px 0 1px 0.4em;float:left}#labelOptions{color:#aaaaaa;font-weight:100;width:100px}.options-field{min-height:1.3em;min-width:100px;max-width:100px;width:100px;opacity:60%}.options{float:left;position:relative;width:16px;height:16px;padding:0.2em 0.4em;cursor:pointer;opacity:60%}.options:hover{opacity:100%}.options:focus{border:none;outline:none;opacity:100%}#options-create{text-align:left;height:1.3em;padding-bottom:1em;max-width:0px}.hidden{display:none}.shown{display:block}.row{margin-top:0px;margin-bottom:1px}.row:hover{background-color:#efefef}textarea{position:relative;resize:none;top:0.1em;width:100%;min-height:1.3em;max-height:2.3em;padding:1px 1px;background-color:#ffffff;border:none;font-size:0.95em;font-weight:300;text-overflow:ellipsis;white-space:pre;overflow:hidden;-webkit-transition:box-shadow 0.3s}textarea:not(:disabled){height:2.3em;min-height:2.3em;border-bottom:0.5px solid #5f5f5f}textarea:disabled{color:#5f5f5f;background-color:inherit;font-size:0.95em;font-weight:200;box-shadow:none;height:1.3em;max-height:1.3em}textarea:focus{outline:none;font-weight:300;white-space:normal;overflow:auto;padding-top:1px}textarea:not(:focus){max-height:1.3em}</style>`;
     		init(this, { target: this.shadowRoot }, instance, create_fragment, safe_not_equal, { table_data: 0, table_config: 1 }, [-1, -1]);
 
     		if (options) {
