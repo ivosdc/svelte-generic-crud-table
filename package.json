@@ -6,10 +6,9 @@
   "module": "dist/build/crud-table.mjs",
   "svelte": "src/index.js",
   "scripts": {
-    "build": "rollup -c && npm run copy",
+    "build": "rollup -c",
     "dev": "rollup -c -w",
     "test": "jest",
-    "copy": "cp -Rf ./src/icons ./dist"
   },
   "repository": {
     "type": "git",
