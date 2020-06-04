@@ -156,11 +156,6 @@
     <h3>{name}</h3>
     {#if (table_data !== undefined)}
         {#if Array.isArray(table_data)}
-            {#if options.includes(CREATE)}
-                <div class="options blue" id="options-create" on:click={handleCreate} title="Create">
-                    {@html iconcreate}
-                </div>
-            {/if}
             <table>
                 {#each table_data as tableRow, i}
                     {#if i === 0}
@@ -174,7 +169,11 @@
                                 </td>
                             {/each}
                             <td id="labelOptions" class="headline">
-                                <textarea disabled></textarea>
+                                {#if options.includes(CREATE)}
+                                    <div class="options blue" id="options-create" on:click={handleCreate} title="Create">
+                                        {@html iconcreate}
+                                    </div>
+                                {/if}
                             </td>
                         </tr>
                     {/if}
