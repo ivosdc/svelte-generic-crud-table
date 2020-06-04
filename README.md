@@ -1,7 +1,7 @@
 # svelte-generic-crud-table
 Use as:
 - Web-component: `<crud-table></crud-table>`
-- or Svelte-component: `import SvelteGenericCrudTable from 'svelte-generic-crud-table`
+- or Svelte-component: `import SvelteGenericCrudTable from 'svelte-generic-crud-table'`
 
 See examples below...
 
@@ -101,12 +101,20 @@ Just include the table as seen in the example below.
     <meta name='viewport' content='width=device-width,initial-scale=1'>
     <title>Generic Crud Table</title>
     <link rel='icon' type='image/png' href='favicon.png'>
-    <link rel='stylesheet' href='build/bundle.css'>
-    <script defer src='build/bundle.js'></script>
+    <link rel='stylesheet' href='global.css'>
+    <link rel='stylesheet' href='build/crud-table.css'>
+    <script defer src='build/crud-table.js'></script>
 </head>
 
 <body>
+<h1>&lt;crud-table&gt;&lt;/crud-table&gt;</h1>
+<p>Agnostic web-component for object-arrays with CRUD functionality.</p>
+<span style="background-color: #dddddd; padding: 0.4em; display:inline-block">&gt; npm install -save svelte-generic-crud-table</span>
+<p></p>
+<hr>
 <crud-table></crud-table>
+<hr>
+</span style="text-align: right"><a href="https://ivolution.one">ivolution.one product - MIT License</a></p>
 </body>
 
 <script>
@@ -119,7 +127,6 @@ Just include the table as seen in the example below.
         name: 'Awesome',
         options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
         columns_setting: [
-            // columns order is relevant
             {name: 'job', show: true, edit: true, size: '200px'},
             {name: 'name', show: true, edit: true, size: '200px'},
             {name: 'private', show: true, edit: false, size: '200px'}
@@ -134,9 +141,7 @@ Just include the table as seen in the example below.
 
     genericCrudTable.addEventListener('create', () => {
         console.log('create');
-        console.log(table_data.length);
         table_data.push({name: 'myName', job: 'code', private: 'not editable'});
-        console.log(table_data.length);
         refresh();
     });
 
@@ -197,6 +202,7 @@ Just include the table as seen in the example below.
     }
 </script>
 </html>
+
 ```
 
 
