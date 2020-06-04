@@ -2,13 +2,8 @@
 <script>
     import {createEventDispatcher} from 'svelte';
     import {SvelteGenericCrudTableService} from "./SvelteGenericCrudTableService";
-    import icontrash from './icons/bin2.svg';
-    import iconedit from './icons/pencil2.svg';
-    import iconsave from './icons/save.svg';
-    import iconsend from './icons/paperplane.svg';
-    import iconcancel from './icons/cross.svg';
-    import icondetail from './icons/info.svg';
-    import iconcreate from './icons/plus.svg';
+    import {icontrash, iconedit, iconsend, icondetail, iconcancel, iconcreate, iconsave} from './svgIcon'
+
 
     let shadowed = false;
     if (document.querySelector('crud-table')) {
@@ -46,6 +41,13 @@
     let cursor = NO_ROW_IN_EDIT_MODE;
     let genericCrudTable = new SvelteGenericCrudTableService(table_config, shadowed);
     $: genericCrudTable = new SvelteGenericCrudTableService(table_config, shadowed);
+
+    function getFile(file) {
+        return new Promise((resolve, reject) => {
+            let fr = new FileReader();
+            fr.onload = x=> resolve(fr.result);
+            fr.readAsText(file);
+        })}
 
     function handleEdit(id) {
         resetRawInEditMode(id);
@@ -278,6 +280,23 @@
     .blue:hover {
         fill: dodgerblue;
         fill-opacity: 80%;
+    }
+
+    .trash {
+        width: 100%;
+        height: 100%;
+        background-image: url("/icons/bin2.svg");
+        background-repeat: no-repeat;
+        background-size: 100% auto;
+    }
+
+    .trash:hover {
+        fill: red;
+        fill-opacity: 80%;
+    }
+
+    svg.trash {
+        fill: red;
     }
 
 
