@@ -466,32 +466,32 @@ var SvelteGenericCrudTable = (function () {
 
     function get_each_context_2(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[37] = list[i];
-    	child_ctx[39] = i;
+    	child_ctx[36] = list[i];
+    	child_ctx[38] = i;
     	return child_ctx;
     }
 
     function get_each_context_1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[34] = list[i];
-    	child_ctx[36] = i;
+    	child_ctx[33] = list[i];
+    	child_ctx[35] = i;
     	return child_ctx;
     }
 
     function get_each_context_3(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[37] = list[i];
+    	child_ctx[36] = list[i];
     	return child_ctx;
     }
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[31] = list[i];
-    	child_ctx[33] = i;
+    	child_ctx[30] = list[i];
+    	child_ctx[32] = i;
     	return child_ctx;
     }
 
-    // (159:4) {#if (table_data !== undefined)}
+    // (157:4) {#if (table_data !== undefined)}
     function create_if_block(ctx) {
     	let show_if;
     	let if_block_anchor;
@@ -534,7 +534,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (262:8) {:else}
+    // (259:8) {:else}
     function create_else_block(ctx) {
     	let br;
     	let t0;
@@ -562,12 +562,12 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (160:8) {#if Array.isArray(table_data)}
+    // (158:8) {#if Array.isArray(table_data)}
     function create_if_block_1(ctx) {
-    	let table;
-    	let t;
     	let show_if = /*options*/ ctx[3].includes(CREATE);
-    	let if_block_anchor;
+    	let t;
+    	let table;
+    	let if_block = show_if && create_if_block_10(ctx);
     	let each_value = /*table_data*/ ctx[0];
     	let each_blocks = [];
 
@@ -575,32 +575,41 @@ var SvelteGenericCrudTable = (function () {
     		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
     	}
 
-    	let if_block = show_if && create_if_block_2(ctx);
-
     	return {
     		c() {
+    			if (if_block) if_block.c();
+    			t = space();
     			table = element("table");
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
-
-    			t = space();
-    			if (if_block) if_block.c();
-    			if_block_anchor = empty();
     		},
     		m(target, anchor) {
+    			if (if_block) if_block.m(target, anchor);
+    			insert(target, t, anchor);
     			insert(target, table, anchor);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(table, null);
     			}
-
-    			insert(target, t, anchor);
-    			if (if_block) if_block.m(target, anchor);
-    			insert(target, if_block_anchor, anchor);
     		},
     		p(ctx, dirty) {
+    			if (dirty[0] & /*options*/ 8) show_if = /*options*/ ctx[3].includes(CREATE);
+
+    			if (show_if) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block_10(ctx);
+    					if_block.c();
+    					if_block.m(t.parentNode, t);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+
     			if (dirty[0] & /*table_config, table_data, name, handleDeleteConfirmation, handleCancelDelete, options, handleCancelEdit, handleEditConfirmation, handleDetails, handleEdit, handleDelete, genericCrudTable, handleSort*/ 14335) {
     				each_value = /*table_data*/ ctx[0];
     				let i;
@@ -623,34 +632,44 @@ var SvelteGenericCrudTable = (function () {
 
     				each_blocks.length = each_value.length;
     			}
-
-    			if (dirty[0] & /*options*/ 8) show_if = /*options*/ ctx[3].includes(CREATE);
-
-    			if (show_if) {
-    				if (if_block) {
-    					if_block.p(ctx, dirty);
-    				} else {
-    					if_block = create_if_block_2(ctx);
-    					if_block.c();
-    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
-    				}
-    			} else if (if_block) {
-    				if_block.d(1);
-    				if_block = null;
-    			}
     		},
     		d(detaching) {
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach(t);
     			if (detaching) detach(table);
     			destroy_each(each_blocks, detaching);
-    			if (detaching) detach(t);
-    			if (if_block) if_block.d(detaching);
-    			if (detaching) detach(if_block_anchor);
     		}
     	};
     }
 
-    // (163:20) {#if i === 0}
+    // (159:12) {#if options.includes(CREATE)}
     function create_if_block_10(ctx) {
+    	let div;
+    	let dispose;
+
+    	return {
+    		c() {
+    			div = element("div");
+    			attr(div, "class", "options blue");
+    			attr(div, "id", "options-create");
+    			attr(div, "title", "Create");
+    		},
+    		m(target, anchor, remount) {
+    			insert(target, div, anchor);
+    			div.innerHTML = iconcreate;
+    			if (remount) dispose();
+    			dispose = listen(div, "click", /*handleCreate*/ ctx[11]);
+    		},
+    		p: noop,
+    		d(detaching) {
+    			if (detaching) detach(div);
+    			dispose();
+    		}
+    	};
+    }
+
+    // (166:20) {#if i === 0}
+    function create_if_block_9(ctx) {
     	let tr;
     	let t;
     	let td;
@@ -716,7 +735,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (165:28) {#each table_config.columns_setting as elem}
+    // (168:28) {#each table_config.columns_setting as elem}
     function create_each_block_3(ctx) {
     	let td;
     	let textarea;
@@ -725,7 +744,7 @@ var SvelteGenericCrudTable = (function () {
     	let dispose;
 
     	function click_handler(...args) {
-    		return /*click_handler*/ ctx[23](/*elem*/ ctx[37], ...args);
+    		return /*click_handler*/ ctx[22](/*elem*/ ctx[36], ...args);
     	}
 
     	return {
@@ -734,13 +753,13 @@ var SvelteGenericCrudTable = (function () {
     			textarea = element("textarea");
     			attr(textarea, "class", "sortable");
     			textarea.disabled = true;
-    			textarea.value = textarea_value_value = /*genericCrudTable*/ ctx[4].makeCapitalLead(/*elem*/ ctx[37].name);
+    			textarea.value = textarea_value_value = /*genericCrudTable*/ ctx[4].makeCapitalLead(/*elem*/ ctx[36].name);
 
-    			attr(td, "class", td_class_value = "headline " + (/*genericCrudTable*/ ctx[4].isShowField(/*elem*/ ctx[37].name) === false
+    			attr(td, "class", td_class_value = "headline " + (/*genericCrudTable*/ ctx[4].isShowField(/*elem*/ ctx[36].name) === false
     			? "hidden"
     			: "shown"));
 
-    			set_style(td, "width", /*genericCrudTable*/ ctx[4].getShowFieldWidth(/*elem*/ ctx[37].name));
+    			set_style(td, "width", /*genericCrudTable*/ ctx[4].getShowFieldWidth(/*elem*/ ctx[36].name));
     		},
     		m(target, anchor, remount) {
     			insert(target, td, anchor);
@@ -751,18 +770,18 @@ var SvelteGenericCrudTable = (function () {
     		p(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (dirty[0] & /*genericCrudTable, table_config*/ 18 && textarea_value_value !== (textarea_value_value = /*genericCrudTable*/ ctx[4].makeCapitalLead(/*elem*/ ctx[37].name))) {
+    			if (dirty[0] & /*genericCrudTable, table_config*/ 18 && textarea_value_value !== (textarea_value_value = /*genericCrudTable*/ ctx[4].makeCapitalLead(/*elem*/ ctx[36].name))) {
     				textarea.value = textarea_value_value;
     			}
 
-    			if (dirty[0] & /*genericCrudTable, table_config*/ 18 && td_class_value !== (td_class_value = "headline " + (/*genericCrudTable*/ ctx[4].isShowField(/*elem*/ ctx[37].name) === false
+    			if (dirty[0] & /*genericCrudTable, table_config*/ 18 && td_class_value !== (td_class_value = "headline " + (/*genericCrudTable*/ ctx[4].isShowField(/*elem*/ ctx[36].name) === false
     			? "hidden"
     			: "shown"))) {
     				attr(td, "class", td_class_value);
     			}
 
     			if (dirty[0] & /*genericCrudTable, table_config*/ 18) {
-    				set_style(td, "width", /*genericCrudTable*/ ctx[4].getShowFieldWidth(/*elem*/ ctx[37].name));
+    				set_style(td, "width", /*genericCrudTable*/ ctx[4].getShowFieldWidth(/*elem*/ ctx[36].name));
     			}
     		},
     		d(detaching) {
@@ -772,8 +791,8 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (181:32) {#if (column_order.name === genericCrudTable.getKey(elem))}
-    function create_if_block_9(ctx) {
+    // (184:32) {#if (column_order.name === genericCrudTable.getKey(elem))}
+    function create_if_block_8(ctx) {
     	let td;
     	let textarea;
     	let textarea_id_value;
@@ -785,42 +804,42 @@ var SvelteGenericCrudTable = (function () {
     		c() {
     			td = element("td");
     			textarea = element("textarea");
-    			attr(textarea, "id", textarea_id_value = /*name*/ ctx[2] + /*column_order*/ ctx[34].name + /*i*/ ctx[33]);
-    			attr(textarea, "aria-label", textarea_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[34].name + /*i*/ ctx[33]);
+    			attr(textarea, "id", textarea_id_value = /*name*/ ctx[2] + /*column_order*/ ctx[33].name + /*i*/ ctx[32]);
+    			attr(textarea, "aria-label", textarea_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[33].name + /*i*/ ctx[32]);
     			textarea.disabled = true;
-    			textarea.value = textarea_value_value = /*table_data*/ ctx[0][/*i*/ ctx[33]][/*column_order*/ ctx[34].name];
+    			textarea.value = textarea_value_value = /*table_data*/ ctx[0][/*i*/ ctx[32]][/*column_order*/ ctx[33].name];
 
-    			attr(td, "class", td_class_value = /*genericCrudTable*/ ctx[4].isShowField(/*column_order*/ ctx[34].name) === false
+    			attr(td, "class", td_class_value = /*genericCrudTable*/ ctx[4].isShowField(/*column_order*/ ctx[33].name) === false
     			? "hidden"
     			: "shown");
 
-    			set_style(td, "width", /*genericCrudTable*/ ctx[4].getShowFieldWidth(/*column_order*/ ctx[34].name));
+    			set_style(td, "width", /*genericCrudTable*/ ctx[4].getShowFieldWidth(/*column_order*/ ctx[33].name));
     		},
     		m(target, anchor) {
     			insert(target, td, anchor);
     			append(td, textarea);
     		},
     		p(ctx, dirty) {
-    			if (dirty[0] & /*name, table_config*/ 6 && textarea_id_value !== (textarea_id_value = /*name*/ ctx[2] + /*column_order*/ ctx[34].name + /*i*/ ctx[33])) {
+    			if (dirty[0] & /*name, table_config*/ 6 && textarea_id_value !== (textarea_id_value = /*name*/ ctx[2] + /*column_order*/ ctx[33].name + /*i*/ ctx[32])) {
     				attr(textarea, "id", textarea_id_value);
     			}
 
-    			if (dirty[0] & /*name, table_config*/ 6 && textarea_aria_label_value !== (textarea_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[34].name + /*i*/ ctx[33])) {
+    			if (dirty[0] & /*name, table_config*/ 6 && textarea_aria_label_value !== (textarea_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[33].name + /*i*/ ctx[32])) {
     				attr(textarea, "aria-label", textarea_aria_label_value);
     			}
 
-    			if (dirty[0] & /*table_data, table_config*/ 3 && textarea_value_value !== (textarea_value_value = /*table_data*/ ctx[0][/*i*/ ctx[33]][/*column_order*/ ctx[34].name])) {
+    			if (dirty[0] & /*table_data, table_config*/ 3 && textarea_value_value !== (textarea_value_value = /*table_data*/ ctx[0][/*i*/ ctx[32]][/*column_order*/ ctx[33].name])) {
     				textarea.value = textarea_value_value;
     			}
 
-    			if (dirty[0] & /*genericCrudTable, table_config*/ 18 && td_class_value !== (td_class_value = /*genericCrudTable*/ ctx[4].isShowField(/*column_order*/ ctx[34].name) === false
+    			if (dirty[0] & /*genericCrudTable, table_config*/ 18 && td_class_value !== (td_class_value = /*genericCrudTable*/ ctx[4].isShowField(/*column_order*/ ctx[33].name) === false
     			? "hidden"
     			: "shown")) {
     				attr(td, "class", td_class_value);
     			}
 
     			if (dirty[0] & /*genericCrudTable, table_config*/ 18) {
-    				set_style(td, "width", /*genericCrudTable*/ ctx[4].getShowFieldWidth(/*column_order*/ ctx[34].name));
+    				set_style(td, "width", /*genericCrudTable*/ ctx[4].getShowFieldWidth(/*column_order*/ ctx[33].name));
     			}
     		},
     		d(detaching) {
@@ -829,8 +848,8 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (188:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
-    function create_if_block_3(ctx) {
+    // (191:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
+    function create_if_block_2(ctx) {
     	let td;
     	let div0;
     	let show_if_4 = /*options*/ ctx[3].includes(DELETE);
@@ -849,11 +868,11 @@ var SvelteGenericCrudTable = (function () {
     	let show_if = /*options*/ ctx[3].includes(DELETE);
     	let div2_id_value;
     	let div2_aria_label_value;
-    	let if_block0 = show_if_4 && create_if_block_8(ctx);
-    	let if_block1 = show_if_3 && create_if_block_7(ctx);
-    	let if_block2 = show_if_2 && create_if_block_6(ctx);
-    	let if_block3 = show_if_1 && create_if_block_5(ctx);
-    	let if_block4 = show_if && create_if_block_4(ctx);
+    	let if_block0 = show_if_4 && create_if_block_7(ctx);
+    	let if_block1 = show_if_3 && create_if_block_6(ctx);
+    	let if_block2 = show_if_2 && create_if_block_5(ctx);
+    	let if_block3 = show_if_1 && create_if_block_4(ctx);
+    	let if_block4 = show_if && create_if_block_3(ctx);
 
     	return {
     		c() {
@@ -870,13 +889,13 @@ var SvelteGenericCrudTable = (function () {
     			t3 = space();
     			div2 = element("div");
     			if (if_block4) if_block4.c();
-    			attr(div0, "id", div0_id_value = "" + (/*name*/ ctx[2] + "options-default" + /*i*/ ctx[33]));
-    			attr(div0, "aria-label", div0_aria_label_value = "" + (/*name*/ ctx[2] + "options-default" + /*i*/ ctx[33]));
+    			attr(div0, "id", div0_id_value = "" + (/*name*/ ctx[2] + "options-default" + /*i*/ ctx[32]));
+    			attr(div0, "aria-label", div0_aria_label_value = "" + (/*name*/ ctx[2] + "options-default" + /*i*/ ctx[32]));
     			attr(div0, "class", "options-field shown");
-    			attr(div1, "id", div1_id_value = "" + (/*name*/ ctx[2] + "options-edit" + /*i*/ ctx[33]));
+    			attr(div1, "id", div1_id_value = "" + (/*name*/ ctx[2] + "options-edit" + /*i*/ ctx[32]));
     			attr(div1, "class", "options-field hidden");
-    			attr(div2, "id", div2_id_value = "" + (/*name*/ ctx[2] + "options-delete" + /*i*/ ctx[33]));
-    			attr(div2, "aria-label", div2_aria_label_value = "" + (/*name*/ ctx[2] + "options-delete" + /*i*/ ctx[33]));
+    			attr(div2, "id", div2_id_value = "" + (/*name*/ ctx[2] + "options-delete" + /*i*/ ctx[32]));
+    			attr(div2, "aria-label", div2_aria_label_value = "" + (/*name*/ ctx[2] + "options-delete" + /*i*/ ctx[32]));
     			attr(div2, "class", "options-field hidden");
     		},
     		m(target, anchor) {
@@ -901,7 +920,7 @@ var SvelteGenericCrudTable = (function () {
     				if (if_block0) {
     					if_block0.p(ctx, dirty);
     				} else {
-    					if_block0 = create_if_block_8(ctx);
+    					if_block0 = create_if_block_7(ctx);
     					if_block0.c();
     					if_block0.m(div0, t0);
     				}
@@ -916,7 +935,7 @@ var SvelteGenericCrudTable = (function () {
     				if (if_block1) {
     					if_block1.p(ctx, dirty);
     				} else {
-    					if_block1 = create_if_block_7(ctx);
+    					if_block1 = create_if_block_6(ctx);
     					if_block1.c();
     					if_block1.m(div0, t1);
     				}
@@ -931,7 +950,7 @@ var SvelteGenericCrudTable = (function () {
     				if (if_block2) {
     					if_block2.p(ctx, dirty);
     				} else {
-    					if_block2 = create_if_block_6(ctx);
+    					if_block2 = create_if_block_5(ctx);
     					if_block2.c();
     					if_block2.m(div0, null);
     				}
@@ -940,11 +959,11 @@ var SvelteGenericCrudTable = (function () {
     				if_block2 = null;
     			}
 
-    			if (dirty[0] & /*name*/ 4 && div0_id_value !== (div0_id_value = "" + (/*name*/ ctx[2] + "options-default" + /*i*/ ctx[33]))) {
+    			if (dirty[0] & /*name*/ 4 && div0_id_value !== (div0_id_value = "" + (/*name*/ ctx[2] + "options-default" + /*i*/ ctx[32]))) {
     				attr(div0, "id", div0_id_value);
     			}
 
-    			if (dirty[0] & /*name*/ 4 && div0_aria_label_value !== (div0_aria_label_value = "" + (/*name*/ ctx[2] + "options-default" + /*i*/ ctx[33]))) {
+    			if (dirty[0] & /*name*/ 4 && div0_aria_label_value !== (div0_aria_label_value = "" + (/*name*/ ctx[2] + "options-default" + /*i*/ ctx[32]))) {
     				attr(div0, "aria-label", div0_aria_label_value);
     			}
 
@@ -954,7 +973,7 @@ var SvelteGenericCrudTable = (function () {
     				if (if_block3) {
     					if_block3.p(ctx, dirty);
     				} else {
-    					if_block3 = create_if_block_5(ctx);
+    					if_block3 = create_if_block_4(ctx);
     					if_block3.c();
     					if_block3.m(div1, null);
     				}
@@ -963,7 +982,7 @@ var SvelteGenericCrudTable = (function () {
     				if_block3 = null;
     			}
 
-    			if (dirty[0] & /*name*/ 4 && div1_id_value !== (div1_id_value = "" + (/*name*/ ctx[2] + "options-edit" + /*i*/ ctx[33]))) {
+    			if (dirty[0] & /*name*/ 4 && div1_id_value !== (div1_id_value = "" + (/*name*/ ctx[2] + "options-edit" + /*i*/ ctx[32]))) {
     				attr(div1, "id", div1_id_value);
     			}
 
@@ -973,7 +992,7 @@ var SvelteGenericCrudTable = (function () {
     				if (if_block4) {
     					if_block4.p(ctx, dirty);
     				} else {
-    					if_block4 = create_if_block_4(ctx);
+    					if_block4 = create_if_block_3(ctx);
     					if_block4.c();
     					if_block4.m(div2, null);
     				}
@@ -982,11 +1001,11 @@ var SvelteGenericCrudTable = (function () {
     				if_block4 = null;
     			}
 
-    			if (dirty[0] & /*name*/ 4 && div2_id_value !== (div2_id_value = "" + (/*name*/ ctx[2] + "options-delete" + /*i*/ ctx[33]))) {
+    			if (dirty[0] & /*name*/ 4 && div2_id_value !== (div2_id_value = "" + (/*name*/ ctx[2] + "options-delete" + /*i*/ ctx[32]))) {
     				attr(div2, "id", div2_id_value);
     			}
 
-    			if (dirty[0] & /*name*/ 4 && div2_aria_label_value !== (div2_aria_label_value = "" + (/*name*/ ctx[2] + "options-delete" + /*i*/ ctx[33]))) {
+    			if (dirty[0] & /*name*/ 4 && div2_aria_label_value !== (div2_aria_label_value = "" + (/*name*/ ctx[2] + "options-delete" + /*i*/ ctx[32]))) {
     				attr(div2, "aria-label", div2_aria_label_value);
     			}
     		},
@@ -1001,14 +1020,14 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (193:44) {#if options.includes(DELETE)}
-    function create_if_block_8(ctx) {
+    // (196:44) {#if options.includes(DELETE)}
+    function create_if_block_7(ctx) {
     	let div;
     	let div_aria_label_value;
     	let dispose;
 
     	function click_handler_1(...args) {
-    		return /*click_handler_1*/ ctx[24](/*i*/ ctx[33], ...args);
+    		return /*click_handler_1*/ ctx[23](/*i*/ ctx[32], ...args);
     	}
 
     	return {
@@ -1016,7 +1035,7 @@ var SvelteGenericCrudTable = (function () {
     			div = element("div");
     			attr(div, "class", "options red");
     			attr(div, "title", "Delete");
-    			attr(div, "aria-label", div_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[34].name + /*i*/ ctx[33] + "delete");
+    			attr(div, "aria-label", div_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[33].name + /*i*/ ctx[32] + "delete");
     			attr(div, "tabindex", "0");
     		},
     		m(target, anchor, remount) {
@@ -1028,7 +1047,7 @@ var SvelteGenericCrudTable = (function () {
     		p(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (dirty[0] & /*name, table_config*/ 6 && div_aria_label_value !== (div_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[34].name + /*i*/ ctx[33] + "delete")) {
+    			if (dirty[0] & /*name, table_config*/ 6 && div_aria_label_value !== (div_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[33].name + /*i*/ ctx[32] + "delete")) {
     				attr(div, "aria-label", div_aria_label_value);
     			}
     		},
@@ -1039,13 +1058,13 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (200:44) {#if options.includes(EDIT)}
-    function create_if_block_7(ctx) {
+    // (203:44) {#if options.includes(EDIT)}
+    function create_if_block_6(ctx) {
     	let div;
     	let dispose;
 
     	function click_handler_2(...args) {
-    		return /*click_handler_2*/ ctx[25](/*i*/ ctx[33], ...args);
+    		return /*click_handler_2*/ ctx[24](/*i*/ ctx[32], ...args);
     	}
 
     	return {
@@ -1071,13 +1090,13 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (206:44) {#if options.includes(DETAILS)}
-    function create_if_block_6(ctx) {
+    // (209:44) {#if options.includes(DETAILS)}
+    function create_if_block_5(ctx) {
     	let div;
     	let dispose;
 
     	function click_handler_3(...args) {
-    		return /*click_handler_3*/ ctx[26](/*i*/ ctx[33], ...args);
+    		return /*click_handler_3*/ ctx[25](/*i*/ ctx[32], ...args);
     	}
 
     	return {
@@ -1103,8 +1122,8 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (215:44) {#if options.includes(EDIT)}
-    function create_if_block_5(ctx) {
+    // (218:44) {#if options.includes(EDIT)}
+    function create_if_block_4(ctx) {
     	let div0;
     	let t;
     	let div1;
@@ -1112,11 +1131,11 @@ var SvelteGenericCrudTable = (function () {
     	let dispose;
 
     	function click_handler_4(...args) {
-    		return /*click_handler_4*/ ctx[27](/*i*/ ctx[33], ...args);
+    		return /*click_handler_4*/ ctx[26](/*i*/ ctx[32], ...args);
     	}
 
     	function click_handler_5(...args) {
-    		return /*click_handler_5*/ ctx[28](/*i*/ ctx[33], ...args);
+    		return /*click_handler_5*/ ctx[27](/*i*/ ctx[32], ...args);
     	}
 
     	return {
@@ -1129,7 +1148,7 @@ var SvelteGenericCrudTable = (function () {
     			attr(div0, "tabindex", "0");
     			attr(div1, "class", "options red");
     			attr(div1, "title", "Cancel");
-    			attr(div1, "aria-label", div1_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[34].name + /*i*/ ctx[33] + "editCancel");
+    			attr(div1, "aria-label", div1_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[33].name + /*i*/ ctx[32] + "editCancel");
     			attr(div1, "tabindex", "0");
     		},
     		m(target, anchor, remount) {
@@ -1148,7 +1167,7 @@ var SvelteGenericCrudTable = (function () {
     		p(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (dirty[0] & /*name, table_config*/ 6 && div1_aria_label_value !== (div1_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[34].name + /*i*/ ctx[33] + "editCancel")) {
+    			if (dirty[0] & /*name, table_config*/ 6 && div1_aria_label_value !== (div1_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[33].name + /*i*/ ctx[32] + "editCancel")) {
     				attr(div1, "aria-label", div1_aria_label_value);
     			}
     		},
@@ -1161,8 +1180,8 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (232:44) {#if options.includes(DELETE)}
-    function create_if_block_4(ctx) {
+    // (235:44) {#if options.includes(DELETE)}
+    function create_if_block_3(ctx) {
     	let div0;
     	let div0_aria_label_value;
     	let t;
@@ -1171,11 +1190,11 @@ var SvelteGenericCrudTable = (function () {
     	let dispose;
 
     	function click_handler_6(...args) {
-    		return /*click_handler_6*/ ctx[29](/*i*/ ctx[33], ...args);
+    		return /*click_handler_6*/ ctx[28](/*i*/ ctx[32], ...args);
     	}
 
     	function click_handler_7(...args) {
-    		return /*click_handler_7*/ ctx[30](/*i*/ ctx[33], ...args);
+    		return /*click_handler_7*/ ctx[29](/*i*/ ctx[32], ...args);
     	}
 
     	return {
@@ -1185,11 +1204,11 @@ var SvelteGenericCrudTable = (function () {
     			div1 = element("div");
     			attr(div0, "class", "options red");
     			attr(div0, "title", "Cancel");
-    			attr(div0, "aria-label", div0_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[34].name + /*i*/ ctx[33] + "deleteCancel");
+    			attr(div0, "aria-label", div0_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[33].name + /*i*/ ctx[32] + "deleteCancel");
     			attr(div0, "tabindex", "0");
     			attr(div1, "class", "options green");
     			attr(div1, "title", "Delete");
-    			attr(div1, "aria-label", div1_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[34].name + /*i*/ ctx[33] + "deleteConfirmation");
+    			attr(div1, "aria-label", div1_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[33].name + /*i*/ ctx[32] + "deleteConfirmation");
     			attr(div1, "tabindex", "0");
     		},
     		m(target, anchor, remount) {
@@ -1208,11 +1227,11 @@ var SvelteGenericCrudTable = (function () {
     		p(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (dirty[0] & /*name, table_config*/ 6 && div0_aria_label_value !== (div0_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[34].name + /*i*/ ctx[33] + "deleteCancel")) {
+    			if (dirty[0] & /*name, table_config*/ 6 && div0_aria_label_value !== (div0_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[33].name + /*i*/ ctx[32] + "deleteCancel")) {
     				attr(div0, "aria-label", div0_aria_label_value);
     			}
 
-    			if (dirty[0] & /*name, table_config*/ 6 && div1_aria_label_value !== (div1_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[34].name + /*i*/ ctx[33] + "deleteConfirmation")) {
+    			if (dirty[0] & /*name, table_config*/ 6 && div1_aria_label_value !== (div1_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[33].name + /*i*/ ctx[32] + "deleteConfirmation")) {
     				attr(div1, "aria-label", div1_aria_label_value);
     			}
     		},
@@ -1225,14 +1244,14 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (180:28) {#each Object.entries(tableRow) as elem, k}
+    // (183:28) {#each Object.entries(tableRow) as elem, k}
     function create_each_block_2(ctx) {
-    	let show_if_1 = /*column_order*/ ctx[34].name === /*genericCrudTable*/ ctx[4].getKey(/*elem*/ ctx[37]);
+    	let show_if_1 = /*column_order*/ ctx[33].name === /*genericCrudTable*/ ctx[4].getKey(/*elem*/ ctx[36]);
     	let t;
-    	let show_if = /*table_config*/ ctx[1].columns_setting.length - 1 === /*j*/ ctx[36] && Object.entries(/*tableRow*/ ctx[31]).length - 1 === /*k*/ ctx[39];
+    	let show_if = /*table_config*/ ctx[1].columns_setting.length - 1 === /*j*/ ctx[35] && Object.entries(/*tableRow*/ ctx[30]).length - 1 === /*k*/ ctx[38];
     	let if_block1_anchor;
-    	let if_block0 = show_if_1 && create_if_block_9(ctx);
-    	let if_block1 = show_if && create_if_block_3(ctx);
+    	let if_block0 = show_if_1 && create_if_block_8(ctx);
+    	let if_block1 = show_if && create_if_block_2(ctx);
 
     	return {
     		c() {
@@ -1248,13 +1267,13 @@ var SvelteGenericCrudTable = (function () {
     			insert(target, if_block1_anchor, anchor);
     		},
     		p(ctx, dirty) {
-    			if (dirty[0] & /*table_config, genericCrudTable, table_data*/ 19) show_if_1 = /*column_order*/ ctx[34].name === /*genericCrudTable*/ ctx[4].getKey(/*elem*/ ctx[37]);
+    			if (dirty[0] & /*table_config, genericCrudTable, table_data*/ 19) show_if_1 = /*column_order*/ ctx[33].name === /*genericCrudTable*/ ctx[4].getKey(/*elem*/ ctx[36]);
 
     			if (show_if_1) {
     				if (if_block0) {
     					if_block0.p(ctx, dirty);
     				} else {
-    					if_block0 = create_if_block_9(ctx);
+    					if_block0 = create_if_block_8(ctx);
     					if_block0.c();
     					if_block0.m(t.parentNode, t);
     				}
@@ -1263,13 +1282,13 @@ var SvelteGenericCrudTable = (function () {
     				if_block0 = null;
     			}
 
-    			if (dirty[0] & /*table_config, table_data*/ 3) show_if = /*table_config*/ ctx[1].columns_setting.length - 1 === /*j*/ ctx[36] && Object.entries(/*tableRow*/ ctx[31]).length - 1 === /*k*/ ctx[39];
+    			if (dirty[0] & /*table_config, table_data*/ 3) show_if = /*table_config*/ ctx[1].columns_setting.length - 1 === /*j*/ ctx[35] && Object.entries(/*tableRow*/ ctx[30]).length - 1 === /*k*/ ctx[38];
 
     			if (show_if) {
     				if (if_block1) {
     					if_block1.p(ctx, dirty);
     				} else {
-    					if_block1 = create_if_block_3(ctx);
+    					if_block1 = create_if_block_2(ctx);
     					if_block1.c();
     					if_block1.m(if_block1_anchor.parentNode, if_block1_anchor);
     				}
@@ -1287,10 +1306,10 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (179:24) {#each table_config.columns_setting as column_order, j}
+    // (182:24) {#each table_config.columns_setting as column_order, j}
     function create_each_block_1(ctx) {
     	let each_1_anchor;
-    	let each_value_2 = Object.entries(/*tableRow*/ ctx[31]);
+    	let each_value_2 = Object.entries(/*tableRow*/ ctx[30]);
     	let each_blocks = [];
 
     	for (let i = 0; i < each_value_2.length; i += 1) {
@@ -1314,7 +1333,7 @@ var SvelteGenericCrudTable = (function () {
     		},
     		p(ctx, dirty) {
     			if (dirty[0] & /*name, table_config, handleDeleteConfirmation, handleCancelDelete, options, handleCancelEdit, handleEditConfirmation, handleDetails, handleEdit, handleDelete, table_data, genericCrudTable*/ 6143) {
-    				each_value_2 = Object.entries(/*tableRow*/ ctx[31]);
+    				each_value_2 = Object.entries(/*tableRow*/ ctx[30]);
     				let i;
 
     				for (i = 0; i < each_value_2.length; i += 1) {
@@ -1343,12 +1362,12 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (162:16) {#each table_data as tableRow, i}
+    // (165:16) {#each table_data as tableRow, i}
     function create_each_block(ctx) {
     	let t0;
     	let tr;
     	let t1;
-    	let if_block = /*i*/ ctx[33] === 0 && create_if_block_10(ctx);
+    	let if_block = /*i*/ ctx[32] === 0 && create_if_block_9(ctx);
     	let each_value_1 = /*table_config*/ ctx[1].columns_setting;
     	let each_blocks = [];
 
@@ -1381,7 +1400,7 @@ var SvelteGenericCrudTable = (function () {
     			append(tr, t1);
     		},
     		p(ctx, dirty) {
-    			if (/*i*/ ctx[33] === 0) if_block.p(ctx, dirty);
+    			if (/*i*/ ctx[32] === 0) if_block.p(ctx, dirty);
 
     			if (dirty[0] & /*table_data, name, table_config, handleDeleteConfirmation, handleCancelDelete, options, handleCancelEdit, handleEditConfirmation, handleDetails, handleEdit, handleDelete, genericCrudTable*/ 6143) {
     				each_value_1 = /*table_config*/ ctx[1].columns_setting;
@@ -1411,44 +1430,6 @@ var SvelteGenericCrudTable = (function () {
     			if (detaching) detach(t0);
     			if (detaching) detach(tr);
     			destroy_each(each_blocks, detaching);
-    		}
-    	};
-    }
-
-    // (256:12) {#if options.includes(CREATE)}
-    function create_if_block_2(ctx) {
-    	let div;
-    	let t;
-    	let br0;
-    	let br1;
-    	let dispose;
-
-    	return {
-    		c() {
-    			div = element("div");
-    			t = space();
-    			br0 = element("br");
-    			br1 = element("br");
-    			attr(div, "class", "options");
-    			attr(div, "id", "options-create");
-    			attr(div, "title", "Create");
-    		},
-    		m(target, anchor, remount) {
-    			insert(target, div, anchor);
-    			div.innerHTML = iconcreate;
-    			insert(target, t, anchor);
-    			insert(target, br0, anchor);
-    			insert(target, br1, anchor);
-    			if (remount) dispose();
-    			dispose = listen(div, "click", /*handleCreate*/ ctx[11]);
-    		},
-    		p: noop,
-    		d(detaching) {
-    			if (detaching) detach(div);
-    			if (detaching) detach(t);
-    			if (detaching) detach(br0);
-    			if (detaching) detach(br1);
-    			dispose();
     		}
     	};
     }
@@ -1522,7 +1503,6 @@ var SvelteGenericCrudTable = (function () {
     	};
 
     	let { table_data = {} } = $$props;
-    	let tableDataCache = table_data;
     	let { table_config = table_config_default } = $$props;
     	let name = "";
     	let options = [];
@@ -1544,15 +1524,14 @@ var SvelteGenericCrudTable = (function () {
     	function resetRawValues(id) {
     		table_config.columns_setting.forEach(elem => {
     			if (shadowed) {
-    				document.querySelector("crud-table").shadowRoot.getElementById(name + elem.name + id).value = tableDataCache[id][elem.name];
+    				document.querySelector("crud-table").shadowRoot.getElementById(name + elem.name + id).value = table_data[id][elem.name];
     			} else {
-    				document.getElementById(name + elem.name + id).value = tableDataCache[id][elem.name];
+    				document.getElementById(name + elem.name + id).value = table_data[id][elem.name];
     			}
     		});
     	}
 
     	function handleCancelEdit(id) {
-    		$$invalidate(0, table_data = tableDataCache);
     		resetRawValues(id);
     		genericCrudTable.resetEditMode(id);
     		genericCrudTable.resetDeleteMode(id);
@@ -1563,7 +1542,7 @@ var SvelteGenericCrudTable = (function () {
     		resetRawInEditMode(id);
     		const body = genericCrudTable.gatherUpdates(id, table_data);
     		$$invalidate(0, table_data[id] = body, table_data);
-    		tableDataCache = table_data;
+    		$$invalidate(0, table_data);
     		const details = { id, body };
     		genericCrudTable.resetEditMode(id);
     		dispatcher("update", details, event);
@@ -1651,10 +1630,6 @@ var SvelteGenericCrudTable = (function () {
     			: table_data);
     		}
 
-    		if ($$self.$$.dirty[0] & /*table_data*/ 1) {
-    			 tableDataCache = table_data;
-    		}
-
     		if ($$self.$$.dirty[0] & /*table_config*/ 2) {
     			 $$invalidate(1, table_config = typeof table_config === "string"
     			? JSON.parse(table_config)
@@ -1692,7 +1667,6 @@ var SvelteGenericCrudTable = (function () {
     		handleDetails,
     		handleSort,
     		shadowed,
-    		tableDataCache,
     		cursor,
     		dispatch,
     		table_config_default,
@@ -1714,7 +1688,7 @@ var SvelteGenericCrudTable = (function () {
     class SvelteGenericCrudTable extends SvelteElement {
     	constructor(options) {
     		super();
-    		this.shadowRoot.innerHTML = `<style>.red:hover{fill:red;fill-opacity:80%}.green:hover{fill:limegreen;fill-opacity:80%}.blue:hover{fill:dodgerblue;fill-opacity:80%}h3{color:#5f5f5f;font-size:0.85em;font-weight:200;padding-left:0.2em;text-align:left}table{text-align:left;border-collapse:collapse;table-layout:fixed;width:100%}.headline{border-bottom:1px solid #dddddd;cursor:pointer}.sortable{cursor:pointer}tr{padding:0;margin:0}td{color:#5f5f5f;border:none;font-size:0.95em;font-weight:200;padding:1px 0 1px 0.4em;float:left}#labelOptions{color:#aaaaaa;font-weight:100;width:100px}.options-field{min-height:1.3em;min-width:100px;max-width:100px;width:100px;opacity:60%}.options{float:left;position:relative;width:16px;height:16px;padding:0.2em 0.4em;cursor:pointer;opacity:60%}.options:hover{opacity:100%}.options:focus{border:none;outline:none;opacity:100%}#options-create{text-align:left;height:1.3em;padding-bottom:1em;max-width:0px}.hidden{display:none}.shown{display:block}.row{margin-top:0px;margin-bottom:1px}.row:hover{background-color:#efefef}textarea{position:relative;resize:none;top:0.1em;width:100%;min-height:1.3em;max-height:2.3em;padding:1px 1px;background-color:#ffffff;border:none;font-size:0.95em;font-weight:300;text-overflow:ellipsis;white-space:pre;overflow:hidden;-webkit-transition:box-shadow 0.3s}textarea:not(:disabled){height:2.3em;min-height:2.3em;border-bottom:0.5px solid #5f5f5f}textarea:disabled{color:#5f5f5f;background-color:inherit;font-size:0.95em;font-weight:200;box-shadow:none;height:1.3em;max-height:1.3em}textarea:focus{outline:none;font-weight:300;white-space:normal;overflow:auto;padding-top:1px}textarea:not(:focus){max-height:1.3em}</style>`;
+    		this.shadowRoot.innerHTML = `<style>.red:hover{fill:red;fill-opacity:80%}.green:hover{fill:limegreen;fill-opacity:80%}.blue:hover{fill:dodgerblue;fill-opacity:80%}h3{color:#5f5f5f;font-size:0.85em;font-weight:200;margin-left:1.4em;text-align:left}table{text-align:left;border-collapse:collapse;table-layout:fixed;width:100%;margin-left:1em}.headline{border-bottom:1px solid #dddddd;cursor:pointer}.sortable{cursor:pointer}tr{padding:0;margin:0}td{color:#5f5f5f;border:none;font-size:0.95em;font-weight:200;padding:1px 0 1px 0.4em;float:left}#labelOptions{color:#aaaaaa;font-weight:100;width:100px}.options-field{min-height:1.3em;min-width:100px;max-width:100px;width:100px;opacity:60%}.options{float:left;position:relative;width:16px;height:16px;padding:0.2em 0.4em;cursor:pointer;opacity:60%}.options:hover{opacity:100%}.options:focus{border:none;outline:none;opacity:100%}.hidden{display:none}.shown{display:block}.row{margin-top:0px;margin-bottom:1px}.row:hover{background-color:#efefef}textarea{position:relative;resize:none;top:0.1em;width:100%;min-height:1.3em;max-height:2.3em;padding:1px 1px;background-color:#ffffff;border:none;font-size:0.95em;font-weight:300;text-overflow:ellipsis;white-space:pre;overflow:hidden;-webkit-transition:box-shadow 0.3s}textarea:not(:disabled){height:2.3em;min-height:2.3em;border-bottom:0.5px solid #5f5f5f}textarea:disabled{color:#5f5f5f;background-color:inherit;font-size:0.95em;font-weight:200;box-shadow:none;height:1.3em;max-height:1.3em}textarea:focus{outline:none;font-weight:300;white-space:normal;overflow:auto;padding-top:1px}textarea:not(:focus){max-height:1.3em}</style>`;
     		init(this, { target: this.shadowRoot }, instance, create_fragment, safe_not_equal, { table_data: 0, table_config: 1 }, [-1, -1]);
 
     		if (options) {
