@@ -438,19 +438,29 @@ var SvelteGenericCrudTable = (function () {
         }
     }
 
-    var icontrash = "<svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 32 32\">\n<title>Delete</title>\n<path d=\"M6 32h20l2-22h-24zM20 4v-4h-8v4h-10v6l2-2h24l2 2v-6h-10zM18 4h-4v-2h4v2z\"></path>\n</svg>";
-
-    var iconedit = "<svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 32 32\">\n<title>Edit</title>\n<path d=\"M12 20l4-2 14-14-2-2-14 14-2 4zM9.041 27.097c-0.989-2.085-2.052-3.149-4.137-4.137l3.097-8.525 4-2.435 12-12h-6l-12 12-6 20 20-6 12-12v-6l-12 12-2.435 4z\"></path>\n</svg>";
-
-    var iconsave = "<svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 32 32\">\n<title>Save</title>\n<path d=\"M28 0h-28v32h32v-28l-4-4zM16 4h4v8h-4v-8zM28 28h-24v-24h2v10h18v-10h2.343l1.657 1.657v22.343z\"></path>\n</svg>";
-
-    var iconsend = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 512 512\"><path d=\"M476 3.2L12.5 270.6c-18.1 10.4-15.8 35.6 2.2 43.2L121 358.4l287.3-253.2c5.5-4.9 13.3 2.6 8.6 8.3L176 407v80.5c0 23.6 28.5 32.9 42.5 15.8L282 426l124.6 52.2c14.2 6 30.4-2.9 33-18.2l72-432C515 7.8 493.3-6.8 476 3.2z\"/></svg>\n<!--\nFont Awesome Free 5.2.0 by @fontawesome - https://fontawesome.com\nLicense - https://fontawesome.com/license (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)\n-->";
-
-    var iconcancel = "<svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 32 32\">\n<title>Cancel</title>\n<path d=\"M31.708 25.708c-0-0-0-0-0-0l-9.708-9.708 9.708-9.708c0-0 0-0 0-0 0.105-0.105 0.18-0.227 0.229-0.357 0.133-0.356 0.057-0.771-0.229-1.057l-4.586-4.586c-0.286-0.286-0.702-0.361-1.057-0.229-0.13 0.048-0.252 0.124-0.357 0.228 0 0-0 0-0 0l-9.708 9.708-9.708-9.708c-0-0-0-0-0-0-0.105-0.104-0.227-0.18-0.357-0.228-0.356-0.133-0.771-0.057-1.057 0.229l-4.586 4.586c-0.286 0.286-0.361 0.702-0.229 1.057 0.049 0.13 0.124 0.252 0.229 0.357 0 0 0 0 0 0l9.708 9.708-9.708 9.708c-0 0-0 0-0 0-0.104 0.105-0.18 0.227-0.229 0.357-0.133 0.355-0.057 0.771 0.229 1.057l4.586 4.586c0.286 0.286 0.702 0.361 1.057 0.229 0.13-0.049 0.252-0.124 0.357-0.229 0-0 0-0 0-0l9.708-9.708 9.708 9.708c0 0 0 0 0 0 0.105 0.105 0.227 0.18 0.357 0.229 0.356 0.133 0.771 0.057 1.057-0.229l4.586-4.586c0.286-0.286 0.362-0.702 0.229-1.057-0.049-0.13-0.124-0.252-0.229-0.357z\"></path>\n</svg>";
-
-    var icondetail = "<svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 32 32\">\n<title>Details</title>\n<path d=\"M14 9.5c0-0.825 0.675-1.5 1.5-1.5h1c0.825 0 1.5 0.675 1.5 1.5v1c0 0.825-0.675 1.5-1.5 1.5h-1c-0.825 0-1.5-0.675-1.5-1.5v-1z\"></path>\n<path d=\"M20 24h-8v-2h2v-6h-2v-2h6v8h2z\"></path>\n<path d=\"M16 0c-8.837 0-16 7.163-16 16s7.163 16 16 16 16-7.163 16-16-7.163-16-16-16zM16 29c-7.18 0-13-5.82-13-13s5.82-13 13-13 13 5.82 13 13-5.82 13-13 13z\"></path>\n</svg>";
-
-    var iconcreate = "<svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 32 32\">\n<title>Create</title>\n<path d=\"M31 12h-11v-11c0-0.552-0.448-1-1-1h-6c-0.552 0-1 0.448-1 1v11h-11c-0.552 0-1 0.448-1 1v6c0 0.552 0.448 1 1 1h11v11c0 0.552 0.448 1 1 1h6c0.552 0 1-0.448 1-1v-11h11c0.552 0 1-0.448 1-1v-6c0-0.552-0.448-1-1-1z\"></path>\n</svg>";
+    const icontrash = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 32 32">\n' +
+        '<path d="M6 32h20l2-22h-24zM20 4v-4h-8v4h-10v6l2-2h24l2 2v-6h-10zM18 4h-4v-2h4v2z"></path>\n' +
+        '</svg>';
+    const iconedit = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 32 32">\n' +
+        '<path d="M12 20l4-2 14-14-2-2-14 14-2 4zM9.041 27.097c-0.989-2.085-2.052-3.149-4.137-4.137l3.097-8.525 4-2.435 12-12h-6l-12 12-6 20 20-6 12-12v-6l-12 12-2.435 4z"></path>\n' +
+        '</svg>';
+    const iconsave = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 32 32">\n' +
+        '<path d="M28 0h-28v32h32v-28l-4-4zM16 4h4v8h-4v-8zM28 28h-24v-24h2v10h18v-10h2.343l1.657 1.657v22.343z"></path>\n' +
+        '</svg>';
+    const iconsend = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 512 512">\n' +
+        '<path d="M476 3.2L12.5 270.6c-18.1 10.4-15.8 35.6 2.2 43.2L121 358.4l287.3-253.2c5.5-4.9 13.3 2.6 8.6 8.3L176 407v80.5c0 23.6 28.5 32.9 42.5 15.8L282 426l124.6 52.2c14.2 6 30.4-2.9 33-18.2l72-432C515 7.8 493.3-6.8 476 3.2z"/>\n' +
+        '</svg>';
+    const iconcancel = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 32 32">\n' +
+        '<path d="M31.708 25.708c-0-0-0-0-0-0l-9.708-9.708 9.708-9.708c0-0 0-0 0-0 0.105-0.105 0.18-0.227 0.229-0.357 0.133-0.356 0.057-0.771-0.229-1.057l-4.586-4.586c-0.286-0.286-0.702-0.361-1.057-0.229-0.13 0.048-0.252 0.124-0.357 0.228 0 0-0 0-0 0l-9.708 9.708-9.708-9.708c-0-0-0-0-0-0-0.105-0.104-0.227-0.18-0.357-0.228-0.356-0.133-0.771-0.057-1.057 0.229l-4.586 4.586c-0.286 0.286-0.361 0.702-0.229 1.057 0.049 0.13 0.124 0.252 0.229 0.357 0 0 0 0 0 0l9.708 9.708-9.708 9.708c-0 0-0 0-0 0-0.104 0.105-0.18 0.227-0.229 0.357-0.133 0.355-0.057 0.771 0.229 1.057l4.586 4.586c0.286 0.286 0.702 0.361 1.057 0.229 0.13-0.049 0.252-0.124 0.357-0.229 0-0 0-0 0-0l9.708-9.708 9.708 9.708c0 0 0 0 0 0 0.105 0.105 0.227 0.18 0.357 0.229 0.356 0.133 0.771 0.057 1.057-0.229l4.586-4.586c0.286-0.286 0.362-0.702 0.229-1.057-0.049-0.13-0.124-0.252-0.229-0.357z"></path>\n' +
+        '</svg>';
+    const icondetail = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 32 32">\n' +
+        '<path d="M14 9.5c0-0.825 0.675-1.5 1.5-1.5h1c0.825 0 1.5 0.675 1.5 1.5v1c0 0.825-0.675 1.5-1.5 1.5h-1c-0.825 0-1.5-0.675-1.5-1.5v-1z"></path>\n' +
+        '<path d="M20 24h-8v-2h2v-6h-2v-2h6v8h2z"></path>\n' +
+        '<path d="M16 0c-8.837 0-16 7.163-16 16s7.163 16 16 16 16-7.163 16-16-7.163-16-16-16zM16 29c-7.18 0-13-5.82-13-13s5.82-13 13-13 13 5.82 13 13-5.82 13-13 13z"></path>\n' +
+        '</svg>';
+    const iconcreate = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 32 32">\n' +
+        '<path d="M31 12h-11v-11c0-0.552-0.448-1-1-1h-6c-0.552 0-1 0.448-1 1v11h-11c-0.552 0-1 0.448-1 1v6c0 0.552 0.448 1 1 1h11v11c0 0.552 0.448 1 1 1h6c0.552 0 1-0.448 1-1v-11h11c0.552 0 1-0.448 1-1v-6c0-0.552-0.448-1-1-1z"></path>\n' +
+        '</svg>';
 
     /* src/SvelteGenericCrudTable.svelte generated by Svelte v3.22.3 */
 
@@ -481,7 +491,7 @@ var SvelteGenericCrudTable = (function () {
     	return child_ctx;
     }
 
-    // (157:4) {#if (table_data !== undefined)}
+    // (159:4) {#if (table_data !== undefined)}
     function create_if_block(ctx) {
     	let show_if;
     	let if_block_anchor;
@@ -524,7 +534,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (260:8) {:else}
+    // (262:8) {:else}
     function create_else_block(ctx) {
     	let br;
     	let t0;
@@ -552,7 +562,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (158:8) {#if Array.isArray(table_data)}
+    // (160:8) {#if Array.isArray(table_data)}
     function create_if_block_1(ctx) {
     	let table;
     	let t;
@@ -639,7 +649,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (161:20) {#if i === 0}
+    // (163:20) {#if i === 0}
     function create_if_block_10(ctx) {
     	let tr;
     	let t;
@@ -706,7 +716,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (163:28) {#each table_config.columns_setting as elem}
+    // (165:28) {#each table_config.columns_setting as elem}
     function create_each_block_3(ctx) {
     	let td;
     	let textarea;
@@ -762,7 +772,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (179:32) {#if (column_order.name === genericCrudTable.getKey(elem))}
+    // (181:32) {#if (column_order.name === genericCrudTable.getKey(elem))}
     function create_if_block_9(ctx) {
     	let td;
     	let textarea;
@@ -819,7 +829,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (186:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
+    // (188:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
     function create_if_block_3(ctx) {
     	let td;
     	let div0;
@@ -991,7 +1001,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (191:44) {#if options.includes(DELETE)}
+    // (193:44) {#if options.includes(DELETE)}
     function create_if_block_8(ctx) {
     	let div;
     	let div_aria_label_value;
@@ -1029,7 +1039,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (198:44) {#if options.includes(EDIT)}
+    // (200:44) {#if options.includes(EDIT)}
     function create_if_block_7(ctx) {
     	let div;
     	let dispose;
@@ -1061,7 +1071,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (204:44) {#if options.includes(DETAILS)}
+    // (206:44) {#if options.includes(DETAILS)}
     function create_if_block_6(ctx) {
     	let div;
     	let dispose;
@@ -1093,7 +1103,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (213:44) {#if options.includes(EDIT)}
+    // (215:44) {#if options.includes(EDIT)}
     function create_if_block_5(ctx) {
     	let div0;
     	let t;
@@ -1151,7 +1161,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (230:44) {#if options.includes(DELETE)}
+    // (232:44) {#if options.includes(DELETE)}
     function create_if_block_4(ctx) {
     	let div0;
     	let div0_aria_label_value;
@@ -1215,7 +1225,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (178:28) {#each Object.entries(tableRow) as elem, k}
+    // (180:28) {#each Object.entries(tableRow) as elem, k}
     function create_each_block_2(ctx) {
     	let show_if_1 = /*column_order*/ ctx[34].name === /*genericCrudTable*/ ctx[4].getKey(/*elem*/ ctx[37]);
     	let t;
@@ -1277,7 +1287,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (177:24) {#each table_config.columns_setting as column_order, j}
+    // (179:24) {#each table_config.columns_setting as column_order, j}
     function create_each_block_1(ctx) {
     	let each_1_anchor;
     	let each_value_2 = Object.entries(/*tableRow*/ ctx[31]);
@@ -1333,7 +1343,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (160:16) {#each table_data as tableRow, i}
+    // (162:16) {#each table_data as tableRow, i}
     function create_each_block(ctx) {
     	let t0;
     	let tr;
@@ -1405,7 +1415,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (254:12) {#if options.includes(CREATE)}
+    // (256:12) {#if options.includes(CREATE)}
     function create_if_block_2(ctx) {
     	let div;
     	let t;
