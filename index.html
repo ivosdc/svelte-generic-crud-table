@@ -11,7 +11,14 @@
 </head>
 
 <body>
+<h1>&lt;crud-table&gt;&lt;/crud-table&gt;</h1>
+<p>Agnostic web-component for object-arrays with CRUD functionality.</p>
+<span style="background-color: #dddddd; padding: 0.4em; display:inline-block">&gt; npm install -save svelte-generic-crud-table</span>
+<p></p>
+<hr>
 <crud-table></crud-table>
+<hr>
+</span style="text-align: right"><a href="https://ivolution.one">ivolution.one product - MIT License</a></p>
 </body>
 
 <script>
@@ -38,9 +45,7 @@
 
     genericCrudTable.addEventListener('create', () => {
         console.log('create');
-        console.log(table_data.length);
         table_data.push({name: 'myName', job: 'code', private: 'not editable'});
-        console.log(table_data.length);
         refresh();
     });
 
