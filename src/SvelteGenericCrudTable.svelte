@@ -25,8 +25,6 @@
 
     export let table_data = {};
     $: table_data = (typeof table_data === 'string') ? JSON.parse(table_data) : table_data;
-    let tableDataCache = table_data;
-    $: tableDataCache = table_data;
 
     export let table_config = table_config_default;
     $: table_config = (typeof table_config === 'string') ? JSON.parse(table_config) : table_config;
@@ -45,9 +43,10 @@
     function getFile(file) {
         return new Promise((resolve, reject) => {
             let fr = new FileReader();
-            fr.onload = x=> resolve(fr.result);
+            fr.onload = x => resolve(fr.result);
             fr.readAsText(file);
-        })}
+        })
+    }
 
     function handleEdit(id) {
         resetRawInEditMode(id);
@@ -61,15 +60,14 @@
     function resetRawValues(id) {
         table_config.columns_setting.forEach((elem) => {
             if (shadowed) {
-                document.querySelector('crud-table').shadowRoot.getElementById(name + elem.name + id).value = tableDataCache[id][elem.name]
+                document.querySelector('crud-table').shadowRoot.getElementById(name + elem.name + id).value = table_data[id][elem.name]
             } else {
-                document.getElementById(name + elem.name + id).value = tableDataCache[id][elem.name];
+                document.getElementById(name + elem.name + id).value = table_data[id][elem.name];
             }
         })
     }
 
     function handleCancelEdit(id) {
-        table_data = tableDataCache;
         resetRawValues(id);
         genericCrudTable.resetEditMode(id);
         genericCrudTable.resetDeleteMode(id);
@@ -80,7 +78,7 @@
         resetRawInEditMode(id);
         const body = genericCrudTable.gatherUpdates(id, table_data);
         table_data[id] = body;
-        tableDataCache = table_data;
+        table_data = table_data;
         const details = {
             id: id,
             body: body
@@ -158,6 +156,11 @@
     <h3>{name}</h3>
     {#if (table_data !== undefined)}
         {#if Array.isArray(table_data)}
+            {#if options.includes(CREATE)}
+                <div class="options blue" id="options-create" on:click={handleCreate} title="Create">
+                    {@html iconcreate}
+                </div>
+            {/if}
             <table>
                 {#each table_data as tableRow, i}
                     {#if i === 0}
@@ -253,12 +256,6 @@
                     </tr>
                 {/each}
             </table>
-            {#if options.includes(CREATE)}
-                <div class="options" id="options-create" on:click={handleCreate} title="Create">
-                    {@html iconcreate}
-                </div>
-                <br><br>
-            {/if}
         {:else}
             <br>
             table: {table_data}
@@ -282,19 +279,6 @@
         fill-opacity: 80%;
     }
 
-    .trash {
-        width: 100%;
-        height: 100%;
-        background-image: url("/icons/bin2.svg");
-        background-repeat: no-repeat;
-        background-size: 100% auto;
-    }
-
-    .trash:hover {
-        fill: red;
-        fill-opacity: 80%;
-    }
-
     svg.trash {
         fill: red;
     }
@@ -304,7 +288,7 @@
         color: #5f5f5f;
         font-size: 0.85em;
         font-weight: 200;
-        padding-left: 0.2em;
+        margin-left: 1.4em;
         text-align: left;
     }
 
@@ -313,6 +297,7 @@
         border-collapse: collapse;
         table-layout: fixed;
         width: 100%;
+        margin-left: 1em;
     }
 
     .headline {
@@ -370,13 +355,6 @@
         border: none;
         outline: none;
         opacity: 100%;
-    }
-
-    #options-create {
-        text-align: left;
-        height: 1.3em;
-        padding-bottom: 1em;
-        max-width: 0px;
     }
 
     .hidden {
