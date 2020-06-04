@@ -30,6 +30,8 @@
 
     export let table_data = {};
     $: table_data = (typeof table_data === 'string') ? JSON.parse(table_data) : table_data;
+    let tableDataCache = table_data;
+    $: tableDataCache = table_data;
 
     export let table_config = table_config_default;
     $: table_config = (typeof table_config === 'string') ? JSON.parse(table_config) : table_config;
@@ -54,16 +56,19 @@
         genericCrudTable.setEditMode(id);
     }
 
-    function handleCancelEdit(id) {
+    function resetRawValues(id) {
         table_config.columns_setting.forEach((elem) => {
             if (shadowed) {
-                document.querySelector('crud-table').shadowRoot.getElementById(name + elem.name + id).value =
-                        document.querySelector('crud-table').shadowRoot.getElementById(name + elem.name + id + 'copy').innerText;
+                document.querySelector('crud-table').shadowRoot.getElementById(name + elem.name + id).value = tableDataCache[id][elem.name]
             } else {
-                document.getElementById(name + elem.name + id).value =
-                        document.getElementById(name + elem.name + id + 'copy').innerText;
+                document.getElementById(name + elem.name + id).value = tableDataCache[id][elem.name];
             }
-        });
+        })
+    }
+
+    function handleCancelEdit(id) {
+        table_data = tableDataCache;
+        resetRawValues(id);
         genericCrudTable.resetEditMode(id);
         genericCrudTable.resetDeleteMode(id);
         cursor = NO_ROW_IN_EDIT_MODE;
@@ -71,16 +76,9 @@
 
     function handleEditConfirmation(id, event) {
         resetRawInEditMode(id);
-        table_config.columns_setting.forEach((elem) => {
-            if (shadowed) {
-                document.querySelector('crud-table').shadowRoot.getElementById(name + elem.name + id + 'copy').innerText =
-                        document.querySelector('crud-table').shadowRoot.getElementById(name + elem.name + id).value;
-            } else {
-                document.getElementById(name + elem.name + id + 'copy').innerText =
-                        document.getElementById(name + elem.name + id).value;
-            }
-        });
         const body = genericCrudTable.gatherUpdates(id, table_data);
+        table_data[id] = body;
+        tableDataCache = table_data;
         const details = {
             id: id,
             body: body
@@ -164,14 +162,14 @@
                         <tr>
                             {#each table_config.columns_setting as elem}
                                 <td class="headline {genericCrudTable.isShowField(elem.name) === false ? 'hidden' : 'shown'}"
-                                    width="{genericCrudTable.getShowFieldWidth(elem.name)}"
+                                    style="width:{genericCrudTable.getShowFieldWidth(elem.name)}"
                                     on:click={(e) => handleSort(elem.name, e)}>
-                                    <textarea class="sortable" value={genericCrudTable.makeCapitalLead(elem.name)}
-                                              disabled></textarea>
+                                    <textarea class="sortable"
+                                              disabled>{genericCrudTable.makeCapitalLead(elem.name)}</textarea>
                                 </td>
                             {/each}
                             <td id="labelOptions" class="headline">
-                                <textarea value="" disabled></textarea>
+                                <textarea disabled></textarea>
                             </td>
                         </tr>
                     {/if}
@@ -180,15 +178,10 @@
                             {#each Object.entries(tableRow) as elem, k}
                                 {#if (column_order.name === genericCrudTable.getKey(elem))}
                                     <td class="{genericCrudTable.isShowField(column_order.name) === false ? 'hidden' : 'shown'}"
-                                        width="{genericCrudTable.getShowFieldWidth(column_order.name)}">
-                                <textarea id="{name}{column_order.name}{i}"
-                                          aria-label="{name}{column_order.name}{i}"
-                                          value={genericCrudTable.getValue(elem)} disabled></textarea>
-                                        <div class="hidden"
-                                             id="{name + column_order.name + i}copy"
-                                             aria-label="{name}{column_order.name}{i}copy">
-                                            {genericCrudTable.getValue(elem)}</div>
-                                    </td>
+                                        style="width:{genericCrudTable.getShowFieldWidth(column_order.name)}">
+                                <textarea id={name + column_order.name + i}
+                                          aria-label={name + column_order.name + i}
+                                          disabled>{table_data[i][column_order.name]}</textarea>
                                 {/if}
                                 {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
                                     <td>
@@ -198,7 +191,7 @@
                                             {#if options.includes(DELETE)}
                                                 <div class="options red" on:click={() => handleDelete(i)}
                                                      title="Delete"
-                                                     aria-label={name + genericCrudTable.getKey(elem) + i + 'delete'} tabindex="0">
+                                                     aria-label={name + column_order.name + i + 'delete'} tabindex="0">
                                                     {@html icontrash}
                                                 </div>
                                             {/if}
@@ -225,7 +218,7 @@
                                                 </div>
                                                 <div class="options red" on:click="{() => {handleCancelEdit(i)}}"
                                                      title="Cancel"
-                                                     aria-label="{name}{genericCrudTable.getKey(elem)}{i}editCancel"
+                                                     aria-label={name + column_order.name + i + 'editCancel'}
                                                      tabindex="0">
                                                     {@html iconcancel}
                                                 </div>
@@ -235,17 +228,17 @@
                                              aria-label="{name}options-delete{i}"
                                              class="options-field hidden">
                                             {#if options.includes(DELETE)}
-                                                <div class="options red" on:click={(e) => handleCancelDelete(i)}
+                                                <div class="options red" on:click={() => handleCancelDelete(i)}
                                                      title="Cancel"
-                                                     aria-label="{name}{genericCrudTable.getKey(elem)}{i}deleteCancel"
-                                                     tabindex="0">
+                                                     aria-label={name + column_order.name + i + 'deleteCancel'}
+                                                             tabindex="0">
                                                     {@html iconcancel}
                                                 </div>
                                                 <div class="options green"
                                                      on:click={(e) => handleDeleteConfirmation(i, e)}
                                                      title="Delete"
-                                                     aria-label="{name}{genericCrudTable.getKey(elem)}{i}deleteConfirmation"
-                                                     tabindex="0">
+                                                     aria-label={name + column_order.name + i + 'deleteConfirmation'}
+                                                             tabindex="0">
                                                     {@html iconsend}
                                                 </div>
                                             {/if}

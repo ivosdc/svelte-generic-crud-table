@@ -8,6 +8,7 @@ const config = {
     ]
 }
 const genericCrudTable = new SvelteGenericCrudTableService(config, false);
+const shadowedGenericCrudTable = new SvelteGenericCrudTableService(config, true);
 
 describe('Test SvelteGenericCrudTableService', () => {
 

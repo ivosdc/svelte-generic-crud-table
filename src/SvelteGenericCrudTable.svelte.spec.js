@@ -99,9 +99,7 @@ describe('Test SvelteGenericCrudTable', () => {
         const update = dom.getByTitle('Update');
         await fireEvent.click(update);
 
-        const editFieldCopy = dom.getByLabelText(config.table_config.name + `A_FIELD` + 0 + 'copy');
-
-        expect(editFieldCopy.innerText).toBe('NEW_VALUE');
+        expect(config.table_data[0].A_FIELD).toBe('NEW_VALUE');
     })
 
     it('testSvelteGenericCrudTable_deleteConfirmation', async () => {
