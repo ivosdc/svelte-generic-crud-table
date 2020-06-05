@@ -15,6 +15,7 @@
     "url": "git+https://github.com/ivosdc/svelte-generic-crud-table.git"
   },
   "keywords": [
+    "webcomponent",
     "svelte",
     "table",
     "generic",

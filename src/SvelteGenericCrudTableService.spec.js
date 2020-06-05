@@ -1,16 +1,26 @@
 import {SvelteGenericCrudTableService} from './SvelteGenericCrudTableService'
 
+
 const config = {
     name: '',
     options: [],
     columns_setting: [
+        {name: 'id', show: false, edit: true, width: '200px'},
         {name: 'name', show: true, edit: true, width: '200px'}
     ]
 }
-const genericCrudTable = new SvelteGenericCrudTableService(config, false);
-const shadowedGenericCrudTable = new SvelteGenericCrudTableService(config, true);
 
-describe('Test SvelteGenericCrudTableService', () => {
+describe('shadow DOM Test SvelteGenericCrudTableService', () => {
+   let genericCrudTable = new SvelteGenericCrudTableService(config, true);
+    runTest(genericCrudTable);
+});
+
+describe('light DOM Test SvelteGenericCrudTableService', () => {
+    let genericCrudTable = new SvelteGenericCrudTableService(config, false);
+    runTest(genericCrudTable);
+});
+
+function runTest(genericCrudTable) {
 
     it('testGetKey', async () => {
         let actual = genericCrudTable.getKey(["name", "A_VALUE"])
@@ -31,103 +41,158 @@ describe('Test SvelteGenericCrudTableService', () => {
     })
 
     it('testResetEditMode', async () => {
-        const toEdit = 'A_FIELD';
-        const config = {
-            name: '',
-            options: [],
-            columns_setting: [
-                {name: toEdit, show: true, edit: true, size: '200px'}
-            ]
-        }
-        const genericCrudTable = new SvelteGenericCrudTableService(config, false);
+        const toEdit = 'name';
         const documentHTML = '<!doctype html><html><body>' +
-            '<div id=' + toEdit + '></div>' +
-            '<div id="options-default"></div>' +
-            '<div id="options-edit"></div>' +
+            '<crud-table>' +
+            '<div id=' + toEdit + '0' + '></div>' +
+            '<div id="options-default0"></div>' +
+            '<div id="options-edit0"></div>' +
+            '</crud-table>' +
             '</body></html>';
-        document.body.innerHTML = documentHTML
+        document.body.innerHTML = documentHTML;
 
-        let actual = genericCrudTable.resetEditMode('')
+        const crudTable = document.querySelector('crud-table');
+        const shadowRoot = crudTable.attachShadow({mode: 'open'});
+        shadowRoot.innerHTML = documentHTML;
 
-        expect(document.getElementById(toEdit).getAttribute('disabled')).toBe('true')
+        let actual = genericCrudTable.resetEditMode(0)
 
-        expect(document.getElementById("options-default").classList.contains('hidden')).toBe(false);
-        expect(document.getElementById("options-default").classList.contains('shown')).toBe(true);
+        if (genericCrudTable.shadowed) {
+            expect(document.querySelector('crud-table').shadowRoot.getElementById(toEdit + '0').getAttribute('disabled')).toBe('true')
 
-        expect(document.getElementById("options-edit").classList.contains('hidden')).toBe(true);
-        expect(document.getElementById("options-edit").classList.contains('shown')).toBe(false);
+            expect(document.querySelector('crud-table').shadowRoot.getElementById("options-default0").classList.contains('hidden')).toBe(false);
+            expect(document.querySelector('crud-table').shadowRoot.getElementById("options-default0").classList.contains('shown')).toBe(true);
+
+            expect(document.querySelector('crud-table').shadowRoot.getElementById("options-edit0").classList.contains('hidden')).toBe(true);
+            expect(document.querySelector('crud-table').shadowRoot.getElementById("options-edit0").classList.contains('shown')).toBe(false);
+
+        } else {
+
+            expect(document.getElementById(toEdit + '0').getAttribute('disabled')).toBe('true')
+
+            expect(document.getElementById("options-default0").classList.contains('hidden')).toBe(false);
+            expect(document.getElementById("options-default0").classList.contains('shown')).toBe(true);
+
+            expect(document.getElementById("options-edit0").classList.contains('hidden')).toBe(true);
+            expect(document.getElementById("options-edit0").classList.contains('shown')).toBe(false);
+        }
     })
 
     it('testSetEditMode', async () => {
-        const toEdit = 'A_FIELD';
-        const config = {
-            name: '',
-            options: [],
-            columns_setting: [
-                {name: toEdit, show: true, edit: true, size: '200px'}
-            ]
-        }
-        const genericCrudTable = new SvelteGenericCrudTableService(config, false);
+        const toEdit = 'name';
         const documentHTML = '<!doctype html><html><body>' +
-            '<div id=' + toEdit + ' disabled></div>' +
-            '<div id="options-default"></div>' +
-            '<div id="options-edit"></div>' +
+            '<crud-table>' +
+            '<div id=' + toEdit + '0' + ' disabled></div>' +
+            '<div id="options-default0"></div>' +
+            '<div id="options-edit0"></div>' +
+            '</crud-table>' +
             '</body></html>';
         document.body.innerHTML = documentHTML
 
-        let actual = genericCrudTable.setEditMode('')
+        const crudTable = document.querySelector('crud-table');
+        const shadowRoot = crudTable.attachShadow({mode: 'open'});
+        shadowRoot.innerHTML = documentHTML;
 
-        expect(document.getElementById(toEdit).getAttribute('disabled')).toBe(null)
+        let actual = genericCrudTable.setEditMode(0)
 
-        expect(document.getElementById("options-default").classList.contains('hidden')).toBe(true);
-        expect(document.getElementById("options-default").classList.contains('shown')).toBe(false);
+        if (genericCrudTable.shadowed) {
+            expect(document.querySelector('crud-table').shadowRoot.getElementById(toEdit + '0').getAttribute('disabled')).toBe(null)
 
-        expect(document.getElementById("options-edit").classList.contains('hidden')).toBe(false);
-        expect(document.getElementById("options-edit").classList.contains('shown')).toBe(true);
+            expect(document.querySelector('crud-table').shadowRoot.getElementById("options-default0").classList.contains('hidden')).toBe(true);
+            expect(document.querySelector('crud-table').shadowRoot.getElementById("options-default0").classList.contains('shown')).toBe(false);
+
+            expect(document.querySelector('crud-table').shadowRoot.getElementById("options-edit0").classList.contains('hidden')).toBe(false);
+            expect(document.querySelector('crud-table').shadowRoot.getElementById("options-edit0").classList.contains('shown')).toBe(true);
+
+        } else {
+            expect(document.getElementById(toEdit + '0').getAttribute('disabled')).toBe(null)
+
+            expect(document.getElementById("options-default0").classList.contains('hidden')).toBe(true);
+            expect(document.getElementById("options-default0").classList.contains('shown')).toBe(false);
+
+            expect(document.getElementById("options-edit0").classList.contains('hidden')).toBe(false);
+            expect(document.getElementById("options-edit0").classList.contains('shown')).toBe(true);
+        }
     })
 
     it('testResetDeleteMode', async () => {
         const documentHTML = '<!doctype html><html><body>' +
+            '<crud-table>' +
             '<div id="options-default"></div>' +
             '<div id="options-delete"></div>' +
+            '</crud-table>' +
             '</body></html>';
         document.body.innerHTML = documentHTML
 
+        const crudTable = document.querySelector('crud-table');
+        const shadowRoot = crudTable.attachShadow({mode: 'open'});
+        shadowRoot.innerHTML = documentHTML;
+
         let actual = genericCrudTable.resetDeleteMode('')
 
-        expect(document.getElementById("options-default").classList.contains('hidden')).toBe(false);
-        expect(document.getElementById("options-default").classList.contains('shown')).toBe(true);
+        if (genericCrudTable.shadowed) {
+            expect(document.querySelector('crud-table').shadowRoot.getElementById("options-default").classList.contains('hidden')).toBe(false);
+            expect(document.querySelector('crud-table').shadowRoot.getElementById("options-default").classList.contains('shown')).toBe(true);
 
-        expect(document.getElementById("options-delete").classList.contains('hidden')).toBe(true);
-        expect(document.getElementById("options-delete").classList.contains('shown')).toBe(false);
+            expect(document.querySelector('crud-table').shadowRoot.getElementById("options-delete").classList.contains('hidden')).toBe(true);
+            expect(document.querySelector('crud-table').shadowRoot.getElementById("options-delete").classList.contains('shown')).toBe(false);
+
+        } else {
+            expect(document.getElementById("options-default").classList.contains('hidden')).toBe(false);
+            expect(document.getElementById("options-default").classList.contains('shown')).toBe(true);
+
+            expect(document.getElementById("options-delete").classList.contains('hidden')).toBe(true);
+            expect(document.getElementById("options-delete").classList.contains('shown')).toBe(false);
+        }
     })
 
 
     it('testSetDeleteMode', async () => {
         const documentHTML = '<!doctype html><html><body>' +
+            '<crud-table>' +
             '<div id="options-default"></div>' +
             '<div id="options-delete"></div>' +
+            '</crud-table>' +
             '</body></html>';
         document.body.innerHTML = documentHTML
+
+        const crudTable = document.querySelector('crud-table');
+        const shadowRoot = crudTable.attachShadow({mode: 'open'});
+        shadowRoot.innerHTML = documentHTML;
 
         let actual = genericCrudTable.setDeleteMode('')
 
-        expect(document.getElementById("options-default").classList.contains('hidden')).toBe(true);
-        expect(document.getElementById("options-default").classList.contains('shown')).toBe(false);
+        if (genericCrudTable.shadowed) {
+            expect(document.querySelector('crud-table').shadowRoot.getElementById("options-default").classList.contains('hidden')).toBe(true);
+            expect(document.querySelector('crud-table').shadowRoot.getElementById("options-default").classList.contains('shown')).toBe(false);
 
-        expect(document.getElementById("options-delete").classList.contains('hidden')).toBe(false);
-        expect(document.getElementById("options-delete").classList.contains('shown')).toBe(true);
+            expect(document.querySelector('crud-table').shadowRoot.getElementById("options-delete").classList.contains('hidden')).toBe(false);
+            expect(document.querySelector('crud-table').shadowRoot.getElementById("options-delete").classList.contains('shown')).toBe(true);
+        } else {
+            expect(document.getElementById("options-default").classList.contains('hidden')).toBe(true);
+            expect(document.getElementById("options-default").classList.contains('shown')).toBe(false);
+
+            expect(document.getElementById("options-delete").classList.contains('hidden')).toBe(false);
+            expect(document.getElementById("options-delete").classList.contains('shown')).toBe(true);
+
+        }
     })
 
     it('testGatherUpdates', async () => {
-        const table = [{name: 'A_NAME'}];
-
+        const table = [{id: 42, name: 'A_NAME'}];
         const documentHTML = '<!doctype html><html><body>' +
+            '<crud-table>' +
+            '<input id="id0" value="42"/>' +
             '<input id="name0" value="A_NAME"/>' +
+            '</crud-table>' +
             '</body></html>';
-        document.body.innerHTML = documentHTML
+        document.body.innerHTML = documentHTML;
 
-        let actual = genericCrudTable.gatherUpdates(0,table);
+        const crudTable = document.querySelector('crud-table');
+        const shadowRoot = crudTable.attachShadow({mode: 'open'});
+        shadowRoot.innerHTML = documentHTML;
+
+        let actual = genericCrudTable.gatherUpdates(0, table);
 
         expect(table[0]).toStrictEqual(actual);
     })
@@ -175,4 +240,4 @@ describe('Test SvelteGenericCrudTableService', () => {
 
         expect(actual).toBe('');
     })
-});
+};
