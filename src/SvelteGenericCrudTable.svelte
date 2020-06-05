@@ -130,6 +130,7 @@
 
     function handleDetails(id, event) {
         resetRawInEditMode(id);
+        //get whole set!
         const body = genericCrudTable.gatherUpdates(id, table_data);
         const details = {
             id: id,

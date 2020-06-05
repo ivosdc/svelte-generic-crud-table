@@ -98,7 +98,7 @@ export class SvelteGenericCrudTableService {
     }
 
     gatherUpdates(id, table) {
-        const body = {};
+        const body = table[id];
         this.table_config.columns_setting.forEach((elem) => {
             if (this.shadowed) {
                 body[elem.name] = document.querySelector('crud-table').shadowRoot
