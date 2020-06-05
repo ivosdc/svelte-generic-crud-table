@@ -123,11 +123,11 @@ describe('Test SvelteGenericCrudTableService', () => {
         const table = [{name: 'A_NAME'}];
 
         const documentHTML = '<!doctype html><html><body>' +
-            '<input id="name" value="A_NAME"/>' +
+            '<input id="name0" value="A_NAME"/>' +
             '</body></html>';
         document.body.innerHTML = documentHTML
 
-        let actual = genericCrudTable.gatherUpdates('',table);
+        let actual = genericCrudTable.gatherUpdates(0,table);
 
         expect(table[0]).toStrictEqual(actual);
     })
