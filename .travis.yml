@@ -3,26 +3,32 @@ node_js:
   - "10"
 jobs:
   include:
-    - script: npm install
-    - script: npm run build
-    - script: npm test
-    - script: npm run build && npm run coverage
-      deploy:
-        provider: pages
-        skip_cleanup: true
-        token: $GITHUB_OAUTH_TOKEN
-        local_dir: ./dist
-        keep_history: true
-        edge: true
-        on:
-          tags: false
-      - deploy:
-          provider: releases
-          token: $GITHUB_OAUTH_TOKEN
-          file:
-            - "./dist/build/crud-table.js"
-            - "./dist/build/crud-table.mjs"
-            - "./dist/build/crud-table.css"
-          skip_cleanup: true
-          on:
-            tags: true
+    - stages:
+        - name: deploy gh-pages
+        - script: npm install
+        - script: npm run build
+        - script: npm test
+        - script: npm run build && npm run coverage
+          deploy:
+            provider: pages
+            skip_cleanup: true
+            token: $GITHUB_OAUTH_TOKEN
+            local_dir: ./dist
+            keep_history: true
+            edge: true
+            on:
+              tags: false
+    - stages:
+        - name: deploy release
+        - script: npm install
+        - script: npm run build
+        - deploy:
+            provider: releases
+            token: $GITHUB_OAUTH_TOKEN
+            file:
+              - "./dist/build/crud-table.js"
+              - "./dist/build/crud-table.mjs"
+              - "./dist/build/crud-table.css"
+            skip_cleanup: true
+            on:
+              tags: true
