@@ -429,22 +429,18 @@ var SvelteGenericCrudTable = (function () {
         }
 
         getShowFieldWidth(field) {
-            const width = (this.getColumnSetting('width', field, '100px') !== undefined) ? this.getColumnSetting('width', field, '100px') : '';
-            return (this.isShowField(field)) ? width : '';
+            return (this.getColumnSetting('width', field, '100px') !== undefined) ? this.getColumnSetting('width', field, '100px') : '';
         }
 
         getColumnSetting(attr, column, preset) {
-            let val = preset;
             let column_setting = {};
             this.table_config.columns_setting.forEach((elem) => {
                 if (elem.name === column) {
                     column_setting = elem;
                 }
             });
-            if (column_setting !== {}) {
-                val = column_setting[attr];
-            }
-            return val;
+
+            return column_setting[attr];
         }
     }
 
