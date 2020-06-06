@@ -4,7 +4,7 @@
     import {SvelteGenericCrudTableService} from "./SvelteGenericCrudTableService";
     import {icontrash, iconedit, iconsend, icondetail, iconcancel, iconcreate, iconsave} from './svgIcon'
 
-    /* istanbul ignore next */
+    /* istanbul ignore file */
     let shadowed = document.querySelector('crud-table') !== null ? true : false;
 
     const dispatch = createEventDispatcher();
@@ -20,11 +20,9 @@
         columns_setting: []
     }
 
-    /* istanbul ignore next */
     export let table_data = {};
     $: table_data = (typeof table_data === 'string') ? JSON.parse(table_data) : table_data;
 
-    /* istanbul ignore next */
     export let table_config = table_config_default;
     $: table_config = (typeof table_config === 'string') ? JSON.parse(table_config) : table_config;
 
@@ -97,7 +95,6 @@
     }
 
     function dispatcher(name, details, event) {
-        /* istanbul ignore next */
         if (shadowed) {
             event.target.dispatchEvent(
                     new CustomEvent(name, {
@@ -134,11 +131,10 @@
 
 </script>
 
+/* istanbul ignore next */
 <main>
-    /* istanbul ignore next line */
     <h3>{name}</h3>
     {#if (table_data !== undefined)}
-        /* istanbul ignore next */
         {#if Array.isArray(table_data)}
             <table>
                 {#each table_data as tableRow, i}
@@ -173,7 +169,6 @@
                                           aria-label={name + column_order.name + i}
                                           disabled>{table_data[i][column_order.name]}</textarea>
                                 {/if}
-                                /* istanbul ignore next */
                                 {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
                                     <td>
                                         <div id="{name}options-default{i}"
