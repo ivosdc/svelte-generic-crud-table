@@ -130,8 +130,7 @@ export class SvelteGenericCrudTableService {
     }
 
     getShowFieldWidth(field) {
-        const width = (this.getColumnSetting('width', field, '100px') !== undefined) ? this.getColumnSetting('width', field, '100px') : '';
-        return (this.isShowField(field)) ? width : '';
+        return (this.getColumnSetting('width', field, '100px') !== undefined) ? this.getColumnSetting('width', field, '100px') : '';
     }
 
     getColumnSetting(attr, column, preset) {
@@ -142,10 +141,8 @@ export class SvelteGenericCrudTableService {
                 column_setting = elem;
             }
         });
-        if (column_setting !== {}) {
-            val = column_setting[attr];
-        }
-        return val;
+
+        return column_setting[attr];
     }
 }
 
