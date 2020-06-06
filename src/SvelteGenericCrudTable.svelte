@@ -138,7 +138,6 @@
 <main>
     /* istanbul ignore next line */
     <h3>{name}</h3>
-    /* istanbul ignore next line */
     {#if (table_data !== undefined)}
         /* istanbul ignore next line */
         {#if Array.isArray(table_data)}
@@ -148,9 +147,8 @@
                     /* istanbul ignore next line */
                     {#if i === 0}
                         <tr style="max-height: 1.3em;">
-                            /* istanbul ignore next line */
                             {#each table_config.columns_setting as elem}
-                                /* istanbul ignore next line */
+                                /* istanbul ignore next */
                                 <td class="headline {genericCrudTable.isShowField(elem.name) === false ? 'hidden' : 'shown'}"
                                     style="width:{genericCrudTable.getShowFieldWidth(elem.name)}"
                                     aria-label="Sort{elem.name}"
@@ -160,7 +158,7 @@
                                 </td>
                             {/each}
                             <td id="labelOptions" class="headline">
-                                /* istanbul ignore next line */
+                                /* istanbul ignore next */
                                 {#if options.includes(CREATE)}
                                     <div class="options blue" on:click={handleCreate}
                                          title="Create">
@@ -171,11 +169,9 @@
                         </tr>
                     {/if}
                     <tr class="row">
-                        /* istanbul ignore next line */
                         {#each table_config.columns_setting as column_order, j}
-                            /* istanbul ignore next line */
                             {#each Object.entries(tableRow) as elem, k}
-                                /* istanbul ignore next line */
+                                /* istanbul ignore next */
                                 {#if (column_order.name === genericCrudTable.getKey(elem))}
                                     <td class="{genericCrudTable.isShowField(column_order.name) === false ? 'hidden' : 'shown'}"
                                         style="width:{genericCrudTable.getShowFieldWidth(column_order.name)}">
@@ -183,13 +179,13 @@
                                           aria-label={name + column_order.name + i}
                                           disabled>{table_data[i][column_order.name]}</textarea>
                                 {/if}
-                                /* istanbul ignore next line */
+                                /* istanbul ignore next */
                                 {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
                                     <td>
                                         <div id="{name}options-default{i}"
                                              aria-label="{name}options-default{i}"
                                              class="options-field shown">
-                                            /* istanbul ignore next line */
+                                            /* istanbul ignore next */
                                             {#if options.includes(DELETE)}
                                                 <div class="options red" on:click={() => handleDelete(i)}
                                                      title="Delete"
@@ -197,14 +193,14 @@
                                                     {@html icontrash}
                                                 </div>
                                             {/if}
-                                            /* istanbul ignore next line */
+                                            /* istanbul ignore next */
                                             {#if options.includes(EDIT)}
                                                 <div class="options green"
                                                      on:click={(e) => handleEdit(i, e)} title="Edit" tabindex="0">
                                                     {@html iconedit}
                                                 </div>
                                             {/if}
-                                            /* istanbul ignore next line */
+                                            /* istanbul ignore next */
                                             {#if options.includes(DETAILS)}
                                                 <div class="options blue" on:click="{(e) => {handleDetails(i, e)}}"
                                                      title="Details" tabindex="0">
@@ -214,7 +210,7 @@
                                         </div>
                                         <div id="{name}options-edit{i}"
                                              class="options-field hidden">
-                                            /* istanbul ignore next line */
+                                            /* istanbul ignore next */
                                             {#if options.includes(EDIT)}
                                                 <div class="options green"
                                                      on:click="{(e) => {handleEditConfirmation(i, e)}}"
@@ -232,7 +228,7 @@
                                         <div id="{name}options-delete{i}"
                                              aria-label="{name}options-delete{i}"
                                              class="options-field hidden">
-                                            /* istanbul ignore next line */
+                                            /* istanbul ignore next */
                                             {#if options.includes(DELETE)}
                                                 <div class="options red" on:click={() => handleCancelDelete(i)}
                                                      title="Cancel"
