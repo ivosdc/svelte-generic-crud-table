@@ -501,7 +501,7 @@ var SvelteGenericCrudTable = (function () {
     	return child_ctx;
     }
 
-    // (141:4) {#if (table_data !== undefined)}
+    // (143:4) {#if (table_data !== undefined)}
     function create_if_block(ctx) {
     	let t;
     	let show_if = Array.isArray(/*table_data*/ ctx[0]);
@@ -543,7 +543,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (143:8) {#if Array.isArray(table_data)}
+    // (145:8) {#if Array.isArray(table_data)}
     function create_if_block_1(ctx) {
     	let table;
     	let t;
@@ -602,7 +602,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (148:20) {#if i === 0}
+    // (150:20) {#if i === 0}
     function create_if_block_9(ctx) {
     	let tr;
     	let t0;
@@ -693,7 +693,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (150:28) {#each table_config.columns_setting as elem}
+    // (152:28) {#each table_config.columns_setting as elem}
     function create_each_block_3(ctx) {
     	let t;
     	let td;
@@ -759,7 +759,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (162:32) {#if options.includes(CREATE)}
+    // (164:32) {#if options.includes(CREATE)}
     function create_if_block_10(ctx) {
     	let div;
     	let dispose;
@@ -784,7 +784,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (175:32) {#if (column_order.name === genericCrudTable.getKey(elem))}
+    // (177:32) {#if (column_order.name === genericCrudTable.getKey(elem))}
     function create_if_block_8(ctx) {
     	let td;
     	let textarea;
@@ -841,7 +841,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (183:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
+    // (185:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
     function create_if_block_2(ctx) {
     	let td;
     	let div0;
@@ -1022,7 +1022,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (189:44) {#if options.includes(DELETE)}
+    // (191:44) {#if options.includes(DELETE)}
     function create_if_block_7(ctx) {
     	let div;
     	let div_aria_label_value;
@@ -1060,7 +1060,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (197:44) {#if options.includes(EDIT)}
+    // (199:44) {#if options.includes(EDIT)}
     function create_if_block_6(ctx) {
     	let div;
     	let dispose;
@@ -1092,7 +1092,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (204:44) {#if options.includes(DETAILS)}
+    // (206:44) {#if options.includes(DETAILS)}
     function create_if_block_5(ctx) {
     	let div;
     	let dispose;
@@ -1124,7 +1124,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (214:44) {#if options.includes(EDIT)}
+    // (216:44) {#if options.includes(EDIT)}
     function create_if_block_4(ctx) {
     	let div0;
     	let t;
@@ -1182,7 +1182,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (232:44) {#if options.includes(DELETE)}
+    // (234:44) {#if options.includes(DELETE)}
     function create_if_block_3(ctx) {
     	let div0;
     	let div0_aria_label_value;
@@ -1246,7 +1246,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (173:28) {#each Object.entries(tableRow) as elem, k}
+    // (175:28) {#each Object.entries(tableRow) as elem, k}
     function create_each_block_2(ctx) {
     	let t0;
     	let show_if_1 = /*column_order*/ ctx[32].name === /*genericCrudTable*/ ctx[4].getKey(/*elem*/ ctx[35]);
@@ -1312,7 +1312,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (172:24) {#each table_config.columns_setting as column_order, j}
+    // (174:24) {#each table_config.columns_setting as column_order, j}
     function create_each_block_1(ctx) {
     	let each_1_anchor;
     	let each_value_2 = Object.entries(/*tableRow*/ ctx[29]);
@@ -1368,7 +1368,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (146:16) {#each table_data as tableRow, i}
+    // (148:16) {#each table_data as tableRow, i}
     function create_each_block(ctx) {
     	let t0;
     	let t1;
