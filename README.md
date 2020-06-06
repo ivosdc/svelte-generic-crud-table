@@ -1,6 +1,6 @@
 # svelte-generic-crud-table
 Use as:
-- Web-component: `<crud-table></crud-table>`
+- Web-component: `<crud-table></crud-table>` [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/svelte-generic-crud-table)
 - or Svelte-component: `import SvelteGenericCrudTable from 'svelte-generic-crud-table'`
 
 See examples below...
