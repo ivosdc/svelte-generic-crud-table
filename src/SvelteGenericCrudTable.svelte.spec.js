@@ -1,9 +1,12 @@
 import SvelteGenericCrudTable from './SvelteGenericCrudTable.svelte'
 import {render, fireEvent} from '@testing-library/svelte'
+import  jest from "jest-mock";
+import {beforeUpdate} from "svelte";
+
 
 const table_config = {
     name: 'tableName',
-    options: ['EDIT'],
+    options: ['EDIT', 'CREATE', 'DETAILS'],
     columns_setting: [
         {name: 'A_FIELD', show: true, edit: true, width: '200px'}
     ]
@@ -17,9 +20,10 @@ const table_config_delete = {
     ]
 }
 
+
 describe('Test SvelteGenericCrudTable', () => {
 
-    test('smoke: it should compile and render without throwing', () => {
+   test('smoke: it should compile and render without throwing', () => {
         const config = {
             table_config: table_config,
             table_data: [{A_FIELD: 'A_FIELDS_VALUE'}]
@@ -158,6 +162,49 @@ describe('Test SvelteGenericCrudTable', () => {
         await fireEvent.click(deleteCancelButton);
 
         expect(config.table_data.length).toBe(1);
+    })
+
+    it('testSvelteGenericCrudTable_handleCreate', async () => {
+        const config = {
+            table_config: table_config,
+            table_data: [{A_FIELD: 'A_FIELDS_VALUE'}]
+        };
+        SvelteGenericCrudTable.dispatcher = jest.mock;
+        const dom = render(SvelteGenericCrudTable, config)
+
+        const edit = dom.getByTitle('Create');
+        await fireEvent.click(edit);
+
+
+        expect(null).toBeNull();
+    })
+
+    it('testSvelteGenericCrudTable_handleDetails', async () => {
+        const config = {
+            table_config: table_config,
+            table_data: [{A_FIELD: 'A_FIELDS_VALUE'}]
+        };
+        const dom = render(SvelteGenericCrudTable, config)
+
+        const edit = dom.getByTitle('Details');
+        await fireEvent.click(edit);
+
+
+        expect(null).toBeNull();
+    })
+
+    it('testSvelteGenericCrudTable_handleSort', async () => {
+        const config = {
+            table_config: table_config,
+            table_data: [{A_FIELD: 'A_FIELDS_VALUE'}]
+        };
+        const dom = render(SvelteGenericCrudTable, config)
+
+        const edit = dom.getByLabelText('SortA_FIELD');
+        await fireEvent.click(edit);
+
+
+        expect(null).toBeNull();
     })
 
 })

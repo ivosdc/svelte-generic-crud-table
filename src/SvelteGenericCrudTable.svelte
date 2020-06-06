@@ -5,10 +5,7 @@
     import {icontrash, iconedit, iconsend, icondetail, iconcancel, iconcreate, iconsave} from './svgIcon'
 
 
-    let shadowed = false;
-    if (document.querySelector('crud-table')) {
-        shadowed = true;
-    }
+    let shadowed = document.querySelector('crud-table') !== null ? true : false;
 
     const dispatch = createEventDispatcher();
 
@@ -40,13 +37,6 @@
     let genericCrudTable = new SvelteGenericCrudTableService(table_config, shadowed);
     $: genericCrudTable = new SvelteGenericCrudTableService(table_config, shadowed);
 
-    function getFile(file) {
-        return new Promise((resolve, reject) => {
-            let fr = new FileReader();
-            fr.onload = x => resolve(fr.result);
-            fr.readAsText(file);
-        })
-    }
 
     function handleEdit(id) {
         resetRawInEditMode(id);
@@ -57,18 +47,8 @@
         genericCrudTable.setEditMode(id);
     }
 
-    function resetRawValues(id) {
-        table_config.columns_setting.forEach((elem) => {
-            if (shadowed) {
-                document.querySelector('crud-table').shadowRoot.getElementById(name + elem.name + id).value = table_data[id][elem.name]
-            } else {
-                document.getElementById(name + elem.name + id).value = table_data[id][elem.name];
-            }
-        })
-    }
-
     function handleCancelEdit(id) {
-        resetRawValues(id);
+        genericCrudTable.resetRawValues(id, table_data);
         genericCrudTable.resetEditMode(id);
         genericCrudTable.resetDeleteMode(id);
         cursor = NO_ROW_IN_EDIT_MODE;
@@ -78,7 +58,6 @@
         resetRawInEditMode(id);
         const body = genericCrudTable.gatherUpdates(id, table_data);
         table_data[id] = body;
-        table_data = table_data;
         const details = {
             id: id,
             body: body
@@ -130,7 +109,6 @@
 
     function handleDetails(id, event) {
         resetRawInEditMode(id);
-        //get whole set!
         const body = genericCrudTable.gatherUpdates(id, table_data);
         const details = {
             id: id,
@@ -160,10 +138,11 @@
             <table>
                 {#each table_data as tableRow, i}
                     {#if i === 0}
-                        <tr>
+                        <tr style="max-height: 1.3em;">
                             {#each table_config.columns_setting as elem}
                                 <td class="headline {genericCrudTable.isShowField(elem.name) === false ? 'hidden' : 'shown'}"
                                     style="width:{genericCrudTable.getShowFieldWidth(elem.name)}"
+                                    aria-label="Sort{elem.name}"
                                     on:click={(e) => handleSort(elem.name, e)}>
                                     <textarea class="sortable"
                                               disabled>{genericCrudTable.makeCapitalLead(elem.name)}</textarea>
@@ -171,7 +150,8 @@
                             {/each}
                             <td id="labelOptions" class="headline">
                                 {#if options.includes(CREATE)}
-                                    <div class="options blue" id="options-create" on:click={handleCreate} title="Create">
+                                    <div class="options blue" on:click={handleCreate}
+                                         title="Create">
                                         {@html iconcreate}
                                     </div>
                                 {/if}
@@ -256,9 +236,6 @@
                     </tr>
                 {/each}
             </table>
-        {:else}
-            <br>
-            table: {table_data}
         {/if}
     {/if}
 </main>
@@ -300,10 +277,7 @@
         margin-left: 1em;
     }
 
-    .headline {
-        border-bottom: 1px solid #dddddd;
-        cursor: pointer;
-    }
+
 
     .sortable {
         cursor: pointer;
@@ -323,10 +297,16 @@
         float: left;
     }
 
+    .headline {
+        border-bottom: 1px solid #dddddd;
+        cursor: pointer;
+        min-height: 1.3em;
+        max-height: 1.3em;
+        height: 1.3em;
+    }
+
     #labelOptions {
-        color: #aaaaaa;
-        font-weight: 100;
-        width: 100px;
+        width:85px;
     }
 
     .options-field {
@@ -403,7 +383,6 @@
         background-color: inherit;
         font-size: 0.95em;
         font-weight: 200;
-        box-shadow: none;
         height: 1.3em;
         max-height: 1.3em;
     }

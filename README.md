@@ -23,8 +23,7 @@ Allows CRUD-operations for Object-Arrays.
 npm install -save svelte-generic-crud-table
 ```
 
-<iframe src="https://ivosdc.github.io/svelte-generic-crud-table/donate.html" title="donate crud-table"></iframe>
-
+[![Donate](https://github.com/ivosdc/svelte-generic-crud-table/raw/master/assets/donate.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7V5M288MUT7GE&source=url)
 # Usage
 Use the svelte-generic-crud-table in your component to show and, if you like, edit,update and delete it's content.
 Just include the table as seen in the example below.

@@ -110,6 +110,16 @@ export class SvelteGenericCrudTableService {
         return body;
     }
 
+    resetRawValues(id, table) {
+        this.table_config.columns_setting.forEach((elem) => {
+            if (this.shadowed) {
+                document.querySelector('crud-table').shadowRoot.getElementById(this.name + elem.name + id).value = table[id][elem.name]
+            } else {
+                document.getElementById(this.name + elem.name + id).value = table[id][elem.name];
+            }
+        })
+    }
+
 
     isShowField(field) {
         return (this.getColumnSetting('show', field, false) !== undefined) ? this.getColumnSetting('show', field, false) : false;
