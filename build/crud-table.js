@@ -499,19 +499,16 @@ var SvelteGenericCrudTable = (function () {
 
     // (143:4) {#if (table_data !== undefined)}
     function create_if_block(ctx) {
-    	let t;
     	let show_if = Array.isArray(/*table_data*/ ctx[0]);
     	let if_block_anchor;
     	let if_block = show_if && create_if_block_1(ctx);
 
     	return {
     		c() {
-    			t = text("/* istanbul ignore next line */\n        ");
     			if (if_block) if_block.c();
     			if_block_anchor = empty();
     		},
     		m(target, anchor) {
-    			insert(target, t, anchor);
     			if (if_block) if_block.m(target, anchor);
     			insert(target, if_block_anchor, anchor);
     		},
@@ -532,7 +529,6 @@ var SvelteGenericCrudTable = (function () {
     			}
     		},
     		d(detaching) {
-    			if (detaching) detach(t);
     			if (if_block) if_block.d(detaching);
     			if (detaching) detach(if_block_anchor);
     		}
@@ -542,7 +538,6 @@ var SvelteGenericCrudTable = (function () {
     // (145:8) {#if Array.isArray(table_data)}
     function create_if_block_1(ctx) {
     	let table;
-    	let t;
     	let each_value = /*table_data*/ ctx[0];
     	let each_blocks = [];
 
@@ -553,7 +548,6 @@ var SvelteGenericCrudTable = (function () {
     	return {
     		c() {
     			table = element("table");
-    			t = text("/* istanbul ignore next line */\n                ");
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
@@ -561,7 +555,6 @@ var SvelteGenericCrudTable = (function () {
     		},
     		m(target, anchor) {
     			insert(target, table, anchor);
-    			append(table, t);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(table, null);
@@ -601,9 +594,8 @@ var SvelteGenericCrudTable = (function () {
     // (150:20) {#if i === 0}
     function create_if_block_9(ctx) {
     	let tr;
-    	let t0;
+    	let t;
     	let td;
-    	let t1;
     	let show_if = /*options*/ ctx[3].includes(CREATE);
     	let each_value_3 = /*table_config*/ ctx[1].columns_setting;
     	let each_blocks = [];
@@ -622,9 +614,8 @@ var SvelteGenericCrudTable = (function () {
     				each_blocks[i].c();
     			}
 
-    			t0 = space();
+    			t = space();
     			td = element("td");
-    			t1 = text("/* istanbul ignore next */\n                                ");
     			if (if_block) if_block.c();
     			attr(td, "id", "labelOptions");
     			attr(td, "class", "headline");
@@ -637,9 +628,8 @@ var SvelteGenericCrudTable = (function () {
     				each_blocks[i].m(tr, null);
     			}
 
-    			append(tr, t0);
+    			append(tr, t);
     			append(tr, td);
-    			append(td, t1);
     			if (if_block) if_block.m(td, null);
     		},
     		p(ctx, dirty) {
@@ -655,7 +645,7 @@ var SvelteGenericCrudTable = (function () {
     					} else {
     						each_blocks[i] = create_each_block_3(child_ctx);
     						each_blocks[i].c();
-    						each_blocks[i].m(tr, t0);
+    						each_blocks[i].m(tr, t);
     					}
     				}
 
@@ -691,7 +681,6 @@ var SvelteGenericCrudTable = (function () {
 
     // (152:28) {#each table_config.columns_setting as elem}
     function create_each_block_3(ctx) {
-    	let t;
     	let td;
     	let textarea;
     	let textarea_value_value;
@@ -705,7 +694,6 @@ var SvelteGenericCrudTable = (function () {
 
     	return {
     		c() {
-    			t = text("/* istanbul ignore next */\n                                ");
     			td = element("td");
     			textarea = element("textarea");
     			attr(textarea, "class", "sortable");
@@ -720,7 +708,6 @@ var SvelteGenericCrudTable = (function () {
     			attr(td, "aria-label", td_aria_label_value = "Sort" + /*elem*/ ctx[35].name);
     		},
     		m(target, anchor, remount) {
-    			insert(target, t, anchor);
     			insert(target, td, anchor);
     			append(td, textarea);
     			if (remount) dispose();
@@ -748,7 +735,6 @@ var SvelteGenericCrudTable = (function () {
     			}
     		},
     		d(detaching) {
-    			if (detaching) detach(t);
     			if (detaching) detach(td);
     			dispose();
     		}
@@ -841,22 +827,19 @@ var SvelteGenericCrudTable = (function () {
     function create_if_block_2(ctx) {
     	let td;
     	let div0;
-    	let t0;
     	let show_if_4 = /*options*/ ctx[3].includes(DELETE);
-    	let t1;
+    	let t0;
     	let show_if_3 = /*options*/ ctx[3].includes(EDIT);
-    	let t2;
+    	let t1;
     	let show_if_2 = /*options*/ ctx[3].includes(DETAILS);
     	let div0_id_value;
     	let div0_aria_label_value;
-    	let t3;
+    	let t2;
     	let div1;
-    	let t4;
     	let show_if_1 = /*options*/ ctx[3].includes(EDIT);
     	let div1_id_value;
-    	let t5;
+    	let t3;
     	let div2;
-    	let t6;
     	let show_if = /*options*/ ctx[3].includes(DELETE);
     	let div2_id_value;
     	let div2_aria_label_value;
@@ -870,19 +853,16 @@ var SvelteGenericCrudTable = (function () {
     		c() {
     			td = element("td");
     			div0 = element("div");
-    			t0 = text("/* istanbul ignore next */\n                                            ");
     			if (if_block0) if_block0.c();
-    			t1 = text("\n                                            /* istanbul ignore next */\n                                            ");
+    			t0 = space();
     			if (if_block1) if_block1.c();
-    			t2 = text("\n                                            /* istanbul ignore next */\n                                            ");
+    			t1 = space();
     			if (if_block2) if_block2.c();
-    			t3 = space();
+    			t2 = space();
     			div1 = element("div");
-    			t4 = text("/* istanbul ignore next */\n                                            ");
     			if (if_block3) if_block3.c();
-    			t5 = space();
+    			t3 = space();
     			div2 = element("div");
-    			t6 = text("/* istanbul ignore next */\n                                            ");
     			if (if_block4) if_block4.c();
     			attr(div0, "id", div0_id_value = "" + (/*name*/ ctx[2] + "options-default" + /*i*/ ctx[31]));
     			attr(div0, "aria-label", div0_aria_label_value = "" + (/*name*/ ctx[2] + "options-default" + /*i*/ ctx[31]));
@@ -896,19 +876,16 @@ var SvelteGenericCrudTable = (function () {
     		m(target, anchor) {
     			insert(target, td, anchor);
     			append(td, div0);
-    			append(div0, t0);
     			if (if_block0) if_block0.m(div0, null);
-    			append(div0, t1);
+    			append(div0, t0);
     			if (if_block1) if_block1.m(div0, null);
-    			append(div0, t2);
+    			append(div0, t1);
     			if (if_block2) if_block2.m(div0, null);
-    			append(td, t3);
+    			append(td, t2);
     			append(td, div1);
-    			append(div1, t4);
     			if (if_block3) if_block3.m(div1, null);
-    			append(td, t5);
+    			append(td, t3);
     			append(td, div2);
-    			append(div2, t6);
     			if (if_block4) if_block4.m(div2, null);
     		},
     		p(ctx, dirty) {
@@ -920,7 +897,7 @@ var SvelteGenericCrudTable = (function () {
     				} else {
     					if_block0 = create_if_block_7(ctx);
     					if_block0.c();
-    					if_block0.m(div0, t1);
+    					if_block0.m(div0, t0);
     				}
     			} else if (if_block0) {
     				if_block0.d(1);
@@ -935,7 +912,7 @@ var SvelteGenericCrudTable = (function () {
     				} else {
     					if_block1 = create_if_block_6(ctx);
     					if_block1.c();
-    					if_block1.m(div0, t2);
+    					if_block1.m(div0, t1);
     				}
     			} else if (if_block1) {
     				if_block1.d(1);
@@ -1244,9 +1221,8 @@ var SvelteGenericCrudTable = (function () {
 
     // (175:28) {#each Object.entries(tableRow) as elem, k}
     function create_each_block_2(ctx) {
-    	let t0;
     	let show_if_1 = /*column_order*/ ctx[32].name === /*genericCrudTable*/ ctx[4].getKey(/*elem*/ ctx[35]);
-    	let t1;
+    	let t;
     	let show_if = /*table_config*/ ctx[1].columns_setting.length - 1 === /*j*/ ctx[34] && Object.entries(/*tableRow*/ ctx[29]).length - 1 === /*k*/ ctx[37];
     	let if_block1_anchor;
     	let if_block0 = show_if_1 && create_if_block_8(ctx);
@@ -1254,16 +1230,14 @@ var SvelteGenericCrudTable = (function () {
 
     	return {
     		c() {
-    			t0 = text("/* istanbul ignore next */\n                                ");
     			if (if_block0) if_block0.c();
-    			t1 = text("\n                                /* istanbul ignore next */\n                                ");
+    			t = space();
     			if (if_block1) if_block1.c();
     			if_block1_anchor = empty();
     		},
     		m(target, anchor) {
-    			insert(target, t0, anchor);
     			if (if_block0) if_block0.m(target, anchor);
-    			insert(target, t1, anchor);
+    			insert(target, t, anchor);
     			if (if_block1) if_block1.m(target, anchor);
     			insert(target, if_block1_anchor, anchor);
     		},
@@ -1276,7 +1250,7 @@ var SvelteGenericCrudTable = (function () {
     				} else {
     					if_block0 = create_if_block_8(ctx);
     					if_block0.c();
-    					if_block0.m(t1.parentNode, t1);
+    					if_block0.m(t.parentNode, t);
     				}
     			} else if (if_block0) {
     				if_block0.d(1);
@@ -1299,9 +1273,8 @@ var SvelteGenericCrudTable = (function () {
     			}
     		},
     		d(detaching) {
-    			if (detaching) detach(t0);
     			if (if_block0) if_block0.d(detaching);
-    			if (detaching) detach(t1);
+    			if (detaching) detach(t);
     			if (if_block1) if_block1.d(detaching);
     			if (detaching) detach(if_block1_anchor);
     		}
@@ -1367,9 +1340,8 @@ var SvelteGenericCrudTable = (function () {
     // (148:16) {#each table_data as tableRow, i}
     function create_each_block(ctx) {
     	let t0;
-    	let t1;
     	let tr;
-    	let t2;
+    	let t1;
     	let if_block = /*i*/ ctx[31] === 0 && create_if_block_9(ctx);
     	let each_value_1 = /*table_config*/ ctx[1].columns_setting;
     	let each_blocks = [];
@@ -1380,29 +1352,27 @@ var SvelteGenericCrudTable = (function () {
 
     	return {
     		c() {
-    			t0 = text("/* istanbul ignore next line */\n                    ");
     			if (if_block) if_block.c();
-    			t1 = space();
+    			t0 = space();
     			tr = element("tr");
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
-    			t2 = space();
+    			t1 = space();
     			attr(tr, "class", "row");
     		},
     		m(target, anchor) {
-    			insert(target, t0, anchor);
     			if (if_block) if_block.m(target, anchor);
-    			insert(target, t1, anchor);
+    			insert(target, t0, anchor);
     			insert(target, tr, anchor);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(tr, null);
     			}
 
-    			append(tr, t2);
+    			append(tr, t1);
     		},
     		p(ctx, dirty) {
     			if (/*i*/ ctx[31] === 0) if_block.p(ctx, dirty);
@@ -1419,7 +1389,7 @@ var SvelteGenericCrudTable = (function () {
     					} else {
     						each_blocks[i] = create_each_block_1(child_ctx);
     						each_blocks[i].c();
-    						each_blocks[i].m(tr, t2);
+    						each_blocks[i].m(tr, t1);
     					}
     				}
 
@@ -1431,9 +1401,8 @@ var SvelteGenericCrudTable = (function () {
     			}
     		},
     		d(detaching) {
-    			if (detaching) detach(t0);
     			if (if_block) if_block.d(detaching);
-    			if (detaching) detach(t1);
+    			if (detaching) detach(t0);
     			if (detaching) detach(tr);
     			destroy_each(each_blocks, detaching);
     		}
@@ -1442,32 +1411,29 @@ var SvelteGenericCrudTable = (function () {
 
     function create_fragment(ctx) {
     	let main;
-    	let t0;
     	let h3;
+    	let t0;
     	let t1;
-    	let t2;
     	let if_block = /*table_data*/ ctx[0] !== undefined && create_if_block(ctx);
 
     	return {
     		c() {
     			main = element("main");
-    			t0 = text("/* istanbul ignore next line */\n    ");
     			h3 = element("h3");
-    			t1 = text(/*name*/ ctx[2]);
-    			t2 = space();
+    			t0 = text(/*name*/ ctx[2]);
+    			t1 = space();
     			if (if_block) if_block.c();
     			this.c = noop;
     		},
     		m(target, anchor) {
     			insert(target, main, anchor);
-    			append(main, t0);
     			append(main, h3);
-    			append(h3, t1);
-    			append(main, t2);
+    			append(h3, t0);
+    			append(main, t1);
     			if (if_block) if_block.m(main, null);
     		},
     		p(ctx, dirty) {
-    			if (dirty[0] & /*name*/ 4) set_data(t1, /*name*/ ctx[2]);
+    			if (dirty[0] & /*name*/ 4) set_data(t0, /*name*/ ctx[2]);
 
     			if (/*table_data*/ ctx[0] !== undefined) {
     				if (if_block) {
