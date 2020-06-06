@@ -17,11 +17,11 @@ jobs:
           on:
             tags: false
         - provider: releases
-          token: $GITHUB_OAUTH_TOKEN
+          api_key: $GITHUB_OAUTH_TOKEN
           file:
             - "./dist/build/crud-table.js"
             - "./dist/build/crud-table.mjs"
             - "./dist/build/crud-table.css"
           skip_cleanup: true
           on:
-            tags: true
+            tags: false
