@@ -1,7 +1,6 @@
 import SvelteGenericCrudTable from './SvelteGenericCrudTable.svelte'
 import {render, fireEvent} from '@testing-library/svelte'
 import  jest from "jest-mock";
-import {beforeUpdate} from "svelte";
 
 
 const table_config = {
@@ -14,7 +13,7 @@ const table_config = {
 
 const table_config_delete = {
     name: 'tableName',
-    options: ['EDIT', 'DELETE'],
+    options: ['DELETE'],
     columns_setting: [
         {name: 'A_FIELD', show: true, edit: true, width: '200px'}
     ]
