@@ -1,15 +1,15 @@
 # svelte-generic-crud-table
-Use as:
-- [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/svelte-generic-crud-table): `<crud-table></crud-table>`
+- Web-component: `<crud-table></crud-table>`
 - or Svelte-component: `import SvelteGenericCrudTable from 'svelte-generic-crud-table'`
 
 A self-containing sortable table component with inline edit option.
 
 Allows CRUD-operations for Object-Arrays.
 
-[Try as web-component on github pages:](https://ivosdc.github.io/svelte-generic-crud-table/ "GeneralCrudTable Example")
+[Try out live example:](https://ivosdc.github.io/svelte-generic-crud-table/ "GeneralCrudTable Example")
 
-![Generic CRUD Table](https://github.com/ivosdc/svelte-generic-crud-table/raw/master/assets/generic-crud-table.png "Svelte GenericCrudTable")
+[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/svelte-generic-crud-table)
+
 
 ## Install
 
@@ -19,7 +19,7 @@ npm install -save svelte-generic-crud-table
 
 [![Donate](https://github.com/ivosdc/svelte-generic-crud-table/raw/master/assets/donate.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7V5M288MUT7GE&source=url)
 
-### master state:
+### State (master):
 [![Build Status](https://travis-ci.com/ivosdc/svelte-generic-crud-table.svg?branch=master)](https://travis-ci.com/ivosdc/svelte-generic-crud-table)
 [![Coverage Status](https://coveralls.io/repos/github/ivosdc/svelte-generic-crud-table/badge.svg?branch=master)](https://coveralls.io/github/ivosdc/svelte-generic-crud-table?branch=master)
 
@@ -37,20 +37,14 @@ Just include the table as seen in the example below.
     <meta name='viewport' content='width=device-width,initial-scale=1'>
     <title>Generic Crud Table</title>
     <link rel='icon' type='image/png' href='favicon.png'>
-    <link rel='stylesheet' href='global.css'>
     <link rel='stylesheet' href='https://ivosdc.github.io/svelte-generic-crud-table/build/crud-table.css'>
     <script defer src='https://ivosdc.github.io/svelte-generic-crud-table/build/crud-table.js'></script>
 </head>
 
 <body>
-<h1>&lt;crud-table&gt;&lt;/crud-table&gt;</h1>
-<p>Agnostic web-component for object-arrays with CRUD functionality.</p>
-<span style="background-color: #dddddd; padding: 0.4em; display:inline-block">&gt; npm install -save svelte-generic-crud-table</span>
-<p></p>
 <hr>
 <crud-table></crud-table>
 <hr>
-</span style="text-align: right"><a href="https://ivolution.one">ivolution.one product - MIT License</a></p>
 </body>
 
 <script>
@@ -62,6 +56,7 @@ Just include the table as seen in the example below.
     let table_config = {
         name: 'Awesome',
         options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
+        // order columns!
         columns_setting: [
             {name: 'job', show: true, edit: true, size: '200px'},
             {name: 'name', show: true, edit: true, size: '200px'},
