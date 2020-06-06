@@ -501,7 +501,7 @@ var SvelteGenericCrudTable = (function () {
     	return child_ctx;
     }
 
-    // (142:4) {#if (table_data !== undefined)}
+    // (141:4) {#if (table_data !== undefined)}
     function create_if_block(ctx) {
     	let t;
     	let show_if = Array.isArray(/*table_data*/ ctx[0]);
@@ -543,7 +543,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (144:8) {#if Array.isArray(table_data)}
+    // (143:8) {#if Array.isArray(table_data)}
     function create_if_block_1(ctx) {
     	let table;
     	let t;
@@ -602,13 +602,12 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (149:20) {#if i === 0}
+    // (148:20) {#if i === 0}
     function create_if_block_9(ctx) {
     	let tr;
     	let t0;
-    	let t1;
     	let td;
-    	let t2;
+    	let t1;
     	let show_if = /*options*/ ctx[3].includes(CREATE);
     	let each_value_3 = /*table_config*/ ctx[1].columns_setting;
     	let each_blocks = [];
@@ -622,15 +621,14 @@ var SvelteGenericCrudTable = (function () {
     	return {
     		c() {
     			tr = element("tr");
-    			t0 = text("/* istanbul ignore next line */\n                            ");
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
-    			t1 = space();
+    			t0 = space();
     			td = element("td");
-    			t2 = text("/* istanbul ignore next line */\n                                ");
+    			t1 = text("/* istanbul ignore next */\n                                ");
     			if (if_block) if_block.c();
     			attr(td, "id", "labelOptions");
     			attr(td, "class", "headline");
@@ -638,15 +636,14 @@ var SvelteGenericCrudTable = (function () {
     		},
     		m(target, anchor) {
     			insert(target, tr, anchor);
-    			append(tr, t0);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(tr, null);
     			}
 
-    			append(tr, t1);
+    			append(tr, t0);
     			append(tr, td);
-    			append(td, t2);
+    			append(td, t1);
     			if (if_block) if_block.m(td, null);
     		},
     		p(ctx, dirty) {
@@ -662,7 +659,7 @@ var SvelteGenericCrudTable = (function () {
     					} else {
     						each_blocks[i] = create_each_block_3(child_ctx);
     						each_blocks[i].c();
-    						each_blocks[i].m(tr, t1);
+    						each_blocks[i].m(tr, t0);
     					}
     				}
 
@@ -696,7 +693,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (152:28) {#each table_config.columns_setting as elem}
+    // (150:28) {#each table_config.columns_setting as elem}
     function create_each_block_3(ctx) {
     	let t;
     	let td;
@@ -712,7 +709,7 @@ var SvelteGenericCrudTable = (function () {
 
     	return {
     		c() {
-    			t = text("/* istanbul ignore next line */\n                                ");
+    			t = text("/* istanbul ignore next */\n                                ");
     			td = element("td");
     			textarea = element("textarea");
     			attr(textarea, "class", "sortable");
@@ -762,7 +759,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (164:32) {#if options.includes(CREATE)}
+    // (162:32) {#if options.includes(CREATE)}
     function create_if_block_10(ctx) {
     	let div;
     	let dispose;
@@ -787,7 +784,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (179:32) {#if (column_order.name === genericCrudTable.getKey(elem))}
+    // (175:32) {#if (column_order.name === genericCrudTable.getKey(elem))}
     function create_if_block_8(ctx) {
     	let td;
     	let textarea;
@@ -844,7 +841,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (187:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
+    // (183:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
     function create_if_block_2(ctx) {
     	let td;
     	let div0;
@@ -877,19 +874,19 @@ var SvelteGenericCrudTable = (function () {
     		c() {
     			td = element("td");
     			div0 = element("div");
-    			t0 = text("/* istanbul ignore next line */\n                                            ");
+    			t0 = text("/* istanbul ignore next */\n                                            ");
     			if (if_block0) if_block0.c();
-    			t1 = text("\n                                            /* istanbul ignore next line */\n                                            ");
+    			t1 = text("\n                                            /* istanbul ignore next */\n                                            ");
     			if (if_block1) if_block1.c();
-    			t2 = text("\n                                            /* istanbul ignore next line */\n                                            ");
+    			t2 = text("\n                                            /* istanbul ignore next */\n                                            ");
     			if (if_block2) if_block2.c();
     			t3 = space();
     			div1 = element("div");
-    			t4 = text("/* istanbul ignore next line */\n                                            ");
+    			t4 = text("/* istanbul ignore next */\n                                            ");
     			if (if_block3) if_block3.c();
     			t5 = space();
     			div2 = element("div");
-    			t6 = text("/* istanbul ignore next line */\n                                            ");
+    			t6 = text("/* istanbul ignore next */\n                                            ");
     			if (if_block4) if_block4.c();
     			attr(div0, "id", div0_id_value = "" + (/*name*/ ctx[2] + "options-default" + /*i*/ ctx[31]));
     			attr(div0, "aria-label", div0_aria_label_value = "" + (/*name*/ ctx[2] + "options-default" + /*i*/ ctx[31]));
@@ -1025,7 +1022,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (193:44) {#if options.includes(DELETE)}
+    // (189:44) {#if options.includes(DELETE)}
     function create_if_block_7(ctx) {
     	let div;
     	let div_aria_label_value;
@@ -1063,7 +1060,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (201:44) {#if options.includes(EDIT)}
+    // (197:44) {#if options.includes(EDIT)}
     function create_if_block_6(ctx) {
     	let div;
     	let dispose;
@@ -1095,7 +1092,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (208:44) {#if options.includes(DETAILS)}
+    // (204:44) {#if options.includes(DETAILS)}
     function create_if_block_5(ctx) {
     	let div;
     	let dispose;
@@ -1127,7 +1124,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (218:44) {#if options.includes(EDIT)}
+    // (214:44) {#if options.includes(EDIT)}
     function create_if_block_4(ctx) {
     	let div0;
     	let t;
@@ -1185,7 +1182,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (236:44) {#if options.includes(DELETE)}
+    // (232:44) {#if options.includes(DELETE)}
     function create_if_block_3(ctx) {
     	let div0;
     	let div0_aria_label_value;
@@ -1249,7 +1246,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (177:28) {#each Object.entries(tableRow) as elem, k}
+    // (173:28) {#each Object.entries(tableRow) as elem, k}
     function create_each_block_2(ctx) {
     	let t0;
     	let show_if_1 = /*column_order*/ ctx[32].name === /*genericCrudTable*/ ctx[4].getKey(/*elem*/ ctx[35]);
@@ -1261,9 +1258,9 @@ var SvelteGenericCrudTable = (function () {
 
     	return {
     		c() {
-    			t0 = text("/* istanbul ignore next line */\n                                ");
+    			t0 = text("/* istanbul ignore next */\n                                ");
     			if (if_block0) if_block0.c();
-    			t1 = text("\n                                /* istanbul ignore next line */\n                                ");
+    			t1 = text("\n                                /* istanbul ignore next */\n                                ");
     			if (if_block1) if_block1.c();
     			if_block1_anchor = empty();
     		},
@@ -1315,9 +1312,8 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (175:24) {#each table_config.columns_setting as column_order, j}
+    // (172:24) {#each table_config.columns_setting as column_order, j}
     function create_each_block_1(ctx) {
-    	let t;
     	let each_1_anchor;
     	let each_value_2 = Object.entries(/*tableRow*/ ctx[29]);
     	let each_blocks = [];
@@ -1328,8 +1324,6 @@ var SvelteGenericCrudTable = (function () {
 
     	return {
     		c() {
-    			t = text("/* istanbul ignore next line */\n                            ");
-
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
@@ -1337,8 +1331,6 @@ var SvelteGenericCrudTable = (function () {
     			each_1_anchor = empty();
     		},
     		m(target, anchor) {
-    			insert(target, t, anchor);
-
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(target, anchor);
     			}
@@ -1370,20 +1362,18 @@ var SvelteGenericCrudTable = (function () {
     			}
     		},
     		d(detaching) {
-    			if (detaching) detach(t);
     			destroy_each(each_blocks, detaching);
     			if (detaching) detach(each_1_anchor);
     		}
     	};
     }
 
-    // (147:16) {#each table_data as tableRow, i}
+    // (146:16) {#each table_data as tableRow, i}
     function create_each_block(ctx) {
     	let t0;
     	let t1;
     	let tr;
     	let t2;
-    	let t3;
     	let if_block = /*i*/ ctx[31] === 0 && create_if_block_9(ctx);
     	let each_value_1 = /*table_config*/ ctx[1].columns_setting;
     	let each_blocks = [];
@@ -1398,13 +1388,12 @@ var SvelteGenericCrudTable = (function () {
     			if (if_block) if_block.c();
     			t1 = space();
     			tr = element("tr");
-    			t2 = text("/* istanbul ignore next line */\n                        ");
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
-    			t3 = space();
+    			t2 = space();
     			attr(tr, "class", "row");
     		},
     		m(target, anchor) {
@@ -1412,13 +1401,12 @@ var SvelteGenericCrudTable = (function () {
     			if (if_block) if_block.m(target, anchor);
     			insert(target, t1, anchor);
     			insert(target, tr, anchor);
-    			append(tr, t2);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(tr, null);
     			}
 
-    			append(tr, t3);
+    			append(tr, t2);
     		},
     		p(ctx, dirty) {
     			if (/*i*/ ctx[31] === 0) if_block.p(ctx, dirty);
@@ -1435,7 +1423,7 @@ var SvelteGenericCrudTable = (function () {
     					} else {
     						each_blocks[i] = create_each_block_1(child_ctx);
     						each_blocks[i].c();
-    						each_blocks[i].m(tr, t3);
+    						each_blocks[i].m(tr, t2);
     					}
     				}
 
@@ -1470,7 +1458,7 @@ var SvelteGenericCrudTable = (function () {
     			t0 = text("/* istanbul ignore next line */\n    ");
     			h3 = element("h3");
     			t1 = text(/*name*/ ctx[2]);
-    			t2 = text("\n    /* istanbul ignore next line */\n    ");
+    			t2 = space();
     			if (if_block) if_block.c();
     			this.c = noop;
     		},
