@@ -20,10 +20,12 @@
         columns_setting: []
     }
 
+    /* istanbul ignore next line */
     export let table_data = {};
     /* istanbul ignore next line */
     $: table_data = (typeof table_data === 'string') ? JSON.parse(table_data) : table_data;
 
+    /* istanbul ignore next line */
     export let table_config = table_config_default;
     /* istanbul ignore next line */
     $: table_config = (typeof table_config === 'string') ? JSON.parse(table_config) : table_config;
