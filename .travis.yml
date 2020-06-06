@@ -16,3 +16,13 @@ jobs:
         edge: true
         on:
           tags: false
+      - deploy:
+          provider: releases
+          token: $GITHUB_OAUTH_TOKEN
+          file:
+            - "./dist/build/crud-table.js"
+            - "./dist/build/crud-table.mjs"
+            - "./dist/build/crud-table.css"
+          skip_cleanup: true
+          on:
+            tags: true
