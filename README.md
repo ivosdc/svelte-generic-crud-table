@@ -1,13 +1,7 @@
 # svelte-generic-crud-table
 Use as:
-- Web-component: `<crud-table></crud-table>` [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/svelte-generic-crud-table)
+- [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/svelte-generic-crud-table): `<crud-table></crud-table>`
 - or Svelte-component: `import SvelteGenericCrudTable from 'svelte-generic-crud-table'`
-
-See examples below...
-
-
-[![Build Status](https://travis-ci.com/ivosdc/svelte-generic-crud-table.svg?branch=master)](https://travis-ci.com/ivosdc/svelte-generic-crud-table)
-[![Coverage Status](https://coveralls.io/repos/github/ivosdc/svelte-generic-crud-table/badge.svg?branch=master)](https://coveralls.io/github/ivosdc/svelte-generic-crud-table?branch=master)
 
 A self-containing sortable table component with inline edit option.
 
@@ -24,76 +18,17 @@ npm install -save svelte-generic-crud-table
 ```
 
 [![Donate](https://github.com/ivosdc/svelte-generic-crud-table/raw/master/assets/donate.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7V5M288MUT7GE&source=url)
+
+### master state:
+[![Build Status](https://travis-ci.com/ivosdc/svelte-generic-crud-table.svg?branch=master)](https://travis-ci.com/ivosdc/svelte-generic-crud-table)
+[![Coverage Status](https://coveralls.io/repos/github/ivosdc/svelte-generic-crud-table/badge.svg?branch=master)](https://coveralls.io/github/ivosdc/svelte-generic-crud-table?branch=master)
+
 # Usage
 Use the svelte-generic-crud-table in your component to show and, if you like, edit,update and delete it's content.
 Just include the table as seen in the example below.
 
 
-###  Set options - Svelte-Component:
-```
-<script>
-    import SvelteGenericCrudTable from "svelte-generic-crud-table";
-
-    function handleDelete(event) {
-        const id = event.detail.id; // position in myObjectArray
-        const body = event.detail.body; // object to delete
-        console.log(JSON.stringify(event.detail.body));
-        myObjectArray.slice(id,1);
-    }
-
-    function handleUpdate(event) {
-        const id = event.detail.id; // position in table
-        const body = event.detail.body;
-        console.log(JSON.stringify(body));
-        myObjectArray[id] = body;
-    }
-
-    function handleCreate(event) {
-        console.log(JSON.stringify(event.detail)); // empty object is passed by now
-        myObjectArray.push({id: -1, name:'new Element', sthg:'2345', why:'1234'})
-        myObjectArray = myObjectArray;
-    }
-
-    function handleDetails(event) {
-        const id = event.detail.id; // position in table
-        const body = event.detail.body;
-        console.log(JSON.stringify(body));
-    }
-
-    function handleSort(event) {
-        console.log('sort: ' + e.detail.column);
-    }
-
-    // example object array. This should be your db query result.
-    const myObjectArray = [
-        {id: 1, name: "A_NAME_1", sthg: "A_STHG_1", why: "because"},
-        {id: 2, name: "A_NAME_2", sthg: "A_STHG_2", why: "I can"}
-    ]
-</script>
-
-<main>
-    <SvelteGenericCrudTable on:delete={handleDelete}
-                            on:update={handleUpdate}
-                            on:create={handleCreate}
-                            on:details={handleDetails}
-                            on:sort={handleSort}
-                              table_config={{
-                                name: 'Awesome',
-                                options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
-                                columns_setting: [
-                                // columns order is relevant
-                                    {name: 'id', show: false, edit: true, size: '200px'},
-                                    {name: 'name', show: true, edit: true, size: '200px'},
-                                    {name: 'why', show: true, edit: true, size: '200px'},
-                                    {name: 'sthg', show: true, edit: false, size: '200px'}
-                                ]
-                            }}
-                            table_data={JSON.stringify(myObjectArray)}></SvelteGenericCrudTable>
-</main>
-```
-
-
-### As Web-Component `<crud-table></crud-table>`
+### `<crud-table></crud-table>`
 ```
 <custom-element-demo>
 <template>
@@ -205,7 +140,55 @@ Just include the table as seen in the example below.
 </template>
 </custom-element-demo>
 ```
+
 ```html
 <crud-table></crud-table>
 ```
 
+###  Svelte-Component:
+```
+<script>
+    import SvelteGenericCrudTable from "svelte-generic-crud-table";
+
+    function handleDelete(event) {
+    }
+
+    function handleUpdate(event) {
+    }
+
+    function handleCreate(event) {
+    }
+
+    function handleDetails(event) {
+    }
+
+    function handleSort(event) {
+    }
+
+    // example object array. This should be your db query result.
+    const myObjectArray = [
+        {id: 1, name: "A_NAME_1", sthg: "A_STHG_1", why: "because"},
+        {id: 2, name: "A_NAME_2", sthg: "A_STHG_2", why: "I can"}
+    ]
+</script>
+
+<main>
+    <SvelteGenericCrudTable on:delete={handleDelete}
+                            on:update={handleUpdate}
+                            on:create={handleCreate}
+                            on:details={handleDetails}
+                            on:sort={handleSort}
+                              table_config={{
+                                name: 'Awesome',
+                                options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
+                                columns_setting: [
+                                // columns order is relevant
+                                    {name: 'id', show: false, edit: true, size: '200px'},
+                                    {name: 'name', show: true, edit: true, size: '200px'},
+                                    {name: 'why', show: true, edit: true, size: '200px'},
+                                    {name: 'sthg', show: true, edit: false, size: '200px'}
+                                ]
+                            }}
+                            table_data={JSON.stringify(myObjectArray)}></SvelteGenericCrudTable>
+</main>
+```

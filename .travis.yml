@@ -24,4 +24,4 @@ jobs:
             - "./dist/build/crud-table.css"
           skip_cleanup: true
           on:
-            tags: false
+            tags: true
