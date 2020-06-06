@@ -95,16 +95,16 @@ Just include the table as seen in the example below.
 
 ### As Web-Component `<crud-table></crud-table>`
 ```
-<!DOCTYPE html>
-<html lang="en">
+<custom-element-demo>
+<template>
 <head>
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width,initial-scale=1'>
     <title>Generic Crud Table</title>
     <link rel='icon' type='image/png' href='favicon.png'>
     <link rel='stylesheet' href='global.css'>
-    <link rel='stylesheet' href='build/crud-table.css'>
-    <script defer src='build/crud-table.js'></script>
+    <link rel='stylesheet' href='https://ivosdc.github.io/svelte-generic-crud-table/build/crud-table.css'>
+    <script defer src='https://ivosdc.github.io/svelte-generic-crud-table/build/crud-table.js'></script>
 </head>
 
 <body>
@@ -202,8 +202,10 @@ Just include the table as seen in the example below.
         });
     }
 </script>
-</html>
-
+</template>
+</custom-element-demo>
 ```
-
+```html
+<crud-table></crud-table>
+```
 
