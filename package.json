@@ -1,6 +1,6 @@
 {
   "name": "svelte-generic-crud-table",
-  "version": "1.4.13",
+  "version": "1.4.14",
   "description": "<crud-table> renders object-arrays with options-panel per row. Dispatches events for ongoing data handling. As self-containing webcomponent or for Svelte",
   "main": "dist/build/crud-table.js",
   "module": "dist/build/crud-table.mjs",

@@ -1,6 +1,7 @@
 import SvelteGenericCrudTable from './SvelteGenericCrudTable.svelte'
 import {render, fireEvent} from '@testing-library/svelte'
-import  jest from "jest-mock";
+import {jest} from "@jest/globals";
+
 
 
 const table_config = {
@@ -22,7 +23,7 @@ const table_config_delete = {
 
 describe('Test SvelteGenericCrudTable', () => {
 
-   test('smoke: it should compile and render without throwing', () => {
+    test('smoke: it should compile and render without throwing', () => {
         const config = {
             table_config: table_config,
             table_data: [{A_FIELD: 'A_FIELDS_VALUE'}]
@@ -124,14 +125,14 @@ describe('Test SvelteGenericCrudTable', () => {
     it('testSvelteGenericCrudTable_delete_otherDelete_resetOptions', async () => {
         const config = {
             table_config: table_config_delete,
-            table_data: [{A_FIELD: 'A_FIELDS_VALUE'},{A_FIELD: 'A_FIELDS_VALUE'}]
+            table_data: [{A_FIELD: 'A_FIELDS_VALUE'}, {A_FIELD: 'A_FIELDS_VALUE'}]
         };
         const dom = render(SvelteGenericCrudTable, config)
 
-        const optionsDefault = dom.getByLabelText(config.table_config.name + `options-default` + 0 );
+        const optionsDefault = dom.getByLabelText(config.table_config.name + `options-default` + 0);
         expect(optionsDefault.classList.contains('shown'))
 
-        const optionsDelete = dom.getByLabelText(config.table_config.name + `options-delete` + 0 );
+        const optionsDelete = dom.getByLabelText(config.table_config.name + `options-delete` + 0);
         expect(optionsDelete.classList.contains('hidden'))
 
         const deleteButton = dom.getByLabelText(config.table_config.name + `A_FIELD` + 0 + 'delete');
@@ -197,11 +198,11 @@ describe('Test SvelteGenericCrudTable', () => {
             table_config: table_config,
             table_data: [{A_FIELD: 'A_FIELDS_VALUE'}]
         };
+
         const dom = render(SvelteGenericCrudTable, config)
 
-        const edit = dom.getByLabelText('SortA_FIELD');
+        const edit = dom.queryByLabelText('Sort' + 'A_FIELD');
         await fireEvent.click(edit);
-
 
         expect(null).toBeNull();
     })
