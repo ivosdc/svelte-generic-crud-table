@@ -4,8 +4,9 @@ node_js:
 jobs:
   include:
     - script: npm install
-    - script: npm test
     - script: npm run build
+    - script: npm test
+    - script: npm run coverage
       deploy:
         provider: pages
         skip_cleanup: true

@@ -8,7 +8,8 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "test": "jest --coverage && coveralls < coverage/lcov.info"
+    "test": "jest --coverage",
+    "coverage": "cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "repository": {
     "type": "git",
