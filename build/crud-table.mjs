@@ -399,11 +399,13 @@ var SvelteGenericCrudTable = (function () {
         gatherUpdates(id, table) {
             const body = table[id];
             this.table_config.columns_setting.forEach((elem) => {
-                if (this.shadowed) {
-                    body[elem.name] = document.querySelector('crud-table').shadowRoot
-                        .getElementById(this.name + elem.name + id).value;
-                } else {
-                    body[elem.name] = document.getElementById(this.name + elem.name + id).value;
+                if (elem.show) {
+                    if (this.shadowed) {
+                        body[elem.name] = document.querySelector('crud-table').shadowRoot
+                            .getElementById(this.name + elem.name + id).value;
+                    } else {
+                        body[elem.name] = document.getElementById(this.name + elem.name + id).value;
+                    }
                 }
             });
             return body;
@@ -411,10 +413,12 @@ var SvelteGenericCrudTable = (function () {
 
         resetRawValues(id, table) {
             this.table_config.columns_setting.forEach((elem) => {
-                if (this.shadowed) {
-                    document.querySelector('crud-table').shadowRoot.getElementById(this.name + elem.name + id).value = table[id][elem.name];
-                } else {
-                    document.getElementById(this.name + elem.name + id).value = table[id][elem.name];
+                if (elem.show) {
+                    if (this.shadowed) {
+                        document.querySelector('crud-table').shadowRoot.getElementById(this.name + elem.name + id).value = table[id][elem.name];
+                    } else {
+                        document.getElementById(this.name + elem.name + id).value = table[id][elem.name];
+                    }
                 }
             });
         }
