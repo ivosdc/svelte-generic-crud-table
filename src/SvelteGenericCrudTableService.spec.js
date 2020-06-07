@@ -219,10 +219,10 @@ function runTest(shadowed) {
         genericCrudTable.resetRawValues(0, table);
 
         if (shadowed) {
-            expect(document.querySelector('crud-table').shadowRoot.getElementById(config.name + 'id0').value).toBe('42');
+            expect(document.querySelector('crud-table').shadowRoot.getElementById(config.name + 'id0').value).toBe('424242');
             expect(document.querySelector('crud-table').shadowRoot.getElementById(config.name + 'name0').value).toBe('A_NAME');
         } else {
-            expect(document.getElementById(config.name + 'id0').value).toBe('42');
+            expect(document.getElementById(config.name + 'id0').value).toBe('424242');
             expect(document.getElementById(config.name + 'name0').value).toBe('A_NAME');
         }
     })

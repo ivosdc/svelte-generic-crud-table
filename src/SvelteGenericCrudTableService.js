@@ -100,11 +100,13 @@ export class SvelteGenericCrudTableService {
     gatherUpdates(id, table) {
         const body = table[id];
         this.table_config.columns_setting.forEach((elem) => {
-            if (this.shadowed) {
-                body[elem.name] = document.querySelector('crud-table').shadowRoot
-                    .getElementById(this.name + elem.name + id).value;
-            } else {
-                body[elem.name] = document.getElementById(this.name + elem.name + id).value;
+            if (elem.show) {
+                if (this.shadowed) {
+                    body[elem.name] = document.querySelector('crud-table').shadowRoot
+                        .getElementById(this.name + elem.name + id).value;
+                } else {
+                    body[elem.name] = document.getElementById(this.name + elem.name + id).value;
+                }
             }
         })
         return body;
@@ -114,7 +116,6 @@ export class SvelteGenericCrudTableService {
         this.table_config.columns_setting.forEach((elem) => {
             if (elem.show) {
                 if (this.shadowed) {
-                    console.log(this.name + elem.name + id)
                     document.querySelector('crud-table').shadowRoot.getElementById(this.name + elem.name + id).value = table[id][elem.name]
                 } else {
                     document.getElementById(this.name + elem.name + id).value = table[id][elem.name];
