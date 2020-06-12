@@ -6,6 +6,8 @@
     <title>Generic Crud Table</title>
     <link rel='icon' type='image/png' href='favicon.png'>
     <link rel='stylesheet' href='global.css'>
+    <link rel='stylesheet' href='https://ivosdc.github.io/svelte-generic-table-pager/build/table-pager.css'>
+    <script defer src='https://ivosdc.github.io/svelte-generic-table-pager/build/table-pager.js'></script>
     <link rel='stylesheet' href='build/crud-table.css'>
     <script defer src='build/crud-table.js'></script>
 </head>
@@ -17,6 +19,7 @@
 <p></p>
 <hr>
 <crud-table></crud-table>
+<table-pager></table-pager>
 <hr>
 </span style="text-align: right"><a href="https://ivolution.one">ivolution.one product - MIT License</a>
 <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7V5M288MUT7GE&source=url">donate
@@ -31,11 +34,56 @@
 </body>
 
 <script>
-    let table_data = [
+
+    // config table-pager
+    let table_data = [];
+    let myData = [
+        {id: '127', name: 'myName', job: 'code', private: 'not editable'},
+        {id: '127', name: 'myName', job: 'code', private: 'not editable'},
+        {id: '127', name: 'myName', job: 'code', private: 'not editable'},
+        {id: '127', name: 'myName', job: 'code', private: 'not editable'},
+        {id: '127', name: 'myName', job: 'code', private: 'not editable'},
+        {id: '127', name: 'myName', job: 'code', private: 'not editable'},
+        {id: '127', name: 'myName', job: 'code', private: 'not editable'},
+        {id: '127', name: 'myName', job: 'code', private: 'not editable'},
+        {id: '127', name: 'myName', job: 'code', private: 'not editable'},
         {id: '127', name: 'myName', job: 'code', private: 'not editable'},
         {id: '127', name: 'myName2', job: 'code2', private: 'not editable'}
-        ];
+    ];
 
+    const pager_config = {
+        lines: 5
+    }
+
+    let currentPage = 1;
+    let maxPages = 1;
+    let genericTablePager = document.querySelector('table-pager');
+    genericTablePager.setAttribute('pager_config', JSON.stringify(pager_config))
+    genericTablePager.setAttribute('pager_data', JSON.stringify(myData))
+
+
+    genericTablePager.addEventListener('newpage', (e) => {
+        console.log(e)
+        table_data = e.detail.body;
+        currentPage = e.detail.page;
+        maxPages = e.detail.pages;
+        refresh();
+    });
+
+
+    function refresh_pager() {
+        genericTablePager.setAttribute('pager_data', JSON.stringify(myData));
+        if (currentPage > 1) {
+            genericTablePager.shadowRoot.getElementById('left').click();
+            genericTablePager.shadowRoot.getElementById('right').click();
+        } else {
+            genericTablePager.shadowRoot.getElementById('right').click();
+            genericTablePager.shadowRoot.getElementById('left').click();
+        }
+    }
+
+
+    //config crud-table
     let table_config = {
         name: 'Awesome',
         options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
@@ -55,11 +103,12 @@
 
     genericCrudTable.addEventListener('create', () => {
         console.log('create');
-        table_data.push({name: 'myName', job: 'code', private: 'not editable'});
+        myData.push({name: 'myName', job: 'code', private: 'not editable'});
         refresh();
+        refresh_pager();
     });
 
-   genericCrudTable.addEventListener('details', (e) => {
+    genericCrudTable.addEventListener('details', (e) => {
         console.log('details');
         console.log(e.detail.body);
     });
@@ -67,15 +116,28 @@
     genericCrudTable.addEventListener('update', (e) => {
         console.log('update');
         console.log(e.detail.body);
-        table_data[e.detail.id] = e.detail.body;
+        let BreakException = {};
+        for(let i = 0; i < myData.length; i++) {
+            if (JSON.stringify(myData[i]) === JSON.stringify(table_data[e.detail.id])) {
+                myData[i] = e.detail.body;
+                break;
+            }
+        }
         refresh();
+        refresh_pager();
     });
 
     genericCrudTable.addEventListener('delete', (e) => {
         console.log('delete: ' + JSON.stringify(e.detail.body));
         console.log('offset in view:' + e.detail.id);
-        table_data = arrayRemove(table_data, e.detail.id);
+        for(let i = 0; i < myData.length; i++) {
+            if (JSON.stringify(myData[i]) === JSON.stringify(table_data[e.detail.id])) {
+                myData = arrayRemove(myData, i)
+                break;
+            }
+        }
         refresh();
+        refresh_pager();
     });
 
     genericCrudTable.addEventListener('sort', (e) => {
