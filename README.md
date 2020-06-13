@@ -3,6 +3,7 @@
 - or Svelte-component: `import SvelteGenericCrudTable from 'svelte-generic-crud-table'`
 
 A self-containing sortable table component with inline edit option.
+The example uses `<table-pager>` for pagination.
 
 Allows CRUD-operations for Object-Arrays.
 
@@ -15,6 +16,11 @@ Allows CRUD-operations for Object-Arrays.
 
 ```
 npm install -save svelte-generic-crud-table
+```
+
+For pagination e.g.:
+```
+npm install -save svelte-generic-table-pager
 ```
 
 [![Donate](https://github.com/ivosdc/svelte-generic-crud-table/raw/master/assets/donate.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7V5M288MUT7GE&source=url)
@@ -37,6 +43,9 @@ Just include the table as seen in the example below.
     <meta name='viewport' content='width=device-width,initial-scale=1'>
     <title>Generic Crud Table</title>
     <link rel='icon' type='image/png' href='favicon.png'>
+    <link rel='stylesheet' href='https://ivosdc.github.io/svelte-generic-table-pager/build/table-pager.css'>
+    <script defer src='https://ivosdc.github.io/svelte-generic-table-pager/build/table-pager.js'></script>
+    <link rel='stylesheet' href='https://ivosdc.github.io/svelte-generic-crud-table/global.css'>
     <link rel='stylesheet' href='https://ivosdc.github.io/svelte-generic-crud-table/build/crud-table.css'>
     <script defer src='https://ivosdc.github.io/svelte-generic-crud-table/build/crud-table.js'></script>
 </head>
@@ -44,20 +53,66 @@ Just include the table as seen in the example below.
 <body>
 <hr>
 <crud-table></crud-table>
+<table-pager></table-pager>
 <hr>
 </body>
 
 <script>
-    let table_data = [
-        {name: 'myName', job: 'code', private: 'not editable'},
-        {name: 'myName2', job: 'code2', private: 'not editable'}
-        ];
 
+    // config table-pager
+    let table_data = [];
+    let myData = [
+        {id: '127', name: 'myName', job: 'why', private: 'not editable'},
+        {id: '128', name: 'myRealName', job: 'hmm', private: 'personal info'},
+        {id: '129', name: 'Your Name', job: 'no', private: '122/456789'},
+        {id: '130', name: 'Jim', job: 'code', private: 'sthg@here.where'},
+        {id: '131', name: 'John', job: 'tester', private: 'books'},
+        {id: '132', name: 'Alice', job: 'code', private: 'OSS'},
+        {id: '133', name: 'Nicole', job: 'design', private: 'painting'},
+        {id: '134', name: 'Denis', job: 'coder', private: 'sports'},
+        {id: '135', name: 'Marc', job: 'trainer', private: 'rc models'},
+        {id: '136', name: 'Timme', job: 'diverse', private: 'timme'},
+        {id: '137', name: 'Chuck', job: 'hero', private: 'Norris'}
+    ];
+
+    const pager_config = {
+        lines: 5
+    }
+
+    let currentPage = 1;
+    let maxPages = 1;
+    let genericTablePager = document.querySelector('table-pager');
+    genericTablePager.setAttribute('pager_config', JSON.stringify(pager_config))
+    genericTablePager.setAttribute('pager_data', JSON.stringify(myData))
+
+
+    genericTablePager.addEventListener('newpage', (e) => {
+        console.log(e)
+        table_data = e.detail.body;
+        currentPage = e.detail.page;
+        maxPages = e.detail.pages;
+        refresh();
+    });
+
+
+    function refresh_pager() {
+        genericTablePager.setAttribute('pager_data', JSON.stringify(myData));
+        if (currentPage > 1) {
+            genericTablePager.shadowRoot.getElementById('left').click();
+            genericTablePager.shadowRoot.getElementById('right').click();
+        } else {
+            genericTablePager.shadowRoot.getElementById('right').click();
+            genericTablePager.shadowRoot.getElementById('left').click();
+        }
+    }
+
+
+    //config crud-table
     let table_config = {
         name: 'Awesome',
         options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
-        // order columns!
         columns_setting: [
+            {name: 'id', show: false, edit: true, size: '200px'},
             {name: 'job', show: true, edit: true, size: '200px'},
             {name: 'name', show: true, edit: true, size: '200px'},
             {name: 'private', show: true, edit: false, size: '200px'}
@@ -72,11 +127,12 @@ Just include the table as seen in the example below.
 
     genericCrudTable.addEventListener('create', () => {
         console.log('create');
-        table_data.push({name: 'myName', job: 'code', private: 'not editable'});
+        myData.push({name: 'myName', job: 'code', private: 'not editable'});
         refresh();
+        refresh_pager();
     });
 
-   genericCrudTable.addEventListener('details', (e) => {
+    genericCrudTable.addEventListener('details', (e) => {
         console.log('details');
         console.log(e.detail.body);
     });
@@ -84,15 +140,28 @@ Just include the table as seen in the example below.
     genericCrudTable.addEventListener('update', (e) => {
         console.log('update');
         console.log(e.detail.body);
-        table_data[e.detail.id] = e.detail.body;
+        let BreakException = {};
+        for(let i = 0; i < myData.length; i++) {
+            if (JSON.stringify(myData[i]) === JSON.stringify(table_data[e.detail.id])) {
+                myData[i] = e.detail.body;
+                break;
+            }
+        }
         refresh();
+        refresh_pager();
     });
 
     genericCrudTable.addEventListener('delete', (e) => {
         console.log('delete: ' + JSON.stringify(e.detail.body));
         console.log('offset in view:' + e.detail.id);
-        table_data = arrayRemove(table_data, e.detail.id);
+        for(let i = 0; i < myData.length; i++) {
+            if (JSON.stringify(myData[i]) === JSON.stringify(table_data[e.detail.id])) {
+                myData = arrayRemove(myData, i)
+                break;
+            }
+        }
         refresh();
+        refresh_pager();
     });
 
     genericCrudTable.addEventListener('sort', (e) => {
@@ -161,10 +230,19 @@ Just include the table as seen in the example below.
     }
 
     // example object array. This should be your db query result.
-    const myObjectArray = [
+    let myObjectArray = [
         {id: 1, name: "A_NAME_1", sthg: "A_STHG_1", why: "because"},
         {id: 2, name: "A_NAME_2", sthg: "A_STHG_2", why: "I can"}
     ]
+
+
+   // GenericTablePager
+    let page_data = [];
+
+    function handleNewPage(event) {
+        page_data = event.detail.body;
+    }
+
 </script>
 
 <main>
@@ -173,17 +251,23 @@ Just include the table as seen in the example below.
                             on:create={handleCreate}
                             on:details={handleDetails}
                             on:sort={handleSort}
-                              table_config={{
-                                name: 'Awesome',
+                            table_config={{
+                                name: 'Awesome:',
                                 options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
                                 columns_setting: [
-                                // columns order is relevant
                                     {name: 'id', show: false, edit: true, size: '200px'},
                                     {name: 'name', show: true, edit: true, size: '200px'},
                                     {name: 'why', show: true, edit: true, size: '200px'},
                                     {name: 'sthg', show: true, edit: false, size: '200px'}
                                 ]
                             }}
-                            table_data={JSON.stringify(myObjectArray)}></SvelteGenericCrudTable>
+                            table_data={page_data}></SvelteGenericCrudTable>
+
+    <GenericTablePager on:newpage={handleNewPage}
+                       pager_data={myObjectArray}
+                       pager_config={{
+                                        lines: 5
+                                    }}></GenericTablePager>
 </main>
+
 ```
