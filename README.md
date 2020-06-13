@@ -207,6 +207,7 @@ Just include the table as seen in the example below.
 
 ```html
 <crud-table></crud-table>
+<table-pager></table-pager>
 ```
 
 ###  Svelte-Component:
