@@ -1,7 +1,10 @@
 // config table-pager
 
 const pager_config = {
-    lines: 5
+    name: 'crud-table-pager',
+    lines: 5,
+    steps: [1, 2, 5, 10, 20, 50],
+    width: '600px'
 }
 
 let table_data = [];
