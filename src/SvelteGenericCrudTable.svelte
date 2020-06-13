@@ -275,11 +275,6 @@
         fill-opacity: 80%;
     }
 
-    svg.trash {
-        fill: red;
-    }
-
-
     h3 {
         color: #5f5f5f;
         font-size: 0.85em;

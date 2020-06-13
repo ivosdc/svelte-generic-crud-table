@@ -15,7 +15,8 @@ export default {
         svelte({
             customElement: true,
             tag: null,
-            css: css => {
+            emitCss: true,
+            css: (css) => {
                 css.write('dist/build/crud-table.css');
             }
         }),

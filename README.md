@@ -57,8 +57,8 @@ Just include the table as seen in the example below.
 <hr>
 </body>
 <script src='https://ivosdc.github.io/svelte-generic-crud-table/test-data.js'></script>
-<script src='https://ivosdc.github.io/svelte-generic-crud-table/table-pager-config.js'></script>
-<script src='https://ivosdc.github.io/svelte-generic-crud-table/crud-table-config.js'></script>
+<script src='https://ivosdc.github.io/svelte-generic-crud-table/table-pager-config-html.js'></script>
+<script src='https://ivosdc.github.io/svelte-generic-crud-table/crud-table-config-html.js'></script>
 </template>
 </custom-element-demo>
 ```
