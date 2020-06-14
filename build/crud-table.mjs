@@ -501,7 +501,70 @@ var SvelteGenericCrudTable = (function () {
     	return child_ctx;
     }
 
-    // (143:4) {#if (table_data !== undefined)}
+    // (144:4) {#if table_data.length === 0}
+    function create_if_block_11(ctx) {
+    	let show_if = /*options*/ ctx[3].includes(CREATE);
+    	let if_block_anchor;
+    	let if_block = show_if && create_if_block_12(ctx);
+
+    	return {
+    		c() {
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		m(target, anchor) {
+    			if (if_block) if_block.m(target, anchor);
+    			insert(target, if_block_anchor, anchor);
+    		},
+    		p(ctx, dirty) {
+    			if (dirty[0] & /*options*/ 8) show_if = /*options*/ ctx[3].includes(CREATE);
+
+    			if (show_if) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block_12(ctx);
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		d(detaching) {
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach(if_block_anchor);
+    		}
+    	};
+    }
+
+    // (145:8) {#if options.includes(CREATE)}
+    function create_if_block_12(ctx) {
+    	let div;
+    	let dispose;
+
+    	return {
+    		c() {
+    			div = element("div");
+    			attr(div, "class", "blue");
+    			attr(div, "title", "Create");
+    		},
+    		m(target, anchor, remount) {
+    			insert(target, div, anchor);
+    			div.innerHTML = iconcreate;
+    			if (remount) dispose();
+    			dispose = listen(div, "click", /*handleCreate*/ ctx[11]);
+    		},
+    		p: noop,
+    		d(detaching) {
+    			if (detaching) detach(div);
+    			dispose();
+    		}
+    	};
+    }
+
+    // (152:4) {#if (table_data !== undefined)}
     function create_if_block(ctx) {
     	let show_if = Array.isArray(/*table_data*/ ctx[0]);
     	let if_block_anchor;
@@ -539,7 +602,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (145:8) {#if Array.isArray(table_data)}
+    // (154:8) {#if Array.isArray(table_data)}
     function create_if_block_1(ctx) {
     	let table;
     	let each_value = /*table_data*/ ctx[0];
@@ -595,7 +658,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (150:20) {#if i === 0}
+    // (159:20) {#if i === 0}
     function create_if_block_9(ctx) {
     	let tr;
     	let t;
@@ -683,7 +746,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (152:28) {#each table_config.columns_setting as elem}
+    // (161:28) {#each table_config.columns_setting as elem}
     function create_each_block_3(ctx) {
     	let td;
     	let textarea;
@@ -745,7 +808,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (164:32) {#if options.includes(CREATE)}
+    // (173:32) {#if options.includes(CREATE)}
     function create_if_block_10(ctx) {
     	let div;
     	let dispose;
@@ -770,7 +833,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (177:32) {#if (column_order.name === genericCrudTable.getKey(elem))}
+    // (186:32) {#if (column_order.name === genericCrudTable.getKey(elem))}
     function create_if_block_8(ctx) {
     	let td;
     	let textarea;
@@ -827,7 +890,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (185:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
+    // (194:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
     function create_if_block_2(ctx) {
     	let td;
     	let div0;
@@ -999,7 +1062,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (191:44) {#if options.includes(DELETE)}
+    // (200:44) {#if options.includes(DELETE)}
     function create_if_block_7(ctx) {
     	let div;
     	let div_aria_label_value;
@@ -1037,7 +1100,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (199:44) {#if options.includes(EDIT)}
+    // (208:44) {#if options.includes(EDIT)}
     function create_if_block_6(ctx) {
     	let div;
     	let dispose;
@@ -1069,7 +1132,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (206:44) {#if options.includes(DETAILS)}
+    // (215:44) {#if options.includes(DETAILS)}
     function create_if_block_5(ctx) {
     	let div;
     	let dispose;
@@ -1101,7 +1164,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (216:44) {#if options.includes(EDIT)}
+    // (225:44) {#if options.includes(EDIT)}
     function create_if_block_4(ctx) {
     	let div0;
     	let t;
@@ -1159,7 +1222,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (234:44) {#if options.includes(DELETE)}
+    // (243:44) {#if options.includes(DELETE)}
     function create_if_block_3(ctx) {
     	let div0;
     	let div0_aria_label_value;
@@ -1223,7 +1286,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (175:28) {#each Object.entries(tableRow) as elem, k}
+    // (184:28) {#each Object.entries(tableRow) as elem, k}
     function create_each_block_2(ctx) {
     	let show_if_1 = /*column_order*/ ctx[32].name === /*genericCrudTable*/ ctx[4].getKey(/*elem*/ ctx[35]);
     	let t;
@@ -1285,7 +1348,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (174:24) {#each table_config.columns_setting as column_order, j}
+    // (183:24) {#each table_config.columns_setting as column_order, j}
     function create_each_block_1(ctx) {
     	let each_1_anchor;
     	let each_value_2 = Object.entries(/*tableRow*/ ctx[29]);
@@ -1341,7 +1404,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (148:16) {#each table_data as tableRow, i}
+    // (157:16) {#each table_data as tableRow, i}
     function create_each_block(ctx) {
     	let t0;
     	let tr;
@@ -1418,7 +1481,9 @@ var SvelteGenericCrudTable = (function () {
     	let h3;
     	let t0;
     	let t1;
-    	let if_block = /*table_data*/ ctx[0] !== undefined && create_if_block(ctx);
+    	let t2;
+    	let if_block0 = /*table_data*/ ctx[0].length === 0 && create_if_block_11(ctx);
+    	let if_block1 = /*table_data*/ ctx[0] !== undefined && create_if_block(ctx);
 
     	return {
     		c() {
@@ -1426,7 +1491,9 @@ var SvelteGenericCrudTable = (function () {
     			h3 = element("h3");
     			t0 = text(/*name*/ ctx[2]);
     			t1 = space();
-    			if (if_block) if_block.c();
+    			if (if_block0) if_block0.c();
+    			t2 = space();
+    			if (if_block1) if_block1.c();
     			this.c = noop;
     		},
     		m(target, anchor) {
@@ -1434,29 +1501,45 @@ var SvelteGenericCrudTable = (function () {
     			append(main, h3);
     			append(h3, t0);
     			append(main, t1);
-    			if (if_block) if_block.m(main, null);
+    			if (if_block0) if_block0.m(main, null);
+    			append(main, t2);
+    			if (if_block1) if_block1.m(main, null);
     		},
     		p(ctx, dirty) {
     			if (dirty[0] & /*name*/ 4) set_data(t0, /*name*/ ctx[2]);
 
-    			if (/*table_data*/ ctx[0] !== undefined) {
-    				if (if_block) {
-    					if_block.p(ctx, dirty);
+    			if (/*table_data*/ ctx[0].length === 0) {
+    				if (if_block0) {
+    					if_block0.p(ctx, dirty);
     				} else {
-    					if_block = create_if_block(ctx);
-    					if_block.c();
-    					if_block.m(main, null);
+    					if_block0 = create_if_block_11(ctx);
+    					if_block0.c();
+    					if_block0.m(main, t2);
     				}
-    			} else if (if_block) {
-    				if_block.d(1);
-    				if_block = null;
+    			} else if (if_block0) {
+    				if_block0.d(1);
+    				if_block0 = null;
+    			}
+
+    			if (/*table_data*/ ctx[0] !== undefined) {
+    				if (if_block1) {
+    					if_block1.p(ctx, dirty);
+    				} else {
+    					if_block1 = create_if_block(ctx);
+    					if_block1.c();
+    					if_block1.m(main, null);
+    				}
+    			} else if (if_block1) {
+    				if_block1.d(1);
+    				if_block1 = null;
     			}
     		},
     		i: noop,
     		o: noop,
     		d(detaching) {
     			if (detaching) detach(main);
-    			if (if_block) if_block.d();
+    			if (if_block0) if_block0.d();
+    			if (if_block1) if_block1.d();
     		}
     	};
     }
