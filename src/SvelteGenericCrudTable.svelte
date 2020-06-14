@@ -140,6 +140,15 @@
 <main>
     <!-- /* istanbul ignore next line */ -->
     <h3>{name}</h3>
+    <!-- /* istanbul ignore next line */ -->
+    {#if table_data.length === 0}
+        {#if options.includes(CREATE)}
+            <div class="blue" on:click={handleCreate}
+                 title="Create">
+                {@html iconcreate}
+            </div>
+        {/if}
+    {/if}
     {#if (table_data !== undefined)}
     <!-- /* istanbul ignore next line */ -->
         {#if Array.isArray(table_data)}
@@ -400,9 +409,7 @@
         max-height: 1.3em;
     }
 
-    input:focus,
-    textarea:focus,
-    select:focus {
+    textarea:focus {
         outline: none;
         font-weight: 300;
         white-space: normal;
