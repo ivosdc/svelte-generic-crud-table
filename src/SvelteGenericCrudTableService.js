@@ -134,19 +134,18 @@ export class SvelteGenericCrudTableService {
     }
 
     getShowFieldWidth(field) {
-        return (this.getColumnSetting('width', field, '100px') !== undefined) ? this.getColumnSetting('width', field, '100px') : '';
+        return (this.isShowField(field)) ? this.getColumnSetting('width', field, '100px') : 0;
     }
 
     getColumnSetting(attr, column, preset) {
-        let val = preset;
-        let column_setting = {};
+        let column_setting = [];
         this.table_config.columns_setting.forEach((elem) => {
             if (elem.name === column) {
                 column_setting = elem;
             }
         });
 
-        return column_setting[attr];
+        return (column_setting[attr] !== undefined) ? column_setting[attr] : preset;
     }
 }
 

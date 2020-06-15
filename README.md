@@ -114,10 +114,10 @@ Just include the table as seen in the example below.
                                 name: 'Awesome:',
                                 options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
                                 columns_setting: [
-                                    {name: 'id', show: false, edit: true, size: '200px'},
-                                    {name: 'name', show: true, edit: true, size: '200px'},
-                                    {name: 'why', show: true, edit: true, size: '200px'},
-                                    {name: 'sthg', show: true, edit: false, size: '200px'}
+                                    {name: 'id', show: false, edit: true, width: '200px'},
+                                    {name: 'name', show: true, edit: true, width: '200px'},
+                                    {name: 'why', show: true, edit: true, width: '200px'},
+                                    {name: 'sthg', show: true, edit: false, width: '200px'}
                                 ]
                             }}
                             table_data={page_data}></SvelteGenericCrudTable>

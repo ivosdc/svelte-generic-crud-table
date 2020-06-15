@@ -268,7 +268,7 @@ function runTest(shadowed) {
         const genericCrudTable = new SvelteGenericCrudTableService(config, shadowed);
         let actual = genericCrudTable.getShowFieldWidth('name');
 
-        expect(actual).toBe('');
+        expect(actual).toBe('100px');
     })
 
 };
