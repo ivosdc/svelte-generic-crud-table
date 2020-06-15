@@ -3,10 +3,10 @@ let table_config = {
     name: 'Awesome',
     options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
     columns_setting: [
-        {name: 'id', show: false, edit: true, size: '200px'},
-        {name: 'job', show: true, edit: true, size: '200px'},
-        {name: 'name', show: true, edit: true, size: '200px'},
-        {name: 'private', show: true, edit: false, size: '200px'}
+        {name: 'id', show: false, edit: true, width: '200px'},
+        {name: 'job', show: true, edit: true, width: '100px'},
+        {name: 'name', show: true, edit: true, width: '200px'},
+        {name: 'private', show: true, edit: false, width: '200px'}
     ]
 }
 

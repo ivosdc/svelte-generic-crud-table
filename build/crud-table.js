@@ -433,18 +433,18 @@ var SvelteGenericCrudTable = (function () {
         }
 
         getShowFieldWidth(field) {
-            return (this.getColumnSetting('width', field, '100px') !== undefined) ? this.getColumnSetting('width', field, '100px') : '';
+            return (this.isShowField(field)) ? this.getColumnSetting('width', field, '100px') : 0;
         }
 
         getColumnSetting(attr, column, preset) {
-            let column_setting = {};
+            let column_setting = [];
             this.table_config.columns_setting.forEach((elem) => {
                 if (elem.name === column) {
                     column_setting = elem;
                 }
             });
 
-            return column_setting[attr];
+            return (column_setting[attr] !== undefined) ? column_setting[attr] : preset;
         }
     }
 
@@ -771,7 +771,7 @@ var SvelteGenericCrudTable = (function () {
     			? "hidden"
     			: "shown"));
 
-    			set_style(td, "width", /*genericCrudTable*/ ctx[4].getShowFieldWidth(/*elem*/ ctx[35].name));
+    			set_style(td, "max-width", /*genericCrudTable*/ ctx[4].getShowFieldWidth(/*elem*/ ctx[35].name));
     			attr(td, "aria-label", td_aria_label_value = "Sort" + /*elem*/ ctx[35].name);
     		},
     		m(target, anchor, remount) {
@@ -794,7 +794,7 @@ var SvelteGenericCrudTable = (function () {
     			}
 
     			if (dirty[0] & /*genericCrudTable, table_config*/ 18) {
-    				set_style(td, "width", /*genericCrudTable*/ ctx[4].getShowFieldWidth(/*elem*/ ctx[35].name));
+    				set_style(td, "max-width", /*genericCrudTable*/ ctx[4].getShowFieldWidth(/*elem*/ ctx[35].name));
     			}
 
     			if (dirty[0] & /*table_config*/ 2 && td_aria_label_value !== (td_aria_label_value = "Sort" + /*elem*/ ctx[35].name)) {
@@ -855,7 +855,7 @@ var SvelteGenericCrudTable = (function () {
     			? "hidden"
     			: "shown");
 
-    			set_style(td, "width", /*genericCrudTable*/ ctx[4].getShowFieldWidth(/*column_order*/ ctx[32].name));
+    			set_style(td, "max-width", /*genericCrudTable*/ ctx[4].getShowFieldWidth(/*column_order*/ ctx[32].name));
     		},
     		m(target, anchor) {
     			insert(target, td, anchor);
@@ -881,7 +881,7 @@ var SvelteGenericCrudTable = (function () {
     			}
 
     			if (dirty[0] & /*genericCrudTable, table_config*/ 18) {
-    				set_style(td, "width", /*genericCrudTable*/ ctx[4].getShowFieldWidth(/*column_order*/ ctx[32].name));
+    				set_style(td, "max-width", /*genericCrudTable*/ ctx[4].getShowFieldWidth(/*column_order*/ ctx[32].name));
     			}
     		},
     		d(detaching) {
@@ -1740,7 +1740,7 @@ var SvelteGenericCrudTable = (function () {
     class SvelteGenericCrudTable extends SvelteElement {
     	constructor(options) {
     		super();
-    		this.shadowRoot.innerHTML = `<style>.red:hover{fill:red;fill-opacity:80%}.green:hover{fill:limegreen;fill-opacity:80%}.blue:hover{fill:dodgerblue;fill-opacity:80%}h3{color:#5f5f5f;font-size:0.85em;font-weight:200;margin-left:1.4em;text-align:left}table{text-align:left;border-collapse:collapse;table-layout:fixed;width:100%;margin-left:1em}.sortable{cursor:pointer}tr{padding:0;margin:0}td{color:#5f5f5f;border:none;font-size:0.95em;font-weight:200;padding:1px 0 1px 0.4em;float:left}.headline{border-bottom:1px solid #dddddd;cursor:pointer;min-height:1.3em;max-height:1.3em;height:1.3em}#labelOptions{width:85px}.options-field{min-height:1.3em;min-width:100px;max-width:100px;width:100px;opacity:60%}.options{float:left;position:relative;width:16px;height:16px;padding:0.2em 0.4em;cursor:pointer;opacity:60%}.options:hover{opacity:100%}.options:focus{border:none;outline:none;opacity:100%}.hidden{display:none}.shown{display:block}.row{margin-top:0px;margin-bottom:1px}.row:hover{background-color:#efefef}textarea{position:relative;resize:none;top:0.1em;width:100%;min-height:1.3em;max-height:2.3em;padding:1px 1px;background-color:#ffffff;border:none;font-size:0.95em;font-weight:300;text-overflow:ellipsis;white-space:pre;overflow:hidden;-webkit-transition:box-shadow 0.3s}textarea:not(:disabled){height:2.3em;min-height:2.3em;border-bottom:0.5px solid #5f5f5f}textarea:disabled{color:#5f5f5f;background-color:inherit;font-size:0.95em;font-weight:200;height:1.3em;max-height:1.3em}textarea:focus{outline:none;font-weight:300;white-space:normal;overflow:auto;padding-top:1px}textarea:not(:focus){max-height:1.3em}</style>`;
+    		this.shadowRoot.innerHTML = `<style>.red:hover{fill:red;fill-opacity:80%}.green:hover{fill:limegreen;fill-opacity:80%}.blue:hover{fill:dodgerblue;fill-opacity:80%}h3{color:#5f5f5f;font-size:0.85em;font-weight:200;margin-left:1.4em;text-align:left}table{text-align:left;border-collapse:collapse;table-layout:fixed;margin-left:1em}.sortable{cursor:pointer}tr{padding:0;margin:0}td{color:#5f5f5f;border:none;font-size:0.95em;font-weight:200;padding:1px 0 1px 0.4em;float:left}.headline{border-bottom:1px solid #dddddd;cursor:pointer;min-height:1.3em;max-height:1.3em;height:1.3em}#labelOptions{width:85px}.options-field{min-height:1.3em;min-width:100px;max-width:100px;width:100px;opacity:60%}.options{float:left;position:relative;width:16px;height:16px;padding:0.2em 0.4em;cursor:pointer;opacity:60%}.options:hover{opacity:100%}.options:focus{border:none;outline:none;opacity:100%}.hidden{display:none}.shown{display:block}.row{margin-top:0px;margin-bottom:1px}.row:hover{background-color:#efefef}textarea{position:relative;resize:none;top:0.1em;width:100%;min-height:1.3em;max-height:2.3em;padding:1px 1px;background-color:#ffffff;border:none;font-size:0.95em;font-weight:300;text-overflow:ellipsis;white-space:pre;overflow:hidden;-webkit-transition:box-shadow 0.3s}textarea:not(:disabled){height:2.3em;min-height:2.3em;border-bottom:0.5px solid #5f5f5f}textarea:disabled{color:#5f5f5f;background-color:inherit;font-size:0.95em;font-weight:200;height:1.3em;max-height:1.3em}textarea:focus{outline:none;font-weight:300;white-space:normal;overflow:auto;padding-top:1px}textarea:not(:focus){max-height:1.3em}</style>`;
     		init(this, { target: this.shadowRoot }, instance, create_fragment, safe_not_equal, { table_data: 0, table_config: 1 }, [-1, -1]);
 
     		if (options) {
