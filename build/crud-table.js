@@ -58,11 +58,6 @@ var SvelteGenericCrudTable = (function () {
     function children(element) {
         return Array.from(element.childNodes);
     }
-    function set_data(text, data) {
-        data = '' + data;
-        if (text.data !== data)
-            text.data = data;
-    }
     function set_style(node, key, value, important) {
         node.style.setProperty(key, value, important ? 'important' : '');
     }
@@ -501,7 +496,7 @@ var SvelteGenericCrudTable = (function () {
     	return child_ctx;
     }
 
-    // (144:4) {#if table_data.length === 0}
+    // (142:4) {#if table_data.length === 0}
     function create_if_block_11(ctx) {
     	let show_if = /*options*/ ctx[3].includes(CREATE);
     	let if_block_anchor;
@@ -539,7 +534,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (145:8) {#if options.includes(CREATE)}
+    // (143:8) {#if options.includes(CREATE)}
     function create_if_block_12(ctx) {
     	let div;
     	let dispose;
@@ -564,7 +559,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (152:4) {#if (table_data !== undefined)}
+    // (150:4) {#if (table_data !== undefined)}
     function create_if_block(ctx) {
     	let show_if = Array.isArray(/*table_data*/ ctx[0]);
     	let if_block_anchor;
@@ -602,7 +597,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (154:8) {#if Array.isArray(table_data)}
+    // (152:8) {#if Array.isArray(table_data)}
     function create_if_block_1(ctx) {
     	let table;
     	let each_value = /*table_data*/ ctx[0];
@@ -658,7 +653,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (159:20) {#if i === 0}
+    // (157:20) {#if i === 0}
     function create_if_block_9(ctx) {
     	let tr;
     	let t;
@@ -746,7 +741,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (161:28) {#each table_config.columns_setting as elem}
+    // (159:28) {#each table_config.columns_setting as elem}
     function create_each_block_3(ctx) {
     	let td;
     	let textarea;
@@ -808,7 +803,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (173:32) {#if options.includes(CREATE)}
+    // (171:32) {#if options.includes(CREATE)}
     function create_if_block_10(ctx) {
     	let div;
     	let dispose;
@@ -833,7 +828,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (186:32) {#if (column_order.name === genericCrudTable.getKey(elem))}
+    // (184:32) {#if (column_order.name === genericCrudTable.getKey(elem))}
     function create_if_block_8(ctx) {
     	let td;
     	let textarea;
@@ -890,7 +885,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (194:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
+    // (192:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
     function create_if_block_2(ctx) {
     	let td;
     	let div0;
@@ -1062,7 +1057,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (200:44) {#if options.includes(DELETE)}
+    // (198:44) {#if options.includes(DELETE)}
     function create_if_block_7(ctx) {
     	let div;
     	let div_aria_label_value;
@@ -1100,7 +1095,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (208:44) {#if options.includes(EDIT)}
+    // (206:44) {#if options.includes(EDIT)}
     function create_if_block_6(ctx) {
     	let div;
     	let dispose;
@@ -1132,7 +1127,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (215:44) {#if options.includes(DETAILS)}
+    // (213:44) {#if options.includes(DETAILS)}
     function create_if_block_5(ctx) {
     	let div;
     	let dispose;
@@ -1164,7 +1159,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (225:44) {#if options.includes(EDIT)}
+    // (223:44) {#if options.includes(EDIT)}
     function create_if_block_4(ctx) {
     	let div0;
     	let t;
@@ -1222,7 +1217,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (243:44) {#if options.includes(DELETE)}
+    // (241:44) {#if options.includes(DELETE)}
     function create_if_block_3(ctx) {
     	let div0;
     	let div0_aria_label_value;
@@ -1286,7 +1281,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (184:28) {#each Object.entries(tableRow) as elem, k}
+    // (182:28) {#each Object.entries(tableRow) as elem, k}
     function create_each_block_2(ctx) {
     	let show_if_1 = /*column_order*/ ctx[32].name === /*genericCrudTable*/ ctx[4].getKey(/*elem*/ ctx[35]);
     	let t;
@@ -1348,7 +1343,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (183:24) {#each table_config.columns_setting as column_order, j}
+    // (181:24) {#each table_config.columns_setting as column_order, j}
     function create_each_block_1(ctx) {
     	let each_1_anchor;
     	let each_value_2 = Object.entries(/*tableRow*/ ctx[29]);
@@ -1404,7 +1399,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (157:16) {#each table_data as tableRow, i}
+    // (155:16) {#each table_data as tableRow, i}
     function create_each_block(ctx) {
     	let t0;
     	let tr;
@@ -1478,43 +1473,32 @@ var SvelteGenericCrudTable = (function () {
 
     function create_fragment(ctx) {
     	let main;
-    	let h3;
-    	let t0;
-    	let t1;
-    	let t2;
+    	let t;
     	let if_block0 = /*table_data*/ ctx[0].length === 0 && create_if_block_11(ctx);
     	let if_block1 = /*table_data*/ ctx[0] !== undefined && create_if_block(ctx);
 
     	return {
     		c() {
     			main = element("main");
-    			h3 = element("h3");
-    			t0 = text(/*name*/ ctx[2]);
-    			t1 = space();
     			if (if_block0) if_block0.c();
-    			t2 = space();
+    			t = space();
     			if (if_block1) if_block1.c();
     			this.c = noop;
     		},
     		m(target, anchor) {
     			insert(target, main, anchor);
-    			append(main, h3);
-    			append(h3, t0);
-    			append(main, t1);
     			if (if_block0) if_block0.m(main, null);
-    			append(main, t2);
+    			append(main, t);
     			if (if_block1) if_block1.m(main, null);
     		},
     		p(ctx, dirty) {
-    			if (dirty[0] & /*name*/ 4) set_data(t0, /*name*/ ctx[2]);
-
     			if (/*table_data*/ ctx[0].length === 0) {
     				if (if_block0) {
     					if_block0.p(ctx, dirty);
     				} else {
     					if_block0 = create_if_block_11(ctx);
     					if_block0.c();
-    					if_block0.m(main, t2);
+    					if_block0.m(main, t);
     				}
     			} else if (if_block0) {
     				if_block0.d(1);
@@ -1740,7 +1724,7 @@ var SvelteGenericCrudTable = (function () {
     class SvelteGenericCrudTable extends SvelteElement {
     	constructor(options) {
     		super();
-    		this.shadowRoot.innerHTML = `<style>.red:hover{fill:red;fill-opacity:80%}.green:hover{fill:limegreen;fill-opacity:80%}.blue:hover{fill:dodgerblue;fill-opacity:80%}h3{color:#5f5f5f;font-size:0.85em;font-weight:200;margin-left:1.4em;text-align:left}table{text-align:left;border-collapse:collapse;table-layout:fixed;margin-left:1em}.sortable{cursor:pointer}tr{padding:0;margin:0}td{color:#5f5f5f;border:none;font-size:0.95em;font-weight:200;padding:1px 0 1px 0.4em;float:left}.headline{border-bottom:1px solid #dddddd;cursor:pointer;min-height:1.3em;max-height:1.3em;height:1.3em}#labelOptions{width:85px}.options-field{min-height:1.3em;min-width:100px;max-width:100px;width:100px;opacity:60%}.options{float:left;position:relative;width:16px;height:16px;padding:0.2em 0.4em;cursor:pointer;opacity:60%}.options:hover{opacity:100%}.options:focus{border:none;outline:none;opacity:100%}.hidden{display:none}.shown{display:block}.row{margin-top:0px;margin-bottom:1px}.row:hover{background-color:#efefef}textarea{position:relative;resize:none;top:0.1em;width:100%;min-height:1.3em;max-height:2.3em;padding:1px 1px;background-color:#ffffff;border:none;font-size:0.95em;font-weight:300;text-overflow:ellipsis;white-space:pre;overflow:hidden;-webkit-transition:box-shadow 0.3s}textarea:not(:disabled){height:2.3em;min-height:2.3em;border-bottom:0.5px solid #5f5f5f}textarea:disabled{color:#5f5f5f;background-color:inherit;font-size:0.95em;font-weight:200;height:1.3em;max-height:1.3em}textarea:focus{outline:none;font-weight:300;white-space:normal;overflow:auto;padding-top:1px}textarea:not(:focus){max-height:1.3em}</style>`;
+    		this.shadowRoot.innerHTML = `<style>.red:hover{fill:red;fill-opacity:80%}.green:hover{fill:limegreen;fill-opacity:80%}.blue:hover{fill:dodgerblue;fill-opacity:80%}table{text-align:left;border-collapse:collapse;table-layout:fixed;margin-left:1em}.sortable{cursor:pointer}tr{padding:0;margin:0}td{color:#5f5f5f;border:none;font-size:0.95em;font-weight:200;padding:1px 0 1px 0.4em;float:left}.headline{border-bottom:1px solid #dddddd;cursor:pointer;min-height:1.3em;max-height:1.3em;height:1.3em}#labelOptions{width:85px}.options-field{min-height:1.3em;min-width:100px;max-width:100px;width:100px;opacity:60%}.options{float:left;position:relative;width:16px;height:16px;padding:0.2em 0.4em;cursor:pointer;opacity:60%}.options:hover{opacity:100%}.options:focus{border:none;outline:none;opacity:100%}.hidden{display:none}.shown{display:block}.row{margin-top:0px;margin-bottom:1px}.row:hover{background-color:#efefef}textarea{position:relative;resize:none;top:0.1em;width:100%;min-height:1.3em;max-height:2.3em;padding:1px 1px;background-color:#ffffff;border:none;font-size:0.95em;font-weight:300;text-overflow:ellipsis;white-space:pre;overflow:hidden;-webkit-transition:box-shadow 0.3s}textarea:not(:disabled){height:2.3em;min-height:2.3em;border-bottom:0.5px solid #5f5f5f}textarea:disabled{color:#5f5f5f;background-color:inherit;font-size:0.95em;font-weight:200;height:1.3em;max-height:1.3em}textarea:focus{outline:none;font-weight:300;white-space:normal;overflow:auto;padding-top:1px}textarea:not(:focus){max-height:1.3em}</style>`;
     		init(this, { target: this.shadowRoot }, instance, create_fragment, safe_not_equal, { table_data: 0, table_config: 1 }, [-1, -1]);
 
     		if (options) {
