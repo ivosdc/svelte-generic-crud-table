@@ -139,8 +139,6 @@
 
 <main>
     <!-- /* istanbul ignore next line */ -->
-    <h3>{name}</h3>
-    <!-- /* istanbul ignore next line */ -->
     {#if table_data.length === 0}
         {#if options.includes(CREATE)}
             <div class="blue" on:click={handleCreate}

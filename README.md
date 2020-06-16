@@ -70,33 +70,102 @@ Just include the table as seen in the example below.
 
 ###  Svelte-Component:
 ```
-<script>
     import SvelteGenericCrudTable from "svelte-generic-crud-table";
+    import GenericTablePager from "svelte-generic-table-pager";
+    import {onMount} from 'svelte';
+    import {goto} from "@sapper/app";
 
-    function handleDelete(event) {
-    }
+    const sortStore = [];
 
-    function handleUpdate(event) {
+    let myData = [];
+
+    onMount(refresh);
+
+    function refresh() {
+        get().then( (result) => {
+                myData = result;
+        }).catch((error) => {
+           // throw new Error('refresh');
+        }).finally(() =>{
+       //--- initialize the component ---!
+            let elem = document.getElementById('right');
+            elem.click();
+        });
     }
 
     function handleCreate(event) {
+        post({name: "new entry"})
+                .then(() => {
+                    refresh();
+                });
     }
 
-    function handleDetails(event) {
+
+    function handleDelete(event) {
+        delete(event.detail.body.id)
+                .then(() => {
+                    refresh();
+                });
+    }
+
+    function handleUpdate(event) {
+        update(event.detail.body.id, event.detail.body)
+                .then(() => {
+                    refresh();
+                });
+    }
+
+    function handleDetail(event) {
+        goto('/project/' + event.detail.body.id);
     }
 
     function handleSort(event) {
+        const column = event.detail.column;
+        if (sortStore[column] === undefined || sortStore[column] === 'DESC') {
+            sortStore[column] = 'ASC';
+        } else {
+            sortStore[column] = 'DESC';
+        }
+
+        const tableSort = (a, b) => {
+            var keyA = a[column];
+            var keyB = b[column];
+            if (sortStore[column] === 'ASC') {
+                if (keyA < keyB) return -1;
+                if (keyA > keyB) return 1;
+            } else {
+                if (keyA < keyB) return 1;
+                if (keyA > keyB) return -1;
+            }
+            return 0;
+        };
+
+        myData = myData.sort(tableSort);
     }
 
-    // example object array. This should be your db query result.
-    let myObjectArray = [
-        {id: 1, name: "A_NAME_1", sthg: "A_STHG_1", why: "because"},
-        {id: 2, name: "A_NAME_2", sthg: "A_STHG_2", why: "I can"}
-    ]
+    const table_config = {
+        name: 'Awesome',
+        options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
+        columns_setting: [
+            {name: 'id', show: false, edit: true, width: '200px'},
+            {name: 'job', show: true, edit: true, width: '100px'},
+            {name: 'name', show: true, edit: true, width: '200px'},
+            {name: 'private', show: true, edit: false, width: '200px'}
+        ]
+    }
 
 
-   // GenericTablePager
+    // GenericTablePager
     let page_data = [];
+    let pager_data;
+    $: pager_data = myData;
+
+    let pager_config = {
+        name: 'crud-table-pager',
+        lines: 5,
+        steps: [1, 2, 5, 10, 20, 50],
+        width: '320px'
+    };
 
     function handleNewPage(event) {
         page_data = event.detail.body;
@@ -108,25 +177,13 @@ Just include the table as seen in the example below.
     <SvelteGenericCrudTable on:delete={handleDelete}
                             on:update={handleUpdate}
                             on:create={handleCreate}
-                            on:details={handleDetails}
+                            on:details={handleDetail}
                             on:sort={handleSort}
-                            table_config={{
-                                name: 'Awesome:',
-                                options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
-                                columns_setting: [
-                                    {name: 'id', show: false, edit: true, width: '200px'},
-                                    {name: 'name', show: true, edit: true, width: '200px'},
-                                    {name: 'why', show: true, edit: true, width: '200px'},
-                                    {name: 'sthg', show: true, edit: false, width: '200px'}
-                                ]
-                            }}
-                            table_data={page_data}></SvelteGenericCrudTable>
-
+                            table_config={table_config}
+                            table_data={page_data}/>
     <GenericTablePager on:newpage={handleNewPage}
-                       pager_data={myObjectArray}
-                       pager_config={{
-                                        lines: 5
-                                    }}></GenericTablePager>
+                       pager_data={pager_data}
+                       pager_config={pager_config}></GenericTablePager>
 </main>
 
 ```
