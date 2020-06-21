@@ -373,7 +373,8 @@
 
     textarea {
         position: relative;
-        resize: unset;
+        resize: inherit;
+        overflow: hidden;
         top: 0.1em;
         width: 100%;
         min-height: 1.3em;
@@ -385,7 +386,6 @@
         font-weight: 300;
         text-overflow: ellipsis;
         white-space: pre;
-        overflow: hidden;
         -webkit-transition: box-shadow 0.3s;
     }
 
@@ -393,6 +393,7 @@
         height: 2.3em;
         min-height: 2.3em;
         border-bottom: 0.5px solid #5f5f5f;
+        overflow-y: scroll;
     }
 
     textarea:disabled {
