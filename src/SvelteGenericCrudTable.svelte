@@ -308,7 +308,7 @@
     td {
         color: #5f5f5f;
         border: none;
-        border-left: 0.5em solid #efefef;
+        border-left: 0.1em solid #efefef;
         font-size: 0.95em;
         font-weight: 200;
         padding: 1px 0 1px 0.4em;
