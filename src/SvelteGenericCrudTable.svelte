@@ -267,6 +267,12 @@
 </main>
 
 <style>
+    main {
+        position: fixed;
+        display: table;
+        padding-top:0.4em;
+    }
+
     .red:hover {
         fill: red;
         fill-opacity: 80%;
@@ -280,14 +286,6 @@
     .blue:hover {
         fill: dodgerblue;
         fill-opacity: 80%;
-    }
-
-    h3 {
-        color: #5f5f5f;
-        font-size: 0.85em;
-        font-weight: 200;
-        margin-left: 1.4em;
-        text-align: left;
     }
 
     table {
@@ -375,7 +373,7 @@
 
     textarea {
         position: relative;
-        resize: none;
+        resize: unset;
         top: 0.1em;
         width: 100%;
         min-height: 1.3em;
