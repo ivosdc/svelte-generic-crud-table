@@ -268,7 +268,7 @@
 
 <style>
     main {
-        position: fixed;
+        position: inherit;
         display: table;
         padding-top:0.4em;
     }
