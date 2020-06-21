@@ -159,7 +159,7 @@
                             {#each table_config.columns_setting as elem}
                             <!-- /* istanbul ignore next line */ -->
                                 <td class="headline {genericCrudTable.isShowField(elem.name) === false ? 'hidden' : 'shown'}"
-                                    style="max-width:{genericCrudTable.getShowFieldWidth(elem.name)}"
+                                    style="width:{genericCrudTable.getShowFieldWidth(elem.name)};min-width:{genericCrudTable.getShowFieldWidth(elem.name)};max-width:{genericCrudTable.getShowFieldWidth(elem.name)}"
                                     aria-label="Sort{elem.name}"
                                     on:click={(e) => handleSort(elem.name, e)}>
                                     <textarea class="sortable"
@@ -183,7 +183,7 @@
                             <!-- /* istanbul ignore next */ -->
                                 {#if (column_order.name === genericCrudTable.getKey(elem))}
                                 <td class="{genericCrudTable.isShowField(column_order.name) === false ? 'hidden' : 'shown'}"
-                                    style="max-width:{genericCrudTable.getShowFieldWidth(column_order.name)}">
+                                    style="width:{genericCrudTable.getShowFieldWidth(column_order.name)};min-width:{genericCrudTable.getShowFieldWidth(column_order.name)};max-width:{genericCrudTable.getShowFieldWidth(column_order.name)}">
                                     <textarea id={name + column_order.name + i}
                                               aria-label={name + column_order.name + i}
                                               disabled>{table_data[i][column_order.name]}</textarea>
