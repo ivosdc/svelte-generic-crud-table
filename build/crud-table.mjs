@@ -766,6 +766,8 @@ var SvelteGenericCrudTable = (function () {
     			? "hidden"
     			: "shown"));
 
+    			set_style(td, "width", /*genericCrudTable*/ ctx[4].getShowFieldWidth(/*elem*/ ctx[35].name));
+    			set_style(td, "min-width", /*genericCrudTable*/ ctx[4].getShowFieldWidth(/*elem*/ ctx[35].name));
     			set_style(td, "max-width", /*genericCrudTable*/ ctx[4].getShowFieldWidth(/*elem*/ ctx[35].name));
     			attr(td, "aria-label", td_aria_label_value = "Sort" + /*elem*/ ctx[35].name);
     		},
@@ -786,6 +788,14 @@ var SvelteGenericCrudTable = (function () {
     			? "hidden"
     			: "shown"))) {
     				attr(td, "class", td_class_value);
+    			}
+
+    			if (dirty[0] & /*genericCrudTable, table_config*/ 18) {
+    				set_style(td, "width", /*genericCrudTable*/ ctx[4].getShowFieldWidth(/*elem*/ ctx[35].name));
+    			}
+
+    			if (dirty[0] & /*genericCrudTable, table_config*/ 18) {
+    				set_style(td, "min-width", /*genericCrudTable*/ ctx[4].getShowFieldWidth(/*elem*/ ctx[35].name));
     			}
 
     			if (dirty[0] & /*genericCrudTable, table_config*/ 18) {
@@ -850,6 +860,8 @@ var SvelteGenericCrudTable = (function () {
     			? "hidden"
     			: "shown");
 
+    			set_style(td, "width", /*genericCrudTable*/ ctx[4].getShowFieldWidth(/*column_order*/ ctx[32].name));
+    			set_style(td, "min-width", /*genericCrudTable*/ ctx[4].getShowFieldWidth(/*column_order*/ ctx[32].name));
     			set_style(td, "max-width", /*genericCrudTable*/ ctx[4].getShowFieldWidth(/*column_order*/ ctx[32].name));
     		},
     		m(target, anchor) {
@@ -873,6 +885,14 @@ var SvelteGenericCrudTable = (function () {
     			? "hidden"
     			: "shown")) {
     				attr(td, "class", td_class_value);
+    			}
+
+    			if (dirty[0] & /*genericCrudTable, table_config*/ 18) {
+    				set_style(td, "width", /*genericCrudTable*/ ctx[4].getShowFieldWidth(/*column_order*/ ctx[32].name));
+    			}
+
+    			if (dirty[0] & /*genericCrudTable, table_config*/ 18) {
+    				set_style(td, "min-width", /*genericCrudTable*/ ctx[4].getShowFieldWidth(/*column_order*/ ctx[32].name));
     			}
 
     			if (dirty[0] & /*genericCrudTable, table_config*/ 18) {
