@@ -299,7 +299,8 @@
 
     .sortable {
         cursor: pointer;
-        font-weight: 300;
+        font-weight: 400;
+        z-index: -1;
     }
 
     tr {
