@@ -163,6 +163,7 @@
                                     aria-label="Sort{elem.name}"
                                     on:click={(e) => handleSort(elem.name, e)}>
                                     <textarea class="sortable"
+                                              on:click={(e) => handleSort(elem.name, e)}
                                               disabled>{genericCrudTable.makeCapitalLead(elem.name)}</textarea>
                                 </td>
                             {/each}
@@ -298,6 +299,7 @@
 
     .sortable {
         cursor: pointer;
+        font-weight: 300;
     }
 
     tr {
@@ -321,6 +323,7 @@
         min-height: 1.3em;
         max-height: 1.3em;
         height: 1.3em;
+        font-weight: 300;
     }
 
     #labelOptions {
