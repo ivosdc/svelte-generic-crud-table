@@ -136,7 +136,6 @@
         dispatcher('sort', column, event);
     }
 
-
 </script>
 
 <main>
@@ -422,13 +421,6 @@
 
     textarea:not(:focus) {
         max-height: 1.3em;
-    }
-
-    .disable-css-transitions {
-        -webkit-transition: none !important;
-        -moz-transition: none !important;
-        -o-transition: none !important;
-        transition: none !important;
     }
 
 </style>

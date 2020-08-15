@@ -68,7 +68,7 @@ Just include the table as seen in the example below.
 <table-pager></table-pager>
 ```
 
-###  Svelte-Component:
+###  Svelte-Component - implementation example:
 ```
     import SvelteGenericCrudTable from "svelte-generic-crud-table";
     import GenericTablePager from "svelte-generic-table-pager";
@@ -85,12 +85,14 @@ Just include the table as seen in the example below.
         get().then( (result) => {
                 myData = result;
         }).catch((error) => {
-           // throw new Error('refresh');
         }).finally(() =>{
-       //--- initialize the component ---!
-            let elem = document.getElementById('right');
-            elem.click();
+            initComponent();
         });
+    }
+
+    function initComponent() {
+        let elem = document.getElementById('right');
+        elem.click();
     }
 
     function handleCreate(event) {

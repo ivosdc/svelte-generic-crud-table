@@ -3,10 +3,10 @@ let table_config = {
     name: 'Awesome',
     options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
     columns_setting: [
-        {name: 'id', show: false, edit: true, width: '200px'},
-        {name: 'job', show: true, edit: true, width: '100px'},
-        {name: 'name', show: true, edit: true, width: '200px'},
-        {name: 'private', show: true, edit: false, width: '200px'}
+        {name: 'id', show: false, edit: true, size: '200px'},
+        {name: 'job', show: true, edit: true, size: '200px'},
+        {name: 'name', show: true, edit: true, size: '200px'},
+        {name: 'private', show: true, edit: false, size: '200px'}
     ]
 }
 
@@ -31,7 +31,6 @@ genericCrudTable.addEventListener('details', (e) => {
 genericCrudTable.addEventListener('update', (e) => {
     console.log('update');
     console.log(e.detail.body);
-    let BreakException = {};
     for(let i = 0; i < myData.length; i++) {
         if (JSON.stringify(myData[i]) === JSON.stringify(table_data[e.detail.id])) {
             myData[i] = e.detail.body;
