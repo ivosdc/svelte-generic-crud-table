@@ -1,5 +1,6 @@
 <svelte:options tag={'crud-table'}/>
 <script>
+    import {slide} from 'svelte/transition';
     import {createEventDispatcher} from 'svelte';
     import {SvelteGenericCrudTableService} from "./SvelteGenericCrudTableService";
     import {icontrash, iconedit, iconsend, icondetail, iconcancel, iconcreate, iconsave} from './svgIcon'
@@ -103,10 +104,10 @@
         /* istanbul ignore next */
         if (shadowed) {
             event.target.dispatchEvent(
-                    new CustomEvent(name, {
-                        composed: true,
-                        detail: details
-                    }))
+                new CustomEvent(name, {
+                    composed: true,
+                    detail: details
+                }))
         } else {
             dispatch(name, details);
         }
@@ -135,6 +136,7 @@
         dispatcher('sort', column, event);
     }
 
+
 </script>
 
 <main>
@@ -148,50 +150,50 @@
         {/if}
     {/if}
     {#if (table_data !== undefined)}
-    <!-- /* istanbul ignore next line */ -->
+        <!-- /* istanbul ignore next line */ -->
         {#if Array.isArray(table_data)}
-            <table>
-                <!-- /* istanbul ignore next line */ -->
-                {#each table_data as tableRow, i}
-                <!-- /* istanbul ignore next line */ -->
-                    {#if i === 0}
-                        <tr style="max-height: 1.3em;">
-                            {#each table_config.columns_setting as elem}
-                            <!-- /* istanbul ignore next line */ -->
-                                <td class="headline {genericCrudTable.isShowField(elem.name) === false ? 'hidden' : 'shown'}"
-                                    style="width:{genericCrudTable.getShowFieldWidth(elem.name)};min-width:{genericCrudTable.getShowFieldWidth(elem.name)};max-width:{genericCrudTable.getShowFieldWidth(elem.name)}"
-                                    aria-label="Sort{elem.name}"
-                                    on:click={(e) => handleSort(elem.name, e)}>
+            <div class="table">
+                <div class="thead" style="max-height: 1.3em;">
+                    <!-- /* istanbul ignore next line */ -->
+                    {#each table_config.columns_setting as elem}
+                        <!-- /* istanbul ignore next line */ -->
+                        <div class="td headline {genericCrudTable.isShowField(elem.name) === false ? 'hidden' : 'shown'}"
+                             style="width:{genericCrudTable.getShowFieldWidth(elem.name)};min-width:{genericCrudTable.getShowFieldWidth(elem.name)};max-width:{genericCrudTable.getShowFieldWidth(elem.name)}"
+                             aria-label="Sort{elem.name}"
+                             on:click={(e) => handleSort(elem.name, e)}>
                                     <textarea class="sortable"
                                               on:click={(e) => handleSort(elem.name, e)}
                                               disabled>{genericCrudTable.makeCapitalLead(elem.name)}</textarea>
-                                </td>
-                            {/each}
-                            <td id="labelOptions" class="headline">
-                                <!-- /* istanbul ignore next line */ -->
-                                {#if options.includes(CREATE)}
-                                    <div class="options blue" on:click={handleCreate}
-                                         title="Create">
-                                        {@html iconcreate}
-                                    </div>
-                                {/if}
-                            </td>
-                        </tr>
-                    {/if}
-                    <tr class="row">
+                        </div>
+                    {/each}
+                    <div id="labelOptions" class="headline">
+                        <!-- /* istanbul ignore next line */ -->
+                        {#if options.includes(CREATE)}
+                            <div class="options blue" on:click={handleCreate}
+                                 title="Create">
+                                {@html iconcreate}
+                            </div>
+                        {/if}
+                    </div>
+                </div>
+
+                <!-- /* istanbul ignore next line */ -->
+                {#each table_data as tableRow, i (tableRow)}
+                    <div class="row" in:slide="{{duration: 500 }}">
                         {#each table_config.columns_setting as column_order, j}
                             {#each Object.entries(tableRow) as elem, k}
-                            <!-- /* istanbul ignore next */ -->
+                                <!-- /* istanbul ignore next */ -->
                                 {#if (column_order.name === genericCrudTable.getKey(elem))}
-                                <td class="{genericCrudTable.isShowField(column_order.name) === false ? 'hidden' : 'shown'}"
-                                    style="width:{genericCrudTable.getShowFieldWidth(column_order.name)};min-width:{genericCrudTable.getShowFieldWidth(column_order.name)};max-width:{genericCrudTable.getShowFieldWidth(column_order.name)}">
+                                    <div class="td {genericCrudTable.isShowField(column_order.name) === false ? 'hidden' : 'shown'}"
+                                         style="width:{genericCrudTable.getShowFieldWidth(column_order.name)};min-width:{genericCrudTable.getShowFieldWidth(column_order.name)};max-width:{genericCrudTable.getShowFieldWidth(column_order.name)}">
                                     <textarea id={name + column_order.name + i}
                                               aria-label={name + column_order.name + i}
                                               disabled>{table_data[i][column_order.name]}</textarea>
+                                    </div>
                                 {/if}
-                                    <!-- /* istanbul ignore next line */ -->
+                                <!-- /* istanbul ignore next line */ -->
                                 {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
-                                    <td>
+                                    <div class="td">
                                         <div id="{name}options-default{i}"
                                              aria-label="{name}options-default{i}"
                                              class="options-field shown">
@@ -203,14 +205,14 @@
                                                     {@html icontrash}
                                                 </div>
                                             {/if}
-                                                <!-- /* istanbul ignore next */ -->
+                                            <!-- /* istanbul ignore next */ -->
                                             {#if options.includes(EDIT)}
                                                 <div class="options green"
                                                      on:click={(e) => handleEdit(i, e)} title="Edit" tabindex="0">
                                                     {@html iconedit}
                                                 </div>
                                             {/if}
-                                                <!-- /* istanbul ignore next */ -->
+                                            <!-- /* istanbul ignore next */ -->
                                             {#if options.includes(DETAILS)}
                                                 <div class="options blue" on:click="{(e) => {handleDetails(i, e)}}"
                                                      title="Details" tabindex="0">
@@ -243,26 +245,25 @@
                                                 <div class="options red" on:click={() => handleCancelDelete(i)}
                                                      title="Cancel"
                                                      aria-label={name + column_order.name + i + 'deleteCancel'}
-                                                             tabindex="0">
+                                                     tabindex="0">
                                                     {@html iconcancel}
                                                 </div>
                                                 <div class="options green"
                                                      on:click={(e) => handleDeleteConfirmation(i, e)}
                                                      title="Delete"
                                                      aria-label={name + column_order.name + i + 'deleteConfirmation'}
-                                                             tabindex="0">
+                                                     tabindex="0">
                                                     {@html iconsend}
                                                 </div>
                                             {/if}
                                         </div>
-                                    </td>
+                                    </div>
                                 {/if}
                             {/each}
                         {/each}
-
-                    </tr>
+                    </div>
                 {/each}
-            </table>
+            </div>
         {/if}
     {/if}
 </main>
@@ -270,8 +271,7 @@
 <style>
     main {
         position: inherit;
-        display: table;
-        padding-top:0.4em;
+        padding-top: 0.4em;
     }
 
     .red:hover {
@@ -289,11 +289,16 @@
         fill-opacity: 80%;
     }
 
-    table {
+    .table {
+        display: inline-grid;
         text-align: left;
-        border-collapse: collapse;
-        table-layout: fixed;
         margin-left: 1em;
+    }
+
+    .thead {
+        display: inline-flex;
+        padding: 0;
+        margin: 0;
     }
 
 
@@ -303,12 +308,7 @@
         z-index: -1;
     }
 
-    tr {
-        padding: 0;
-        margin: 0;
-    }
-
-    td {
+    .td {
         color: #5f5f5f;
         border: none;
         border-left: 0.1em solid #efefef;
@@ -367,9 +367,11 @@
         display: block;
     }
 
+
     .row {
-        margin-top: 0px;
-        margin-bottom: 1px;
+        display: inline-flex;
+        padding: 0;
+        margin: 0 0 1px;
     }
 
     .row:hover {
@@ -420,6 +422,13 @@
 
     textarea:not(:focus) {
         max-height: 1.3em;
+    }
+
+    .disable-css-transitions {
+        -webkit-transition: none !important;
+        -moz-transition: none !important;
+        -o-transition: none !important;
+        transition: none !important;
     }
 
 </style>
