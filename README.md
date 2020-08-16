@@ -15,12 +15,12 @@ Allows CRUD-operations for Object-Arrays.
 ## Install
 
 ```
-npm install -save svelte-generic-crud-table
+npm install svelte-generic-crud-table
 ```
 
 For pagination e.g.:
 ```
-npm install -save svelte-generic-table-pager
+npm install svelte-generic-table-pager
 ```
 
 [![Donate](https://github.com/ivosdc/svelte-generic-crud-table/raw/master/assets/donate.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7V5M288MUT7GE&source=url)
