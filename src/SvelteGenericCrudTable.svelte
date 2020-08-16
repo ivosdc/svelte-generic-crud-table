@@ -165,7 +165,7 @@
                                               disabled>{genericCrudTable.makeCapitalLead(elem.name)}</textarea>
                         </div>
                     {/each}
-                    <div id="labelOptions" class="headline">
+                    <div id="labelOptions" class="td headline">
                         <!-- /* istanbul ignore next line */ -->
                         {#if options.includes(CREATE)}
                             <div class="options blue" on:click={handleCreate}
@@ -296,10 +296,18 @@
 
     .thead {
         display: inline-flex;
-        padding: 0;
-        margin: 0;
+        padding: 0 0 0.4em 0;
     }
 
+    .row {
+        display: inline-flex;
+        padding: 0;
+        margin: 0 0 1px;
+    }
+
+    .row:hover {
+        background-color: #efefef;
+    }
 
     .sortable {
         cursor: pointer;
@@ -313,8 +321,9 @@
         border-left: 0.1em solid #efefef;
         font-size: 0.95em;
         font-weight: 200;
-        padding: 1px 0 1px 0.4em;
+        padding: 0.2em 0 0.1em 0.4em;
         float: left;
+        margin-top: 0.2em;
     }
 
     .headline {
@@ -324,6 +333,8 @@
         max-height: 1.3em;
         height: 1.3em;
         font-weight: 300;
+        padding: 0 0 0.3em 0.4em;
+        margin-bottom: 0.3em;
     }
 
     #labelOptions {
@@ -364,17 +375,6 @@
 
     .shown {
         display: block;
-    }
-
-
-    .row {
-        display: inline-flex;
-        padding: 0;
-        margin: 0 0 1px;
-    }
-
-    .row:hover {
-        background-color: #efefef;
     }
 
     textarea {
