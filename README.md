@@ -52,8 +52,8 @@ Just include the table as seen in the example below.
 
 <body>
 <hr>
-<crud-table></crud-table>
 <table-pager></table-pager>
+<crud-table></crud-table>
 <hr>
 </body>
 <script src='https://ivosdc.github.io/svelte-generic-crud-table/test-data.js'></script>
@@ -64,8 +64,8 @@ Just include the table as seen in the example below.
 ```
 
 ```html
-<crud-table></crud-table>
 <table-pager></table-pager>
+<crud-table></crud-table>
 ```
 
 ###  Svelte-Component - implementation example:

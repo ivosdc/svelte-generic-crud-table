@@ -139,15 +139,6 @@
 </script>
 
 <main>
-    <!-- /* istanbul ignore next line */ -->
-    {#if table_data.length === 0}
-        {#if options.includes(CREATE)}
-            <div class="blue" on:click={handleCreate}
-                 title="Create">
-                {@html iconcreate}
-            </div>
-        {/if}
-    {/if}
     {#if (table_data !== undefined)}
         <!-- /* istanbul ignore next line */ -->
         {#if Array.isArray(table_data)}
