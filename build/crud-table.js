@@ -265,10 +265,40 @@ var SvelteGenericCrudTable = (function () {
         node.dispatchEvent(custom_event(`${direction ? 'intro' : 'outro'}${kind}`));
     }
     const outroing = new Set();
+    let outros;
+    function group_outros() {
+        outros = {
+            r: 0,
+            c: [],
+            p: outros // parent group
+        };
+    }
+    function check_outros() {
+        if (!outros.r) {
+            run_all(outros.c);
+        }
+        outros = outros.p;
+    }
     function transition_in(block, local) {
         if (block && block.i) {
             outroing.delete(block);
             block.i(local);
+        }
+    }
+    function transition_out(block, local, detach, callback) {
+        if (block && block.o) {
+            if (outroing.has(block))
+                return;
+            outroing.add(block);
+            outros.c.push(() => {
+                outroing.delete(block);
+                if (callback) {
+                    if (detach)
+                        block.d(1);
+                    callback();
+                }
+            });
+            block.o(local);
         }
     }
     const null_transition = { duration: 0 };
@@ -334,10 +364,66 @@ var SvelteGenericCrudTable = (function () {
             }
         };
     }
-
-    function destroy_block(block, lookup) {
-        block.d(1);
-        lookup.delete(block.key);
+    function create_out_transition(node, fn, params) {
+        let config = fn(node, params);
+        let running = true;
+        let animation_name;
+        const group = outros;
+        group.r += 1;
+        function go() {
+            const { delay = 0, duration = 300, easing = identity, tick = noop, css } = config || null_transition;
+            if (css)
+                animation_name = create_rule(node, 1, 0, duration, delay, easing, css);
+            const start_time = now() + delay;
+            const end_time = start_time + duration;
+            add_render_callback(() => dispatch(node, false, 'start'));
+            loop(now => {
+                if (running) {
+                    if (now >= end_time) {
+                        tick(0, 1);
+                        dispatch(node, false, 'end');
+                        if (!--group.r) {
+                            // this will result in `end()` being called,
+                            // so we don't need to clean up here
+                            run_all(group.c);
+                        }
+                        return false;
+                    }
+                    if (now >= start_time) {
+                        const t = easing((now - start_time) / duration);
+                        tick(1 - t, t);
+                    }
+                }
+                return running;
+            });
+        }
+        if (is_function(config)) {
+            wait().then(() => {
+                // @ts-ignore
+                config = config();
+                go();
+            });
+        }
+        else {
+            go();
+        }
+        return {
+            end(reset) {
+                if (reset && config.tick) {
+                    config.tick(1, 0);
+                }
+                if (running) {
+                    if (animation_name)
+                        delete_rule(node, animation_name);
+                    running = false;
+                }
+            }
+        };
+    }
+    function outro_and_destroy_block(block, lookup) {
+        transition_out(block, 1, 1, () => {
+            lookup.delete(block.key);
+        });
     }
     function update_keyed_each(old_blocks, dirty, get_key, dynamic, ctx, list, lookup, node, destroy, create_each_block, next, get_context) {
         let o = old_blocks.length;
@@ -551,6 +637,15 @@ var SvelteGenericCrudTable = (function () {
         return f * f * f + 1.0;
     }
 
+    function fade(node, { delay = 0, duration = 400, easing = identity }) {
+        const o = +getComputedStyle(node).opacity;
+        return {
+            delay,
+            duration,
+            easing,
+            css: t => `opacity: ${t * o}`
+        };
+    }
     function slide(node, { delay = 0, duration = 400, easing = cubicOut }) {
         const style = getComputedStyle(node);
         const opacity = +style.opacity;
@@ -785,6 +880,7 @@ var SvelteGenericCrudTable = (function () {
     function create_if_block(ctx) {
     	let show_if = Array.isArray(/*table_data*/ ctx[0]);
     	let if_block_anchor;
+    	let current;
     	let if_block = show_if && create_if_block_1(ctx);
 
     	return {
@@ -795,6 +891,7 @@ var SvelteGenericCrudTable = (function () {
     		m(target, anchor) {
     			if (if_block) if_block.m(target, anchor);
     			insert(target, if_block_anchor, anchor);
+    			current = true;
     		},
     		p(ctx, dirty) {
     			if (dirty[0] & /*table_data*/ 1) show_if = Array.isArray(/*table_data*/ ctx[0]);
@@ -813,14 +910,24 @@ var SvelteGenericCrudTable = (function () {
     					if_block.m(if_block_anchor.parentNode, if_block_anchor);
     				}
     			} else if (if_block) {
-    				if_block.d(1);
-    				if_block = null;
+    				group_outros();
+
+    				transition_out(if_block, 1, 1, () => {
+    					if_block = null;
+    				});
+
+    				check_outros();
     			}
     		},
     		i(local) {
+    			if (current) return;
     			transition_in(if_block);
+    			current = true;
     		},
-    		o: noop,
+    		o(local) {
+    			transition_out(if_block);
+    			current = false;
+    		},
     		d(detaching) {
     			if (if_block) if_block.d(detaching);
     			if (detaching) detach(if_block_anchor);
@@ -838,6 +945,7 @@ var SvelteGenericCrudTable = (function () {
     	let t1;
     	let each_blocks = [];
     	let each1_lookup = new Map();
+    	let current;
     	let each_value_3 = /*table_config*/ ctx[1].columns_setting;
     	let each_blocks_1 = [];
 
@@ -895,6 +1003,8 @@ var SvelteGenericCrudTable = (function () {
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(div2, null);
     			}
+
+    			current = true;
     		},
     		p(ctx, dirty) {
     			if (dirty[0] & /*genericCrudTable, table_config, handleSort*/ 8210) {
@@ -937,15 +1047,27 @@ var SvelteGenericCrudTable = (function () {
 
     			if (dirty[0] & /*table_config, table_data, name, handleDeleteConfirmation, handleCancelDelete, options, handleCancelEdit, handleEditConfirmation, handleDetails, handleEdit, handleDelete, genericCrudTable*/ 6143) {
     				const each_value = /*table_data*/ ctx[0];
-    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each1_lookup, div2, destroy_block, create_each_block, null, get_each_context);
+    				group_outros();
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each1_lookup, div2, outro_and_destroy_block, create_each_block, null, get_each_context);
+    				check_outros();
     			}
     		},
     		i(local) {
+    			if (current) return;
+
     			for (let i = 0; i < each_value.length; i += 1) {
     				transition_in(each_blocks[i]);
     			}
+
+    			current = true;
     		},
-    		o: noop,
+    		o(local) {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				transition_out(each_blocks[i]);
+    			}
+
+    			current = false;
+    		},
     		d(detaching) {
     			if (detaching) detach(div2);
     			destroy_each(each_blocks_1, detaching);
@@ -1685,6 +1807,8 @@ var SvelteGenericCrudTable = (function () {
     	let div;
     	let t;
     	let div_intro;
+    	let div_outro;
+    	let current;
     	let each_value_1 = /*table_config*/ ctx[1].columns_setting;
     	let each_blocks = [];
 
@@ -1714,6 +1838,7 @@ var SvelteGenericCrudTable = (function () {
     			}
 
     			append(div, t);
+    			current = true;
     		},
     		p(ctx, dirty) {
     			if (dirty[0] & /*table_data, name, table_config, handleDeleteConfirmation, handleCancelDelete, options, handleCancelEdit, handleEditConfirmation, handleDetails, handleEdit, handleDelete, genericCrudTable*/ 6143) {
@@ -1740,23 +1865,32 @@ var SvelteGenericCrudTable = (function () {
     			}
     		},
     		i(local) {
-    			if (!div_intro) {
-    				add_render_callback(() => {
-    					div_intro = create_in_transition(div, slide, { duration: 500 });
-    					div_intro.start();
-    				});
-    			}
+    			if (current) return;
+
+    			add_render_callback(() => {
+    				if (div_outro) div_outro.end(1);
+    				if (!div_intro) div_intro = create_in_transition(div, slide, { duration: 350 });
+    				div_intro.start();
+    			});
+
+    			current = true;
     		},
-    		o: noop,
+    		o(local) {
+    			if (div_intro) div_intro.invalidate();
+    			div_outro = create_out_transition(div, fade, { duration: 500 });
+    			current = false;
+    		},
     		d(detaching) {
     			if (detaching) detach(div);
     			destroy_each(each_blocks, detaching);
+    			if (detaching && div_outro) div_outro.end();
     		}
     	};
     }
 
     function create_fragment(ctx) {
     	let main;
+    	let current;
     	let if_block = /*table_data*/ ctx[0] !== undefined && create_if_block(ctx);
 
     	return {
@@ -1768,6 +1902,7 @@ var SvelteGenericCrudTable = (function () {
     		m(target, anchor) {
     			insert(target, main, anchor);
     			if (if_block) if_block.m(main, null);
+    			current = true;
     		},
     		p(ctx, dirty) {
     			if (/*table_data*/ ctx[0] !== undefined) {
@@ -1784,14 +1919,24 @@ var SvelteGenericCrudTable = (function () {
     					if_block.m(main, null);
     				}
     			} else if (if_block) {
-    				if_block.d(1);
-    				if_block = null;
+    				group_outros();
+
+    				transition_out(if_block, 1, 1, () => {
+    					if_block = null;
+    				});
+
+    				check_outros();
     			}
     		},
     		i(local) {
+    			if (current) return;
     			transition_in(if_block);
+    			current = true;
     		},
-    		o: noop,
+    		o(local) {
+    			transition_out(if_block);
+    			current = false;
+    		},
     		d(detaching) {
     			if (detaching) detach(main);
     			if (if_block) if_block.d();
