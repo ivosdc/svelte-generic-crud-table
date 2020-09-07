@@ -49,7 +49,8 @@ function runTest(shadowed) {
         const toEdit = 'name';
         const documentHTML = '<!doctype html><html><body>' +
             '<crud-table>' +
-            '<div id=' + toEdit + '0' + '></div>' +
+            '<div id="' + toEdit + '0' + '"></div>' +
+            '<div id="' + toEdit + '0' + ':disabled"></div>' +
             '<div id="' + config.name + 'options-default0"></div>' +
             '<div id="' + config.name + 'options-edit0"></div>' +
             '</crud-table>' +
@@ -63,7 +64,7 @@ function runTest(shadowed) {
         let actual = genericCrudTable.resetEditMode(0)
 
         if (shadowed) {
-            expect(document.querySelector('crud-table').shadowRoot.getElementById(config.name + toEdit + '0').getAttribute('disabled')).toBe('true')
+            expect(document.querySelector('crud-table').shadowRoot.getElementById(config.name + toEdit + '0:disabled').classList.contains('shown')).toBe(true);
 
             expect(document.querySelector('crud-table').shadowRoot.getElementById(config.name + "options-default0").classList.contains('hidden')).toBe(false);
             expect(document.querySelector('crud-table').shadowRoot.getElementById(config.name + "options-default0").classList.contains('shown')).toBe(true);
@@ -73,7 +74,7 @@ function runTest(shadowed) {
 
         } else {
 
-            expect(document.getElementById(config.name + toEdit + '0').getAttribute('disabled')).toBe('true')
+            expect(document.getElementById(config.name + toEdit + '0:disabled').classList.contains('shown')).toBe(true);
 
             expect(document.getElementById(config.name + "options-default0").classList.contains('hidden')).toBe(false);
             expect(document.getElementById(config.name + "options-default0").classList.contains('shown')).toBe(true);
@@ -87,7 +88,8 @@ function runTest(shadowed) {
         const toEdit = 'name';
         const documentHTML = '<!doctype html><html><body>' +
             '<crud-table>' +
-            '<div id=' + toEdit + '0' + ' disabled></div>' +
+            '<div id="' + toEdit + '0' + '"></div>' +
+            '<div id="' + toEdit + '0' + ':disabled"></div>' +
             '<div id="options-default0"></div>' +
             '<div id="options-edit0"></div>' +
             '</crud-table>' +
@@ -101,7 +103,7 @@ function runTest(shadowed) {
         let actual = genericCrudTable.setEditMode(0)
 
         if (shadowed) {
-            expect(document.querySelector('crud-table').shadowRoot.getElementById(config.name + toEdit + '0').getAttribute('disabled')).toBe(null)
+            expect(document.querySelector('crud-table').shadowRoot.getElementById(config.name + toEdit + '0').classList.contains('shown')).toBe(true)
 
             expect(document.querySelector('crud-table').shadowRoot.getElementById(config.name + "options-default0").classList.contains('hidden')).toBe(true);
             expect(document.querySelector('crud-table').shadowRoot.getElementById(config.name + "options-default0").classList.contains('shown')).toBe(false);
@@ -110,7 +112,7 @@ function runTest(shadowed) {
             expect(document.querySelector('crud-table').shadowRoot.getElementById(config.name + "options-edit0").classList.contains('shown')).toBe(true);
 
         } else {
-            expect(document.getElementById(config.name + toEdit + '0').getAttribute('disabled')).toBe(null)
+            expect(document.getElementById(config.name + toEdit + '0').classList.contains('shown')).toBe(true)
 
             expect(document.getElementById(config.name + "options-default0").classList.contains('hidden')).toBe(true);
             expect(document.getElementById(config.name + "options-default0").classList.contains('shown')).toBe(false);

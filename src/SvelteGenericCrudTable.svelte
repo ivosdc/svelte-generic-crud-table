@@ -151,9 +151,7 @@
                              style="width:{genericCrudTable.getShowFieldWidth(elem.name)};min-width:{genericCrudTable.getShowFieldWidth(elem.name)};max-width:{genericCrudTable.getShowFieldWidth(elem.name)}"
                              aria-label="Sort{elem.name}"
                              on:click={(e) => handleSort(elem.name, e)}>
-                                    <textarea class="sortable"
-                                              on:click={(e) => handleSort(elem.name, e)}
-                                              disabled>{genericCrudTable.makeCapitalLead(elem.name)}</textarea>
+                                   {genericCrudTable.makeCapitalLead(elem.name)}
                         </div>
                     {/each}
                     <div id="labelOptions" class="td headline">
@@ -176,9 +174,13 @@
                                 {#if (column_order.name === genericCrudTable.getKey(elem))}
                                     <div class="td {genericCrudTable.isShowField(column_order.name) === false ? 'hidden' : 'shown'}"
                                          style="width:{genericCrudTable.getShowFieldWidth(column_order.name)};min-width:{genericCrudTable.getShowFieldWidth(column_order.name)};max-width:{genericCrudTable.getShowFieldWidth(column_order.name)}">
+                                    <div id={name + column_order.name + i + ':disabled'}
+                                              class="td-disabled shown"
+                                              aria-label={name + column_order.name + i + ':disabled'}>{table_data[i][column_order.name]}
+                                    </div>
                                     <textarea id={name + column_order.name + i}
-                                              aria-label={name + column_order.name + i}
-                                              disabled>{table_data[i][column_order.name]}</textarea>
+                                              class="hidden"
+                                              aria-label={name + column_order.name + i}>{table_data[i][column_order.name]}</textarea>
                                     </div>
                                 {/if}
                                 <!-- /* istanbul ignore next line */ -->
@@ -310,11 +312,23 @@
         color: #5f5f5f;
         border: none;
         border-left: 0.1em solid #efefef;
-        font-size: 0.95em;
         font-weight: 200;
         padding: 0.2em 0 0.1em 0.4em;
         float: left;
-        margin-top: 0.2em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .td-disabled {
+        color: #5f5f5f;
+        border: none;
+        font-weight: 200;
+        padding: 0.2em 0 0.1em 0.4em;
+        float: left;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .headline {

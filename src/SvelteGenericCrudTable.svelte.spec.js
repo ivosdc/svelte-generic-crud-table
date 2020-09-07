@@ -42,8 +42,7 @@ describe('Test SvelteGenericCrudTable', () => {
 
         const actual = dom.getByDisplayValue('A_FIELDS_VALUE');
 
-        expect(actual.getAttribute('disabled')).not.toBeNull();
-    })
+        expect(actual.classList.contains('hidden')).toBeTruthy();    })
 
 
     it('testSvelteGenericCrudTable_editable_fields', async () => {
@@ -58,7 +57,7 @@ describe('Test SvelteGenericCrudTable', () => {
         await fireEvent.click(edit);
         const actual = dom.getByDisplayValue('A_FIELDS_VALUE');
 
-        expect(actual.getAttribute('disabled')).toBeNull();
+        expect(actual.classList.contains('shown')).toBeTruthy();
     })
 
 
@@ -73,12 +72,12 @@ describe('Test SvelteGenericCrudTable', () => {
         await fireEvent.click(edit);
         const actual = dom.getByDisplayValue('A_FIELDS_VALUE');
 
-        expect(actual.getAttribute('disabled')).toBeNull();
+        expect(actual.classList.contains('shown')).toBeTruthy();
 
         const cancel = dom.getByTitle('Cancel');
         await fireEvent.click(cancel);
 
-        expect(actual.getAttribute('disabled')).not.toBeNull();
+        expect(actual.classList.contains('hidden')).toBeTruthy();
     })
 
     it('testSvelteGenericCrudTable_editUpdate', async () => {
@@ -89,13 +88,13 @@ describe('Test SvelteGenericCrudTable', () => {
         const dom = render(SvelteGenericCrudTable, config)
 
         const editField = dom.getByLabelText(config.table_config.name + `A_FIELD` + 0);
-        expect(editField.getAttribute('disabled')).not.toBeNull();
+        expect(editField.classList.contains('hidden')).toBeTruthy();
 
 
         const edit = dom.getByTitle('Edit');
         await fireEvent.click(edit);
 
-        expect(editField.getAttribute('disabled')).toBeNull();
+        expect(editField.classList.contains('shown')).toBeTruthy();
 
         await fireEvent.click(editField);
         editField.value = 'NEW_VALUE';

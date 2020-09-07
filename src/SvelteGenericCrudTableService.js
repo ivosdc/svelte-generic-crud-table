@@ -23,8 +23,10 @@ export class SvelteGenericCrudTableService {
         if (this.shadowed) {
             this.table_config.columns_setting.forEach((toEdit) => {
                 if (this.isEditField(toEdit.name)) {
-                    document.querySelector('crud-table').shadowRoot.getElementById(this.name + toEdit.name + id)
-                        .setAttribute('disabled', 'true');
+                    document.querySelector('crud-table').shadowRoot.getElementById(this.name + toEdit.name + id).classList.add("hidden");
+                    document.querySelector('crud-table').shadowRoot.getElementById(this.name + toEdit.name + id).classList.remove("shown");
+                    document.querySelector('crud-table').shadowRoot.getElementById(this.name + toEdit.name + id + ':disabled').classList.add("shown");
+                    document.querySelector('crud-table').shadowRoot.getElementById(this.name + toEdit.name + id + ':disabled').classList.remove("hidden");
                 }
             })
             document.querySelector('crud-table').shadowRoot.getElementById(this.name + 'options-default' + id).classList.remove('hidden');
@@ -34,8 +36,10 @@ export class SvelteGenericCrudTableService {
         } else {
             this.table_config.columns_setting.forEach((toEdit) => {
                 if (this.isEditField(toEdit.name)) {
-                    document.getElementById(this.name + toEdit.name + id)
-                        .setAttribute('disabled', 'true');
+                    document.getElementById(this.name + toEdit.name + id).classList.add("hidden");
+                    document.getElementById(this.name + toEdit.name + id).classList.remove("shown");
+                    document.getElementById(this.name + toEdit.name + id + ':disabled').classList.add("shown");
+                    document.getElementById(this.name + toEdit.name + id + ':disabled').classList.remove("hidden");
                 }
             })
             document.getElementById(this.name + 'options-default' + id).classList.remove('hidden');
@@ -63,7 +67,10 @@ export class SvelteGenericCrudTableService {
         if (this.shadowed) {
             this.table_config.columns_setting.forEach((toEdit) => {
                 if (this.isEditField(toEdit.name)) {
-                    document.querySelector('crud-table').shadowRoot.getElementById(this.name + toEdit.name + id).removeAttribute("disabled");
+                    document.querySelector('crud-table').shadowRoot.getElementById(this.name + toEdit.name + id + ':disabled').classList.add("hidden");
+                    document.querySelector('crud-table').shadowRoot.getElementById(this.name + toEdit.name + id + ':disabled').classList.remove("shown");
+                    document.querySelector('crud-table').shadowRoot.getElementById(this.name + toEdit.name + id).classList.add("shown");
+                    document.querySelector('crud-table').shadowRoot.getElementById(this.name + toEdit.name + id).classList.remove("hidden");
                 }
             })
             document.querySelector('crud-table').shadowRoot.getElementById(this.name + 'options-default' + id).classList.add('hidden');
@@ -73,7 +80,10 @@ export class SvelteGenericCrudTableService {
         } else {
             this.table_config.columns_setting.forEach((toEdit) => {
                 if (this.isEditField(toEdit.name)) {
-                    document.getElementById(this.name + toEdit.name + id).removeAttribute("disabled");
+                    document.getElementById(this.name + toEdit.name + id + ":disabled").classList.add("hidden");
+                    document.getElementById(this.name + toEdit.name + id + ":disabled").classList.remove("shown");
+                    document.getElementById(this.name + toEdit.name + id).classList.add("shown");
+                    document.getElementById(this.name + toEdit.name + id).classList.remove("hidden");
                 }
             })
             document.getElementById(this.name + 'options-default' + id).classList.add('hidden');
