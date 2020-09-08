@@ -304,7 +304,7 @@
         color: #5f5f5f;
         border: none;
         border-left: 0.1em solid #efefef;
-        font-weight: 200;
+        font-weight: 100;
         padding: 0.2em 0 0.1em 0.4em;
         float: left;
         white-space: nowrap;
@@ -313,14 +313,22 @@
     }
 
     .td-disabled {
+        vertical-align: middle;
         color: #5f5f5f;
         border: none;
         font-weight: 200;
         padding: 0.2em 0 0.1em 0.4em;
         float: left;
+        line-height: 1em;
+        min-height: 1.3em;
+        max-height: 1.3em;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        width: 100%;
+        width: -moz-available;
+        width: -webkit-fill-available;
+        width: stretch;
     }
 
     .headline {
