@@ -317,7 +317,6 @@
         color: #5f5f5f;
         border: none;
         font-weight: 200;
-        padding: 0.2em 0 0.1em 0.4em;
         float: left;
         line-height: 1em;
         min-height: 1.3em;
