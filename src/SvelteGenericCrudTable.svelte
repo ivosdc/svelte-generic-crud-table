@@ -283,7 +283,6 @@
     .table {
         display: inline-grid;
         text-align: left;
-        margin-left: 1em;
     }
 
     .thead {
@@ -299,12 +298,6 @@
 
     .row:hover {
         background-color: #efefef;
-    }
-
-    .sortable {
-        cursor: pointer;
-        font-weight: 400;
-        z-index: -1;
     }
 
     .td {
