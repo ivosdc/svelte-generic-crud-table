@@ -1,6 +1,5 @@
 <svelte:options tag={'crud-table'}/>
 <script>
-    import {slide, fade} from 'svelte/transition';
     import {createEventDispatcher} from 'svelte';
     import {SvelteGenericCrudTableService} from "./SvelteGenericCrudTableService";
     import {icontrash, iconedit, iconsend, icondetail, iconcancel, iconcreate, iconsave} from './svgIcon'
@@ -167,7 +166,7 @@
 
                 <!-- /* istanbul ignore next line */ -->
                 {#each table_data as tableRow, i (tableRow)}
-                    <div class="row" in:slide="{{duration: 350}}" out:fade="{{duration: 500}}">
+                    <div class="row">
                         {#each table_config.columns_setting as column_order, j}
                             {#each Object.entries(tableRow) as elem, k}
                                 <!-- /* istanbul ignore next */ -->
