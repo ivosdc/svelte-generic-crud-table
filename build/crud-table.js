@@ -2,7 +2,6 @@ var SvelteGenericCrudTable = (function () {
     'use strict';
 
     function noop() { }
-    const identity = x => x;
     function run(fn) {
         return fn();
     }
@@ -17,41 +16,6 @@ var SvelteGenericCrudTable = (function () {
     }
     function safe_not_equal(a, b) {
         return a != a ? b == b : a !== b || ((a && typeof a === 'object') || typeof a === 'function');
-    }
-
-    const is_client = typeof window !== 'undefined';
-    let now = is_client
-        ? () => window.performance.now()
-        : () => Date.now();
-    let raf = is_client ? cb => requestAnimationFrame(cb) : noop;
-
-    const tasks = new Set();
-    function run_tasks(now) {
-        tasks.forEach(task => {
-            if (!task.c(now)) {
-                tasks.delete(task);
-                task.f();
-            }
-        });
-        if (tasks.size !== 0)
-            raf(run_tasks);
-    }
-    /**
-     * Creates a new task that runs on each raf frame
-     * until it returns a falsy value or is aborted
-     */
-    function loop(callback) {
-        let task;
-        if (tasks.size === 0)
-            raf(run_tasks);
-        return {
-            promise: new Promise(fulfill => {
-                tasks.add(task = { c: callback, f: fulfill });
-            }),
-            abort() {
-                tasks.delete(task);
-            }
-        };
     }
 
     function append(target, node) {
@@ -106,67 +70,6 @@ var SvelteGenericCrudTable = (function () {
         const e = document.createEvent('CustomEvent');
         e.initCustomEvent(type, false, false, detail);
         return e;
-    }
-
-    const active_docs = new Set();
-    let active = 0;
-    // https://github.com/darkskyapp/string-hash/blob/master/index.js
-    function hash(str) {
-        let hash = 5381;
-        let i = str.length;
-        while (i--)
-            hash = ((hash << 5) - hash) ^ str.charCodeAt(i);
-        return hash >>> 0;
-    }
-    function create_rule(node, a, b, duration, delay, ease, fn, uid = 0) {
-        const step = 16.666 / duration;
-        let keyframes = '{\n';
-        for (let p = 0; p <= 1; p += step) {
-            const t = a + (b - a) * ease(p);
-            keyframes += p * 100 + `%{${fn(t, 1 - t)}}\n`;
-        }
-        const rule = keyframes + `100% {${fn(b, 1 - b)}}\n}`;
-        const name = `__svelte_${hash(rule)}_${uid}`;
-        const doc = node.ownerDocument;
-        active_docs.add(doc);
-        const stylesheet = doc.__svelte_stylesheet || (doc.__svelte_stylesheet = doc.head.appendChild(element('style')).sheet);
-        const current_rules = doc.__svelte_rules || (doc.__svelte_rules = {});
-        if (!current_rules[name]) {
-            current_rules[name] = true;
-            stylesheet.insertRule(`@keyframes ${name} ${rule}`, stylesheet.cssRules.length);
-        }
-        const animation = node.style.animation || '';
-        node.style.animation = `${animation ? `${animation}, ` : ``}${name} ${duration}ms linear ${delay}ms 1 both`;
-        active += 1;
-        return name;
-    }
-    function delete_rule(node, name) {
-        const previous = (node.style.animation || '').split(', ');
-        const next = previous.filter(name
-            ? anim => anim.indexOf(name) < 0 // remove specific animation
-            : anim => anim.indexOf('__svelte') === -1 // remove all Svelte animations
-        );
-        const deleted = previous.length - next.length;
-        if (deleted) {
-            node.style.animation = next.join(', ');
-            active -= deleted;
-            if (!active)
-                clear_rules();
-        }
-    }
-    function clear_rules() {
-        raf(() => {
-            if (active)
-                return;
-            active_docs.forEach(doc => {
-                const stylesheet = doc.__svelte_stylesheet;
-                let i = stylesheet.cssRules.length;
-                while (i--)
-                    stylesheet.deleteRule(i);
-                doc.__svelte_rules = {};
-            });
-            active_docs.clear();
-        });
     }
 
     let current_component;
@@ -255,180 +158,17 @@ var SvelteGenericCrudTable = (function () {
             $$.after_update.forEach(add_render_callback);
         }
     }
-
-    let promise;
-    function wait() {
-        if (!promise) {
-            promise = Promise.resolve();
-            promise.then(() => {
-                promise = null;
-            });
-        }
-        return promise;
-    }
-    function dispatch(node, direction, kind) {
-        node.dispatchEvent(custom_event(`${direction ? 'intro' : 'outro'}${kind}`));
-    }
     const outroing = new Set();
-    let outros;
-    function group_outros() {
-        outros = {
-            r: 0,
-            c: [],
-            p: outros // parent group
-        };
-    }
-    function check_outros() {
-        if (!outros.r) {
-            run_all(outros.c);
-        }
-        outros = outros.p;
-    }
     function transition_in(block, local) {
         if (block && block.i) {
             outroing.delete(block);
             block.i(local);
         }
     }
-    function transition_out(block, local, detach, callback) {
-        if (block && block.o) {
-            if (outroing.has(block))
-                return;
-            outroing.add(block);
-            outros.c.push(() => {
-                outroing.delete(block);
-                if (callback) {
-                    if (detach)
-                        block.d(1);
-                    callback();
-                }
-            });
-            block.o(local);
-        }
-    }
-    const null_transition = { duration: 0 };
-    function create_in_transition(node, fn, params) {
-        let config = fn(node, params);
-        let running = false;
-        let animation_name;
-        let task;
-        let uid = 0;
-        function cleanup() {
-            if (animation_name)
-                delete_rule(node, animation_name);
-        }
-        function go() {
-            const { delay = 0, duration = 300, easing = identity, tick = noop, css } = config || null_transition;
-            if (css)
-                animation_name = create_rule(node, 0, 1, duration, delay, easing, css, uid++);
-            tick(0, 1);
-            const start_time = now() + delay;
-            const end_time = start_time + duration;
-            if (task)
-                task.abort();
-            running = true;
-            add_render_callback(() => dispatch(node, true, 'start'));
-            task = loop(now => {
-                if (running) {
-                    if (now >= end_time) {
-                        tick(1, 0);
-                        dispatch(node, true, 'end');
-                        cleanup();
-                        return running = false;
-                    }
-                    if (now >= start_time) {
-                        const t = easing((now - start_time) / duration);
-                        tick(t, 1 - t);
-                    }
-                }
-                return running;
-            });
-        }
-        let started = false;
-        return {
-            start() {
-                if (started)
-                    return;
-                delete_rule(node);
-                if (is_function(config)) {
-                    config = config();
-                    wait().then(go);
-                }
-                else {
-                    go();
-                }
-            },
-            invalidate() {
-                started = false;
-            },
-            end() {
-                if (running) {
-                    cleanup();
-                    running = false;
-                }
-            }
-        };
-    }
-    function create_out_transition(node, fn, params) {
-        let config = fn(node, params);
-        let running = true;
-        let animation_name;
-        const group = outros;
-        group.r += 1;
-        function go() {
-            const { delay = 0, duration = 300, easing = identity, tick = noop, css } = config || null_transition;
-            if (css)
-                animation_name = create_rule(node, 1, 0, duration, delay, easing, css);
-            const start_time = now() + delay;
-            const end_time = start_time + duration;
-            add_render_callback(() => dispatch(node, false, 'start'));
-            loop(now => {
-                if (running) {
-                    if (now >= end_time) {
-                        tick(0, 1);
-                        dispatch(node, false, 'end');
-                        if (!--group.r) {
-                            // this will result in `end()` being called,
-                            // so we don't need to clean up here
-                            run_all(group.c);
-                        }
-                        return false;
-                    }
-                    if (now >= start_time) {
-                        const t = easing((now - start_time) / duration);
-                        tick(1 - t, t);
-                    }
-                }
-                return running;
-            });
-        }
-        if (is_function(config)) {
-            wait().then(() => {
-                // @ts-ignore
-                config = config();
-                go();
-            });
-        }
-        else {
-            go();
-        }
-        return {
-            end(reset) {
-                if (reset && config.tick) {
-                    config.tick(1, 0);
-                }
-                if (running) {
-                    if (animation_name)
-                        delete_rule(node, animation_name);
-                    running = false;
-                }
-            }
-        };
-    }
-    function outro_and_destroy_block(block, lookup) {
-        transition_out(block, 1, 1, () => {
-            lookup.delete(block.key);
-        });
+
+    function destroy_block(block, lookup) {
+        block.d(1);
+        lookup.delete(block.key);
     }
     function update_keyed_each(old_blocks, dirty, get_key, dynamic, ctx, list, lookup, node, destroy, create_each_block, next, get_context) {
         let o = old_blocks.length;
@@ -634,46 +374,6 @@ var SvelteGenericCrudTable = (function () {
             $set() {
                 // overridden by instance, if it has props
             }
-        };
-    }
-
-    function cubicOut(t) {
-        const f = t - 1.0;
-        return f * f * f + 1.0;
-    }
-
-    function fade(node, { delay = 0, duration = 400, easing = identity }) {
-        const o = +getComputedStyle(node).opacity;
-        return {
-            delay,
-            duration,
-            easing,
-            css: t => `opacity: ${t * o}`
-        };
-    }
-    function slide(node, { delay = 0, duration = 400, easing = cubicOut }) {
-        const style = getComputedStyle(node);
-        const opacity = +style.opacity;
-        const height = parseFloat(style.height);
-        const padding_top = parseFloat(style.paddingTop);
-        const padding_bottom = parseFloat(style.paddingBottom);
-        const margin_top = parseFloat(style.marginTop);
-        const margin_bottom = parseFloat(style.marginBottom);
-        const border_top_width = parseFloat(style.borderTopWidth);
-        const border_bottom_width = parseFloat(style.borderBottomWidth);
-        return {
-            delay,
-            duration,
-            easing,
-            css: t => `overflow: hidden;` +
-                `opacity: ${Math.min(t * 20, 1) * opacity};` +
-                `height: ${t * height}px;` +
-                `padding-top: ${t * padding_top}px;` +
-                `padding-bottom: ${t * padding_bottom}px;` +
-                `margin-top: ${t * margin_top}px;` +
-                `margin-bottom: ${t * margin_bottom}px;` +
-                `border-top-width: ${t * border_top_width}px;` +
-                `border-bottom-width: ${t * border_bottom_width}px;`
         };
     }
 
@@ -891,11 +591,10 @@ var SvelteGenericCrudTable = (function () {
     	return child_ctx;
     }
 
-    // (142:4) {#if (table_data !== undefined)}
+    // (141:4) {#if (table_data !== undefined)}
     function create_if_block(ctx) {
     	let show_if = Array.isArray(/*table_data*/ ctx[0]);
     	let if_block_anchor;
-    	let current;
     	let if_block = show_if && create_if_block_1(ctx);
 
     	return {
@@ -906,7 +605,6 @@ var SvelteGenericCrudTable = (function () {
     		m(target, anchor) {
     			if (if_block) if_block.m(target, anchor);
     			insert(target, if_block_anchor, anchor);
-    			current = true;
     		},
     		p(ctx, dirty) {
     			if (dirty[0] & /*table_data*/ 1) show_if = Array.isArray(/*table_data*/ ctx[0]);
@@ -914,34 +612,15 @@ var SvelteGenericCrudTable = (function () {
     			if (show_if) {
     				if (if_block) {
     					if_block.p(ctx, dirty);
-
-    					if (dirty[0] & /*table_data*/ 1) {
-    						transition_in(if_block, 1);
-    					}
     				} else {
     					if_block = create_if_block_1(ctx);
     					if_block.c();
-    					transition_in(if_block, 1);
     					if_block.m(if_block_anchor.parentNode, if_block_anchor);
     				}
     			} else if (if_block) {
-    				group_outros();
-
-    				transition_out(if_block, 1, 1, () => {
-    					if_block = null;
-    				});
-
-    				check_outros();
+    				if_block.d(1);
+    				if_block = null;
     			}
-    		},
-    		i(local) {
-    			if (current) return;
-    			transition_in(if_block);
-    			current = true;
-    		},
-    		o(local) {
-    			transition_out(if_block);
-    			current = false;
     		},
     		d(detaching) {
     			if (if_block) if_block.d(detaching);
@@ -950,7 +629,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (144:8) {#if Array.isArray(table_data)}
+    // (143:8) {#if Array.isArray(table_data)}
     function create_if_block_1(ctx) {
     	let div2;
     	let div1;
@@ -960,7 +639,6 @@ var SvelteGenericCrudTable = (function () {
     	let t1;
     	let each_blocks = [];
     	let each1_lookup = new Map();
-    	let current;
     	let each_value_3 = /*table_config*/ ctx[1].columns_setting;
     	let each_blocks_1 = [];
 
@@ -1018,8 +696,6 @@ var SvelteGenericCrudTable = (function () {
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(div2, null);
     			}
-
-    			current = true;
     		},
     		p(ctx, dirty) {
     			if (dirty[0] & /*genericCrudTable, table_config, handleSort*/ 8210) {
@@ -1062,26 +738,8 @@ var SvelteGenericCrudTable = (function () {
 
     			if (dirty[0] & /*table_config, table_data, name, handleDeleteConfirmation, handleCancelDelete, options, handleCancelEdit, handleEditConfirmation, handleDetails, handleEdit, handleDelete, genericCrudTable*/ 6143) {
     				const each_value = /*table_data*/ ctx[0];
-    				group_outros();
-    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each1_lookup, div2, outro_and_destroy_block, create_each_block, null, get_each_context);
-    				check_outros();
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each1_lookup, div2, destroy_block, create_each_block, null, get_each_context);
     			}
-    		},
-    		i(local) {
-    			if (current) return;
-
-    			for (let i = 0; i < each_value.length; i += 1) {
-    				transition_in(each_blocks[i]);
-    			}
-
-    			current = true;
-    		},
-    		o(local) {
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				transition_out(each_blocks[i]);
-    			}
-
-    			current = false;
     		},
     		d(detaching) {
     			if (detaching) detach(div2);
@@ -1095,7 +753,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (148:20) {#each table_config.columns_setting as elem}
+    // (147:20) {#each table_config.columns_setting as elem}
     function create_each_block_3(ctx) {
     	let div;
     	let t_value = /*genericCrudTable*/ ctx[4].makeCapitalLead(/*elem*/ ctx[35].name) + "";
@@ -1166,7 +824,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (159:24) {#if options.includes(CREATE)}
+    // (158:24) {#if options.includes(CREATE)}
     function create_if_block_9(ctx) {
     	let div;
     	let mounted;
@@ -1196,7 +854,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (174:32) {#if (column_order.name === genericCrudTable.getKey(elem))}
+    // (173:32) {#if (column_order.name === genericCrudTable.getKey(elem))}
     function create_if_block_8(ctx) {
     	let div1;
     	let div0;
@@ -1288,7 +946,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (187:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
+    // (186:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
     function create_if_block_2(ctx) {
     	let div3;
     	let div0;
@@ -1461,7 +1119,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (193:44) {#if options.includes(DELETE)}
+    // (192:44) {#if options.includes(DELETE)}
     function create_if_block_7(ctx) {
     	let div;
     	let div_aria_label_value;
@@ -1504,7 +1162,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (201:44) {#if options.includes(EDIT)}
+    // (200:44) {#if options.includes(EDIT)}
     function create_if_block_6(ctx) {
     	let div;
     	let mounted;
@@ -1541,7 +1199,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (208:44) {#if options.includes(DETAILS)}
+    // (207:44) {#if options.includes(DETAILS)}
     function create_if_block_5(ctx) {
     	let div;
     	let mounted;
@@ -1578,7 +1236,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (218:44) {#if options.includes(EDIT)}
+    // (217:44) {#if options.includes(EDIT)}
     function create_if_block_4(ctx) {
     	let div0;
     	let t;
@@ -1641,7 +1299,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (236:44) {#if options.includes(DELETE)}
+    // (235:44) {#if options.includes(DELETE)}
     function create_if_block_3(ctx) {
     	let div0;
     	let div0_aria_label_value;
@@ -1710,7 +1368,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (172:28) {#each Object.entries(tableRow) as elem, k}
+    // (171:28) {#each Object.entries(tableRow) as elem, k}
     function create_each_block_2(ctx) {
     	let show_if_1 = /*column_order*/ ctx[32].name === /*genericCrudTable*/ ctx[4].getKey(/*elem*/ ctx[35]);
     	let t;
@@ -1772,7 +1430,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (171:24) {#each table_config.columns_setting as column_order, j}
+    // (170:24) {#each table_config.columns_setting as column_order, j}
     function create_each_block_1(ctx) {
     	let each_1_anchor;
     	let each_value_2 = Object.entries(/*tableRow*/ ctx[29]);
@@ -1828,13 +1486,10 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (169:16) {#each table_data as tableRow, i (tableRow)}
+    // (168:16) {#each table_data as tableRow, i (tableRow)}
     function create_each_block(key_1, ctx) {
     	let div;
     	let t;
-    	let div_intro;
-    	let div_outro;
-    	let current;
     	let each_value_1 = /*table_config*/ ctx[1].columns_setting;
     	let each_blocks = [];
 
@@ -1864,7 +1519,6 @@ var SvelteGenericCrudTable = (function () {
     			}
 
     			append(div, t);
-    			current = true;
     		},
     		p(ctx, dirty) {
     			if (dirty[0] & /*table_data, name, table_config, handleDeleteConfirmation, handleCancelDelete, options, handleCancelEdit, handleEditConfirmation, handleDetails, handleEdit, handleDelete, genericCrudTable*/ 6143) {
@@ -1890,33 +1544,15 @@ var SvelteGenericCrudTable = (function () {
     				each_blocks.length = each_value_1.length;
     			}
     		},
-    		i(local) {
-    			if (current) return;
-
-    			add_render_callback(() => {
-    				if (div_outro) div_outro.end(1);
-    				if (!div_intro) div_intro = create_in_transition(div, slide, { duration: 350 });
-    				div_intro.start();
-    			});
-
-    			current = true;
-    		},
-    		o(local) {
-    			if (div_intro) div_intro.invalidate();
-    			div_outro = create_out_transition(div, fade, { duration: 500 });
-    			current = false;
-    		},
     		d(detaching) {
     			if (detaching) detach(div);
     			destroy_each(each_blocks, detaching);
-    			if (detaching && div_outro) div_outro.end();
     		}
     	};
     }
 
     function create_fragment(ctx) {
     	let main;
-    	let current;
     	let if_block = /*table_data*/ ctx[0] !== undefined && create_if_block(ctx);
 
     	return {
@@ -1928,41 +1564,23 @@ var SvelteGenericCrudTable = (function () {
     		m(target, anchor) {
     			insert(target, main, anchor);
     			if (if_block) if_block.m(main, null);
-    			current = true;
     		},
     		p(ctx, dirty) {
     			if (/*table_data*/ ctx[0] !== undefined) {
     				if (if_block) {
     					if_block.p(ctx, dirty);
-
-    					if (dirty[0] & /*table_data*/ 1) {
-    						transition_in(if_block, 1);
-    					}
     				} else {
     					if_block = create_if_block(ctx);
     					if_block.c();
-    					transition_in(if_block, 1);
     					if_block.m(main, null);
     				}
     			} else if (if_block) {
-    				group_outros();
-
-    				transition_out(if_block, 1, 1, () => {
-    					if_block = null;
-    				});
-
-    				check_outros();
+    				if_block.d(1);
+    				if_block = null;
     			}
     		},
-    		i(local) {
-    			if (current) return;
-    			transition_in(if_block);
-    			current = true;
-    		},
-    		o(local) {
-    			transition_out(if_block);
-    			current = false;
-    		},
+    		i: noop,
+    		o: noop,
     		d(detaching) {
     			if (detaching) detach(main);
     			if (if_block) if_block.d();
