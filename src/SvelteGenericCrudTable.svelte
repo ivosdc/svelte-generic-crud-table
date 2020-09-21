@@ -135,6 +135,19 @@
         dispatcher('sort', column, event);
     }
 
+    function handleResize(event) {
+        let elem = event.target;
+        let column = document.querySelectorAll("[id$='-" + elem.id + "']")
+        for (let i = 0; i < column.length; i++) {
+            column[i].setAttribute('style', 'width:' + (elem.offsetWidth - 8) + 'px');
+        }
+    }
+
+    function getSize(id) {
+        let column = document.querySelector("[id='" + id + "']")
+        return column.offsetWidth
+    }
+
 </script>
 
 <main>
@@ -144,13 +157,17 @@
             <div class="table">
                 <div class="thead" style="max-height: 1.3em;">
                     <!-- /* istanbul ignore next line */ -->
-                    {#each table_config.columns_setting as elem}
+                    {#each table_config.columns_setting as elem, index}
                         <!-- /* istanbul ignore next line */ -->
-                        <div class="td headline {genericCrudTable.isShowField(elem.name) === false ? 'hidden' : 'shown'}"
-                             style="width:{genericCrudTable.getShowFieldWidth(elem.name)};min-width:{genericCrudTable.getShowFieldWidth(elem.name)};max-width:{genericCrudTable.getShowFieldWidth(elem.name)}"
-                             aria-label="Sort{elem.name}"
-                             on:click={(e) => handleSort(elem.name, e)}>
-                                   {genericCrudTable.makeCapitalLead(elem.name)}
+                        <div id={index}
+                             class="td headline {genericCrudTable.isShowField(elem.name) === false ? 'hidden' : 'shown'}"
+                             style="width:{genericCrudTable.getShowFieldWidth(elem.name)};"
+                             on:mousedown={handleResize}
+                             on:mouseup={handleResize}>
+                            <span aria-label="Sort{elem.name}"
+                                  on:click={(e) => handleSort(elem.name, e)}>
+                                {genericCrudTable.makeCapitalLead(elem.name)}
+                            </span>
                         </div>
                     {/each}
                     <div id="labelOptions" class="td headline">
@@ -171,15 +188,16 @@
                             {#each Object.entries(tableRow) as elem, k}
                                 <!-- /* istanbul ignore next */ -->
                                 {#if (column_order.name === genericCrudTable.getKey(elem))}
-                                    <div class="td {genericCrudTable.isShowField(column_order.name) === false ? 'hidden' : 'shown'}"
-                                         style="width:{genericCrudTable.getShowFieldWidth(column_order.name)};min-width:{genericCrudTable.getShowFieldWidth(column_order.name)};max-width:{genericCrudTable.getShowFieldWidth(column_order.name)}">
-                                    <div id={name + column_order.name + i + ':disabled'}
-                                              class="td-disabled shown"
-                                              aria-label={name + column_order.name + i + ':disabled'}>{table_data[i][column_order.name]}
-                                    </div>
-                                    <textarea id={name + column_order.name + i}
-                                              class="hidden"
-                                              aria-label={name + column_order.name + i}>{table_data[i][column_order.name]}</textarea>
+                                    <div id={k + '-' + j}
+                                         class="td {genericCrudTable.isShowField(column_order.name) === false ? 'hidden' : 'shown'}"
+                                         style="width:{genericCrudTable.getShowFieldWidth(column_order.name)};">
+                                        <div id={name + column_order.name + i + ':disabled'}
+                                             class="td-disabled shown"
+                                             aria-label={name + column_order.name + i + ':disabled'}>{table_data[i][column_order.name]}
+                                        </div>
+                                        <textarea id={name + column_order.name + i}
+                                                  class="hidden"
+                                                  aria-label={name + column_order.name + i}>{table_data[i][column_order.name]}</textarea>
                                     </div>
                                 {/if}
                                 <!-- /* istanbul ignore next line */ -->
@@ -339,10 +357,12 @@
         font-weight: 300;
         padding: 0 0 0.3em 0.4em;
         margin-bottom: 0.3em;
+        resize: horizontal;
     }
 
     #labelOptions {
         width: 85px;
+        resize: none;
     }
 
     .options-field {
