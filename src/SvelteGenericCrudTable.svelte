@@ -135,17 +135,26 @@
         dispatcher('sort', column, event);
     }
 
+
+    const columnsWidth = [];
+
     function handleResize(event) {
         let elem = event.target;
         let column = document.querySelectorAll("[id$='-" + elem.id + "']")
+        columnsWidth[elem.id] = (elem.offsetWidth - 8) + 'px';
         for (let i = 0; i < column.length; i++) {
             column[i].setAttribute('style', 'width:' + (elem.offsetWidth - 8) + 'px');
         }
     }
 
-    function getSize(id) {
-        let column = document.querySelector("[id='" + id + "']")
-        return column.offsetWidth
+    function getWidth(id) {
+        return "width:" + columnsWidth[id] + ";"
+    }
+
+    function setWidth(elem, i) {
+        const width = genericCrudTable.getShowFieldWidth(elem.name); // incl.px
+        columnsWidth[i] = width;
+        return "width:" + width + ";"
     }
 
 </script>
@@ -161,7 +170,7 @@
                         <!-- /* istanbul ignore next line */ -->
                         <div id={index}
                              class="td headline {genericCrudTable.isShowField(elem.name) === false ? 'hidden' : 'shown'}"
-                             style="width:{genericCrudTable.getShowFieldWidth(elem.name)};"
+                             style={setWidth(elem, index)}
                              on:mousedown={handleResize}
                              on:mouseup={handleResize}>
                             <span aria-label="Sort{elem.name}"
@@ -190,10 +199,11 @@
                                 {#if (column_order.name === genericCrudTable.getKey(elem))}
                                     <div id={k + '-' + j}
                                          class="td {genericCrudTable.isShowField(column_order.name) === false ? 'hidden' : 'shown'}"
-                                         style="width:{genericCrudTable.getShowFieldWidth(column_order.name)};">
+                                         style={getWidth(j)}>
                                         <div id={name + column_order.name + i + ':disabled'}
                                              class="td-disabled shown"
-                                             aria-label={name + column_order.name + i + ':disabled'}>{table_data[i][column_order.name]}
+                                             aria-label={name + column_order.name + i + ':disabled'}>
+                                            {table_data[i][column_order.name]}
                                         </div>
                                         <textarea id={name + column_order.name + i}
                                                   class="hidden"
