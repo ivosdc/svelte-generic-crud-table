@@ -140,7 +140,9 @@
 
     function handleResize(event) {
         let elem = event.target;
-        let column = document.querySelectorAll("[id$='-" + elem.id + "']")
+        console.log(elem)
+        console.log("[id^='" + elem.id + "']")
+        let column = document.querySelectorAll("[id^='" + elem.id + "']")
         columnsWidth[elem.id] = (elem.offsetWidth - 8) + 'px';
         for (let i = 0; i < column.length; i++) {
             column[i].setAttribute('style', 'width:' + (elem.offsetWidth - 8) + 'px');
@@ -168,7 +170,7 @@
                     <!-- /* istanbul ignore next line */ -->
                     {#each table_config.columns_setting as elem, index}
                         <!-- /* istanbul ignore next line */ -->
-                        <div id={index}
+                        <div id={index + '-' + name}
                              class="td headline {genericCrudTable.isShowField(elem.name) === false ? 'hidden' : 'shown'}"
                              style={setWidth(elem, index)}
                              on:mousedown={handleResize}
@@ -197,7 +199,7 @@
                             {#each Object.entries(tableRow) as elem, k}
                                 <!-- /* istanbul ignore next */ -->
                                 {#if (column_order.name === genericCrudTable.getKey(elem))}
-                                    <div id={k + '-' + j}
+                                    <div id={j + '-' + name + '-' + i + '-' + k}
                                          class="td {genericCrudTable.isShowField(column_order.name) === false ? 'hidden' : 'shown'}"
                                          style={getWidth(j)}>
                                         <div id={name + column_order.name + i + ':disabled'}
