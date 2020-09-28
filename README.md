@@ -69,41 +69,31 @@ Just include the table as seen in the example below.
 
     let myData = [];
 
-    onMount(refresh);
+    onMount(reload);
 
     function refresh() {
         get().then( (result) => {
                 myData = result;
-        }).catch((error) => {
-        }).finally(() =>{
-            initComponent();
         });
     }
 
-    function initComponent() {
-        let elem = document.getElementById('right');
-        elem.click();
-    }
-
     function handleCreate(event) {
-        post({name: "new entry"})
-                .then(() => {
-                    refresh();
+        post({name: "new entry"}).then(() => {
+                    reload();
                 });
     }
 
 
     function handleDelete(event) {
-        delete(event.detail.body.id)
-                .then(() => {
-                    refresh();
+        delete(event.detail.body.id).then(() => {
+                    reload();
                 });
     }
 
     function handleUpdate(event) {
         update(event.detail.body.id, event.detail.body)
                 .then(() => {
-                    refresh();
+                    reload();
                 });
     }
 
@@ -146,23 +136,6 @@ Just include the table as seen in the example below.
         ]
     }
 
-
-    // GenericTablePager
-    let page_data = [];
-    let pager_data;
-    $: pager_data = myData;
-
-    let pager_config = {
-        name: 'crud-table-pager',
-        lines: 5,
-        steps: [1, 2, 5, 10, 20, 50],
-        width: '320px'
-    };
-
-    function handleNewPage(event) {
-        page_data = event.detail.body;
-    }
-
 </script>
 
 <main>
@@ -172,10 +145,7 @@ Just include the table as seen in the example below.
                             on:details={handleDetail}
                             on:sort={handleSort}
                             table_config={table_config}
-                            table_data={page_data}/>
-    <GenericTablePager on:newpage={handleNewPage}
-                       pager_data={pager_data}
-                       pager_config={pager_config}></GenericTablePager>
+                            table_data={myData}/>
 </main>
 
 ```

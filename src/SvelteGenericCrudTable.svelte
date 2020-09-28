@@ -327,6 +327,7 @@
         display: inline-flex;
         padding: 0;
         margin: 0 0 1px;
+        resize: vertical;
     }
 
     .row:hover {
@@ -418,36 +419,23 @@
 
     textarea {
         position: relative;
-        resize: inherit;
+        resize: vertical;
         overflow: hidden;
         top: 0.1em;
         width: 100%;
         min-height: 1.3em;
-        max-height: 2.3em;
+        height: 100%;
         padding: 1px 1px;
         background-color: #ffffff;
         border: none;
         font-size: 0.95em;
         font-weight: 300;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
         text-overflow: ellipsis;
         white-space: pre;
         -webkit-transition: box-shadow 0.3s;
-    }
-
-    textarea:not(:disabled) {
-        height: 2.3em;
-        min-height: 2.3em;
         border-bottom: 0.5px solid #5f5f5f;
         overflow-y: scroll;
-    }
-
-    textarea:disabled {
-        color: #5f5f5f;
-        background-color: inherit;
-        font-size: 0.95em;
-        font-weight: 200;
-        height: 1.3em;
-        max-height: 1.3em;
     }
 
     textarea:focus {
@@ -456,10 +444,6 @@
         white-space: normal;
         overflow: auto;
         padding-top: 1px;
-    }
-
-    textarea:not(:focus) {
-        max-height: 1.3em;
     }
 
 </style>
