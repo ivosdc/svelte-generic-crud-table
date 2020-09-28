@@ -601,7 +601,7 @@ var SvelteGenericCrudTable = (function () {
     	return child_ctx;
     }
 
-    // (163:4) {#if (table_data !== undefined)}
+    // (168:4) {#if (table_data !== undefined)}
     function create_if_block(ctx) {
     	let show_if = Array.isArray(/*table_data*/ ctx[0]);
     	let if_block_anchor;
@@ -639,7 +639,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (165:8) {#if Array.isArray(table_data)}
+    // (170:8) {#if Array.isArray(table_data)}
     function create_if_block_1(ctx) {
     	let div2;
     	let div1;
@@ -763,7 +763,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (169:20) {#each table_config.columns_setting as elem, index}
+    // (174:20) {#each table_config.columns_setting as elem, index}
     function create_each_block_3(ctx) {
     	let div;
     	let span;
@@ -835,7 +835,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (184:24) {#if options.includes(CREATE)}
+    // (189:24) {#if options.includes(CREATE)}
     function create_if_block_9(ctx) {
     	let div;
     	let mounted;
@@ -865,7 +865,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (199:32) {#if (column_order.name === genericCrudTable.getKey(elem))}
+    // (204:32) {#if (column_order.name === genericCrudTable.getKey(elem))}
     function create_if_block_8(ctx) {
     	let div1;
     	let div0;
@@ -946,7 +946,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (214:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
+    // (219:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
     function create_if_block_2(ctx) {
     	let div3;
     	let div0;
@@ -1119,7 +1119,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (220:44) {#if options.includes(DELETE)}
+    // (225:44) {#if options.includes(DELETE)}
     function create_if_block_7(ctx) {
     	let div;
     	let div_aria_label_value;
@@ -1162,7 +1162,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (228:44) {#if options.includes(EDIT)}
+    // (233:44) {#if options.includes(EDIT)}
     function create_if_block_6(ctx) {
     	let div;
     	let mounted;
@@ -1199,7 +1199,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (235:44) {#if options.includes(DETAILS)}
+    // (240:44) {#if options.includes(DETAILS)}
     function create_if_block_5(ctx) {
     	let div;
     	let mounted;
@@ -1236,7 +1236,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (245:44) {#if options.includes(EDIT)}
+    // (250:44) {#if options.includes(EDIT)}
     function create_if_block_4(ctx) {
     	let div0;
     	let t;
@@ -1299,7 +1299,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (263:44) {#if options.includes(DELETE)}
+    // (268:44) {#if options.includes(DELETE)}
     function create_if_block_3(ctx) {
     	let div0;
     	let div0_aria_label_value;
@@ -1368,7 +1368,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (197:28) {#each Object.entries(tableRow) as elem, k}
+    // (202:28) {#each Object.entries(tableRow) as elem, k}
     function create_each_block_2(ctx) {
     	let show_if_1 = /*column_order*/ ctx[36].name === /*genericCrudTable*/ ctx[4].getKey(/*elem*/ ctx[39]);
     	let t;
@@ -1430,7 +1430,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (196:24) {#each table_config.columns_setting as column_order, j}
+    // (201:24) {#each table_config.columns_setting as column_order, j}
     function create_each_block_1(ctx) {
     	let each_1_anchor;
     	let each_value_2 = Object.entries(/*tableRow*/ ctx[33]);
@@ -1486,7 +1486,7 @@ var SvelteGenericCrudTable = (function () {
     	};
     }
 
-    // (194:16) {#each table_data as tableRow, i (tableRow)}
+    // (199:16) {#each table_data as tableRow, i (tableRow)}
     function create_each_block(key_1, ctx) {
     	let div;
     	let t;
@@ -1697,7 +1697,14 @@ var SvelteGenericCrudTable = (function () {
 
     	function handleResize(event) {
     		let elem = event.target;
-    		let column = document.querySelectorAll("[id$='-" + elem.id + "']");
+    		let column;
+
+    		if (shadowed) {
+    			column = document.querySelector("crud-table").shadowRoot.querySelectorAll("[id$='-" + elem.id + "']");
+    		} else {
+    			column = document.querySelectorAll("[id$='-" + elem.id + "']");
+    		}
+
     		columnsWidth[elem.id] = elem.offsetWidth - 8 + "px";
 
     		for (let i = 0; i < column.length; i++) {

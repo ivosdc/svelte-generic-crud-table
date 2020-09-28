@@ -1,4 +1,5 @@
 //config crud-table
+
 let table_config = {
     name: 'Awesome',
     options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
@@ -14,7 +15,7 @@ let genericCrudTable = document.querySelector('crud-table');
 const sortStore = [];
 
 genericCrudTable.setAttribute('table_config', JSON.stringify(table_config));
-genericCrudTable.setAttribute('table_data', JSON.stringify(table_data));
+genericCrudTable.setAttribute('table_data', JSON.stringify(myData));
 
 genericCrudTable.addEventListener('create', () => {
     console.log('create');
@@ -45,13 +46,12 @@ genericCrudTable.addEventListener('delete', (e) => {
     console.log('delete: ' + JSON.stringify(e.detail.body));
     console.log('offset in view:' + e.detail.id);
     for(let i = 0; i < myData.length; i++) {
-        if (JSON.stringify(myData[i]) === JSON.stringify(table_data[e.detail.id])) {
+        if (JSON.stringify(myData[i]) === JSON.stringify(myData[e.detail.id])) {
             myData = arrayRemove(myData, i)
             break;
         }
     }
     refresh();
-    refresh_pager();
 });
 
 genericCrudTable.addEventListener('sort', (e) => {
@@ -76,13 +76,13 @@ genericCrudTable.addEventListener('sort', (e) => {
         return 0;
     };
 
-    table_data = table_data.sort(tableSort);
+    myData = myData.sort(tableSort);
     refresh();
 });
 
 function refresh() {
     genericCrudTable.setAttribute('table_data', JSON.stringify({}));
-    genericCrudTable.setAttribute('table_data', JSON.stringify(table_data));
+    genericCrudTable.setAttribute('table_data', JSON.stringify(myData));
 }
 
 function arrayRemove(arr, value) {
