@@ -344,6 +344,7 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        resize: none;
     }
 
     .td-disabled {
@@ -387,6 +388,7 @@
         max-width: 100px;
         width: 100px;
         opacity: 60%;
+        resize: inherit;
     }
 
     .options {
@@ -421,10 +423,8 @@
         position: relative;
         resize: vertical;
         overflow: hidden;
-        top: 0.1em;
         width: 100%;
-        min-height: 1.3em;
-        height: 100%;
+        height: calc(100% - 2px);
         padding: 1px 1px;
         background-color: #ffffff;
         border: none;
@@ -444,6 +444,10 @@
         white-space: normal;
         overflow: auto;
         padding-top: 1px;
+    }
+
+    textarea:not(:focus) {
+        height: 100%;
     }
 
 </style>
