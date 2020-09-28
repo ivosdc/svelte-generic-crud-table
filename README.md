@@ -43,8 +43,6 @@ Just include the table as seen in the example below.
     <meta name='viewport' content='width=device-width,initial-scale=1'>
     <title>Generic Crud Table</title>
     <link rel='icon' type='image/png' href='favicon.png'>
-    <link rel='stylesheet' href='https://ivosdc.github.io/svelte-generic-table-pager/build/table-pager.css'>
-    <script defer src='https://ivosdc.github.io/svelte-generic-table-pager/build/table-pager.js'></script>
     <link rel='stylesheet' href='https://ivosdc.github.io/svelte-generic-crud-table/global.css'>
     <link rel='stylesheet' href='https://ivosdc.github.io/svelte-generic-crud-table/build/crud-table.css'>
     <script defer src='https://ivosdc.github.io/svelte-generic-crud-table/build/crud-table.js'></script>
@@ -52,19 +50,16 @@ Just include the table as seen in the example below.
 
 <body>
 <hr>
-<table-pager></table-pager>
 <crud-table></crud-table>
 <hr>
 </body>
 <script src='https://ivosdc.github.io/svelte-generic-crud-table/test-data.js'></script>
-<script src='https://ivosdc.github.io/svelte-generic-crud-table/table-pager-config-html.js'></script>
 <script src='https://ivosdc.github.io/svelte-generic-crud-table/crud-table-config-html.js'></script>
 </template>
 </custom-element-demo>
 ```
 
 ```html
-<table-pager></table-pager>
 <crud-table></crud-table>
 ```
 

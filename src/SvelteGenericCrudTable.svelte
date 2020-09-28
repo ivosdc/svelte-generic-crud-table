@@ -140,7 +140,12 @@
 
     function handleResize(event) {
         let elem = event.target;
-        let column = document.querySelectorAll("[id$='-" + elem.id + "']")
+        let column;
+        if (shadowed) {
+            column = document.querySelector('crud-table').shadowRoot.querySelectorAll("[id$='-" + elem.id + "']");
+        } else {
+            column = document.querySelectorAll("[id$='-" + elem.id + "']")
+        }
         columnsWidth[elem.id] = (elem.offsetWidth - 8) + 'px';
         for (let i = 0; i < column.length; i++) {
             column[i].setAttribute('style', 'width:' + (elem.offsetWidth - 8) + 'px');
