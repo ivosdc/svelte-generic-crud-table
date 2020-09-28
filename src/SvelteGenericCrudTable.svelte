@@ -5,7 +5,7 @@
     import {icontrash, iconedit, iconsend, icondetail, iconcancel, iconcreate, iconsave} from './svgIcon'
 
     /* istanbul ignore next line */
-    let shadowed = document.querySelector('crud-table') !== null ? true : false;
+    export let shadowed = false;
 
     const dispatch = createEventDispatcher();
 
