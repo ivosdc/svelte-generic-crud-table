@@ -3,7 +3,8 @@
 - or Svelte-component: `import SvelteGenericCrudTable from 'svelte-generic-crud-table'`
 
 A self-containing sortable table component with inline edit option.
-The example uses `<table-pager>` for pagination.
+See `<table-pager>` with integrated paginator for pagination.
+[table-pager](https://www.npmjs.com/package/svelte-generic-table-pager/ "CrudTable with paginator Example")
 
 Allows CRUD-operations for Object-Arrays.
 
@@ -18,12 +19,6 @@ Allows CRUD-operations for Object-Arrays.
 npm install svelte-generic-crud-table
 ```
 
-For pagination e.g.:
-```
-npm install svelte-generic-table-pager
-```
-
-[![Donate](https://github.com/ivosdc/svelte-generic-crud-table/raw/master/assets/donate.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7V5M288MUT7GE&source=url)
 
 ### State (master):
 [![Build Status](https://travis-ci.com/ivosdc/svelte-generic-crud-table.svg?branch=master)](https://travis-ci.com/ivosdc/svelte-generic-crud-table)
@@ -184,3 +179,5 @@ Just include the table as seen in the example below.
 </main>
 
 ```
+[![Donate](https://github.com/ivosdc/svelte-generic-crud-table/raw/master/assets/donate.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7V5M288MUT7GE&source=url)
+
