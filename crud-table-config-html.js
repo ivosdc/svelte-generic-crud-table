@@ -14,6 +14,7 @@ let table_config = {
 let genericCrudTable = document.querySelector('crud-table');
 const sortStore = [];
 
+genericCrudTable.setAttribute('shadowed', 'true');
 genericCrudTable.setAttribute('table_config', JSON.stringify(table_config));
 genericCrudTable.setAttribute('table_data', JSON.stringify(myData));
 
@@ -21,7 +22,6 @@ genericCrudTable.addEventListener('create', () => {
     console.log('create');
     myData.push({name: 'myName', job: 'code', private: 'not editable'});
     refresh();
-    refresh_pager();
 });
 
 genericCrudTable.addEventListener('details', (e) => {

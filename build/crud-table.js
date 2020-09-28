@@ -777,7 +777,7 @@ var SvelteGenericCrudTable = (function () {
     	let dispose;
 
     	function click_handler(...args) {
-    		return /*click_handler*/ ctx[17](/*elem*/ ctx[39], ...args);
+    		return /*click_handler*/ ctx[18](/*elem*/ ctx[39], ...args);
     	}
 
     	return {
@@ -1127,7 +1127,7 @@ var SvelteGenericCrudTable = (function () {
     	let dispose;
 
     	function click_handler_1(...args) {
-    		return /*click_handler_1*/ ctx[18](/*i*/ ctx[35], ...args);
+    		return /*click_handler_1*/ ctx[19](/*i*/ ctx[35], ...args);
     	}
 
     	return {
@@ -1169,7 +1169,7 @@ var SvelteGenericCrudTable = (function () {
     	let dispose;
 
     	function click_handler_2(...args) {
-    		return /*click_handler_2*/ ctx[19](/*i*/ ctx[35], ...args);
+    		return /*click_handler_2*/ ctx[20](/*i*/ ctx[35], ...args);
     	}
 
     	return {
@@ -1206,7 +1206,7 @@ var SvelteGenericCrudTable = (function () {
     	let dispose;
 
     	function click_handler_3(...args) {
-    		return /*click_handler_3*/ ctx[20](/*i*/ ctx[35], ...args);
+    		return /*click_handler_3*/ ctx[21](/*i*/ ctx[35], ...args);
     	}
 
     	return {
@@ -1246,11 +1246,11 @@ var SvelteGenericCrudTable = (function () {
     	let dispose;
 
     	function click_handler_4(...args) {
-    		return /*click_handler_4*/ ctx[21](/*i*/ ctx[35], ...args);
+    		return /*click_handler_4*/ ctx[22](/*i*/ ctx[35], ...args);
     	}
 
     	function click_handler_5(...args) {
-    		return /*click_handler_5*/ ctx[22](/*i*/ ctx[35], ...args);
+    		return /*click_handler_5*/ ctx[23](/*i*/ ctx[35], ...args);
     	}
 
     	return {
@@ -1310,11 +1310,11 @@ var SvelteGenericCrudTable = (function () {
     	let dispose;
 
     	function click_handler_6(...args) {
-    		return /*click_handler_6*/ ctx[23](/*i*/ ctx[35], ...args);
+    		return /*click_handler_6*/ ctx[24](/*i*/ ctx[35], ...args);
     	}
 
     	function click_handler_7(...args) {
-    		return /*click_handler_7*/ ctx[24](/*i*/ ctx[35], ...args);
+    		return /*click_handler_7*/ ctx[25](/*i*/ ctx[35], ...args);
     	}
 
     	return {
@@ -1594,10 +1594,7 @@ var SvelteGenericCrudTable = (function () {
     const DETAILS = "DETAILS";
 
     function instance($$self, $$props, $$invalidate) {
-    	let shadowed = document.querySelector("crud-table") !== null
-    	? true
-    	: false;
-
+    	let { shadowed = false } = $$props;
     	const dispatch = createEventDispatcher();
 
     	const table_config_default = {
@@ -1742,6 +1739,7 @@ var SvelteGenericCrudTable = (function () {
     	const click_handler_7 = (i, e) => handleDeleteConfirmation(i, e);
 
     	$$self.$$set = $$props => {
+    		if ("shadowed" in $$props) $$invalidate(17, shadowed = $$props.shadowed);
     		if ("table_data" in $$props) $$invalidate(0, table_data = $$props.table_data);
     		if ("table_config" in $$props) $$invalidate(1, table_config = $$props.table_config);
     	};
@@ -1772,7 +1770,7 @@ var SvelteGenericCrudTable = (function () {
     			: []);
     		}
 
-    		if ($$self.$$.dirty[0] & /*table_config*/ 2) {
+    		if ($$self.$$.dirty[0] & /*table_config, shadowed*/ 131074) {
     			 $$invalidate(4, genericCrudTable = new SvelteGenericCrudTableService(table_config, shadowed));
     		}
     	};
@@ -1795,6 +1793,7 @@ var SvelteGenericCrudTable = (function () {
     		handleResize,
     		getWidth,
     		setWidth,
+    		shadowed,
     		click_handler,
     		click_handler_1,
     		click_handler_2,
@@ -1810,7 +1809,20 @@ var SvelteGenericCrudTable = (function () {
     	constructor(options) {
     		super();
     		this.shadowRoot.innerHTML = `<style>main{position:inherit;padding-top:0.4em}.red:hover{fill:red;fill-opacity:80%}.green:hover{fill:limegreen;fill-opacity:80%}.blue:hover{fill:dodgerblue;fill-opacity:80%}.table{display:inline-grid;text-align:left}.thead{display:inline-flex;padding:0 0 0.4em 0}.row{display:inline-flex;padding:0;margin:0 0 1px;resize:vertical}.row:hover{background-color:#efefef}.td{color:#5f5f5f;border:none;border-left:0.1em solid #efefef;font-weight:100;padding:0.2em 0 0.1em 0.4em;float:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;resize:none}.td-disabled{vertical-align:middle;color:#5f5f5f;border:none;font-weight:200;float:left;line-height:1em;min-height:1.3em;max-height:1.3em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;width:-moz-available;width:-webkit-fill-available;width:stretch}.headline{border-bottom:1px solid #dddddd;cursor:pointer;min-height:1.3em;max-height:1.3em;height:1.3em;font-weight:300;padding:0 0 0.3em 0.4em;margin-bottom:0.3em;resize:horizontal}#labelOptions{width:85px;resize:none}.options-field{min-height:1.3em;min-width:100px;max-width:100px;width:100px;opacity:60%;resize:inherit}.options{float:left;position:relative;width:16px;height:16px;padding:0.2em 0.4em;cursor:pointer;opacity:60%}.options:hover{opacity:100%}.options:focus{border:none;outline:none;opacity:100%}.hidden{display:none}.shown{display:block}textarea{position:relative;resize:vertical;overflow:hidden;width:100%;height:calc(100% - 2px);padding:1px 1px;background-color:#ffffff;border:none;font-size:0.95em;font-weight:300;font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;text-overflow:ellipsis;white-space:pre;-webkit-transition:box-shadow 0.3s;border-bottom:0.5px solid #5f5f5f;overflow-y:scroll}textarea:focus{outline:none;font-weight:300;white-space:normal;overflow:auto;padding-top:1px}textarea:not(:focus){height:100%}</style>`;
-    		init(this, { target: this.shadowRoot }, instance, create_fragment, safe_not_equal, { table_data: 0, table_config: 1 }, [-1, -1]);
+
+    		init(
+    			this,
+    			{ target: this.shadowRoot },
+    			instance,
+    			create_fragment,
+    			safe_not_equal,
+    			{
+    				shadowed: 17,
+    				table_data: 0,
+    				table_config: 1
+    			},
+    			[-1, -1]
+    		);
 
     		if (options) {
     			if (options.target) {
@@ -1825,7 +1837,16 @@ var SvelteGenericCrudTable = (function () {
     	}
 
     	static get observedAttributes() {
-    		return ["table_data", "table_config"];
+    		return ["shadowed", "table_data", "table_config"];
+    	}
+
+    	get shadowed() {
+    		return this.$$.ctx[17];
+    	}
+
+    	set shadowed(shadowed) {
+    		this.$set({ shadowed });
+    		flush();
     	}
 
     	get table_data() {
