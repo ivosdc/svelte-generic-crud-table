@@ -17,7 +17,8 @@
     const table_config_default = {
         name: 'crud-table',
         options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
-        columns_setting: []
+        columns_setting: [],
+        details_text: 'detail'
     }
 
     /* istanbul ignore next line */
@@ -240,7 +241,11 @@
                                             {#if options.includes(DETAILS)}
                                                 <div class="options blue" on:click="{(e) => {handleDetails(i, e)}}"
                                                      title="Details" tabindex="0">
-                                                    {@html icondetail}
+                                                    {#if table_config.details_text !== undefined}
+                                                        {table_config.details_text}
+                                                    {:else}
+                                                        {@html icondetail}
+                                                    {/if}
                                                 </div>
                                             {/if}
                                         </div>
@@ -378,7 +383,7 @@
     }
 
     #labelOptions {
-        width: 85px;
+        width: 55px;
         resize: none;
     }
 
@@ -398,11 +403,14 @@
         height: 16px;
         padding: 0.2em 0.4em;
         cursor: pointer;
-        opacity: 60%;
+        fill: #999999;
+        color: #666666;
+        line-height: 0.9em;
     }
 
     .options:hover {
-        opacity: 100%;
+        color: #333333;
+        text-decoration: underline;
     }
 
     .options:focus {

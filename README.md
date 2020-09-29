@@ -133,7 +133,8 @@ Just include the table as seen in the example below.
             {name: 'job', show: true, edit: true, width: '100px'},
             {name: 'name', show: true, edit: true, width: '200px'},
             {name: 'private', show: true, edit: false, width: '200px'}
-        ]
+        ],
+        details_text: 'detail'   // replace the standard icon with an text-link
     }
 
 </script>
