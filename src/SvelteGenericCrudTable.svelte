@@ -383,15 +383,15 @@
     }
 
     #labelOptions {
-        width: 55px;
+        width: 85px;
         resize: none;
     }
 
     .options-field {
         min-height: 1.3em;
-        min-width: 100px;
-        max-width: 100px;
-        width: 100px;
+        max-height: 1.3em;
+        width: fit-content;
+        width: -moz-fit-content;
         opacity: 60%;
         resize: inherit;
     }
@@ -399,7 +399,8 @@
     .options {
         float: left;
         position: relative;
-        width: 16px;
+        width: fit-content;
+        width: -moz-fit-content;
         height: 16px;
         padding: 0.2em 0.4em;
         cursor: pointer;
@@ -432,7 +433,7 @@
         resize: vertical;
         overflow: hidden;
         width: 100%;
-        height: calc(100% - 2px);
+        min-height: calc(100% - 2px);
         padding: 1px 1px;
         background-color: #ffffff;
         border: none;
