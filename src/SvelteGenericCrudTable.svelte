@@ -433,7 +433,8 @@
         resize: vertical;
         overflow: hidden;
         width: 100%;
-        min-height: calc(100% - 2px);
+        min-height: 1.3em;
+        height: 100%;
         padding: 1px 1px;
         background-color: #ffffff;
         border: none;

@@ -71,7 +71,7 @@ Just include the table as seen in the example below.
 
     onMount(reload);
 
-    function refresh() {
+    function reload() {
         get().then( (result) => {
                 myData = result;
         });
