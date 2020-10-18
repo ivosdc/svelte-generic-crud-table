@@ -38,8 +38,6 @@ Just include the table as seen in the example below.
     <meta name='viewport' content='width=device-width,initial-scale=1'>
     <title>Generic Crud Table</title>
     <link rel='icon' type='image/png' href='favicon.png'>
-    <link rel='stylesheet' href='https://ivosdc.github.io/svelte-generic-crud-table/global.css'>
-    <link rel='stylesheet' href='https://ivosdc.github.io/svelte-generic-crud-table/build/crud-table.css'>
     <script defer src='https://ivosdc.github.io/svelte-generic-crud-table/build/crud-table.js'></script>
 </head>
 
