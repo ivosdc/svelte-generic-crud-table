@@ -14,11 +14,8 @@ export default {
     plugins: [
         svelte({
             customElement: true,
-            tag: null,
-            emitCss: true,
-            css: (css) => {
-                css.write('dist/build/crud-table.css');
-            }
+            tag: "crud-table",
+            emitCss: true
         }),
         resolve({
                 extensions: ['.svelte', '.mjs', '.js', '.jsx', '.json'],
