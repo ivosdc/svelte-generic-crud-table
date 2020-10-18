@@ -4,5 +4,4 @@
 **/.idea
 .settings
 /node_modules
-/dist/build
 /coverage
