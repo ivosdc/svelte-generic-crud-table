@@ -62,7 +62,6 @@ Just include the table as seen in the example below.
 ```html
 <script>
     import SvelteGenericCrudTable from "svelte-generic-crud-table";
-    import GenericTablePager from "svelte-generic-table-pager";
     import {onMount} from 'svelte';
     import {goto} from "@sapper/app";
 
