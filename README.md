@@ -30,7 +30,7 @@ Just include the table as seen in the example below.
 
 
 ### `<crud-table></crud-table>`
-```
+```html
 <custom-element-demo>
 <template>
 <head>
@@ -59,7 +59,8 @@ Just include the table as seen in the example below.
 ```
 
 ###  Svelte-Component - implementation example:
-```
+```html
+<script>
     import SvelteGenericCrudTable from "svelte-generic-crud-table";
     import GenericTablePager from "svelte-generic-table-pager";
     import {onMount} from 'svelte';
