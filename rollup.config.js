@@ -8,8 +8,8 @@ export default {
         'src/index.js'
     ],
     output: [
-        {file: pkg.module, format: 'iife', name: 'SvelteGenericCrudTable'},
-        {file: pkg.main, format: 'iife', name: 'SvelteGenericCrudTable'},
+        {file: pkg.module, format: 'es', name: 'SvelteGenericCrudTable'},
+        {file: pkg.main, format: 'umd', name: 'SvelteGenericCrudTable'},
     ],
     plugins: [
         svelte({
