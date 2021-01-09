@@ -28,6 +28,27 @@ npm install svelte-generic-crud-table
 Use the svelte-generic-crud-table in your component to show and, if you like, edit,update and delete it's content.
 Just include the table as seen in the example below.
 
+## column settings
+Settings regarding acolumn can be specified in the table_config:
+```html
+    const table_config = {
+        name: 'Awesome',
+        options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
+        columns_setting: [
+            {name: 'id', show: false, edit: true, width: '200px'},
+            {name: 'job', show: true, edit: true, width: '100px'},
+            {name: 'name', show: true, edit: true, width: '200px',
+            {name: 'private', show: true, edit: false, width: '200px'},
+            {name: 'url', show: true, edit: true, width: '200px', type: 'html'}
+        ],
+        details_text: 'detail'   // replace the standard icon with an text-link
+    }
+```
+
+There are two types:
+- text: Default.
+- html: NEW! The value/text will be interpreted as HTML.
+
 
 ### `<crud-table></crud-table>`
 ```html
@@ -130,7 +151,8 @@ Just include the table as seen in the example below.
             {name: 'id', show: false, edit: true, width: '200px'},
             {name: 'job', show: true, edit: true, width: '100px'},
             {name: 'name', show: true, edit: true, width: '200px'},
-            {name: 'private', show: true, edit: false, width: '200px'}
+            {name: 'private', show: true, edit: false, width: '200px'},
+            {name: 'html', show: true, edit: true, size: '200px', type: 'html'}
         ],
         details_text: 'detail'   // replace the standard icon with an text-link
     }
