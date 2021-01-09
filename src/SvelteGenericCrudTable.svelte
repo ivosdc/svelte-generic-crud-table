@@ -172,7 +172,7 @@
         {#if Array.isArray(table_data)}
             <div class="table">
                 <div class="thead"
-                     style="max-height:{(table_config.row_settings !== undefined) && (table_config.row_settings.height !== undefined) ? table_config.row_settings.height : table_config_default.row_settings.height};">
+                     style="border-left: 0.1em solid #efefef;max-height:{(table_config.row_settings !== undefined) && (table_config.row_settings.height !== undefined) ? table_config.row_settings.height : table_config_default.row_settings.height};">
                     <!-- /* istanbul ignore next line */ -->
                     {#each table_config.columns_setting as elem, index}
                         <!-- /* istanbul ignore next line */ -->
@@ -201,7 +201,7 @@
                 <!-- /* istanbul ignore next line */ -->
                 {#each table_data as tableRow, i (tableRow)}
                     <div class="row"
-                         style="min-height:{(table_config.row_settings !== undefined) && (table_config.row_settings.height !== undefined) ? table_config.row_settings.height : table_config_default.row_settings.height};">
+                         style="background-color:{i % 2 === 0 ? '#fefefe' : 'none'};min-height:{(table_config.row_settings !== undefined) && (table_config.row_settings.height !== undefined) ? table_config.row_settings.height : table_config_default.row_settings.height};">
                         {#each table_config.columns_setting as column_order, j}
                             {#each Object.entries(tableRow) as elem, k}
                                 <!-- /* istanbul ignore next */ -->
@@ -349,7 +349,7 @@
     .td {
         color: #5f5f5f;
         border: none;
-        border-left: 0.1em solid #efefef;
+        border-left: 0.1em solid transparent;
         font-weight: 100;
         padding: 0.2em 0 0.1em 0.4em;
         float: left;
