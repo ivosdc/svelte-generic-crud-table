@@ -902,15 +902,18 @@ function create_if_block_11(ctx) {
 
 // (205:32) {#if (column_order.name === genericCrudTable.getKey(elem))}
 function create_if_block_9(ctx) {
-	let div;
+	let div1;
+	let div0;
+	let div0_id_value;
+	let div0_aria_label_value;
 	let t;
 	let textarea;
 	let textarea_id_value;
 	let textarea_aria_label_value;
 	let textarea_value_value;
-	let div_id_value;
-	let div_class_value;
-	let div_style_value;
+	let div1_id_value;
+	let div1_class_value;
+	let div1_style_value;
 
 	function select_block_type(ctx, dirty) {
 		if (/*column_order*/ ctx[36].type === "html") return create_if_block_10;
@@ -922,27 +925,32 @@ function create_if_block_9(ctx) {
 
 	return {
 		c() {
-			div = element("div");
+			div1 = element("div");
+			div0 = element("div");
 			if_block.c();
 			t = space();
 			textarea = element("textarea");
+			attr(div0, "id", div0_id_value = /*name*/ ctx[2] + /*column_order*/ ctx[36].name + /*i*/ ctx[35] + ":disabled");
+			attr(div0, "class", "td-disabled shown");
+			attr(div0, "aria-label", div0_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[36].name + /*i*/ ctx[35] + ":disabled");
 			attr(textarea, "id", textarea_id_value = /*name*/ ctx[2] + /*column_order*/ ctx[36].name + /*i*/ ctx[35]);
 			attr(textarea, "class", "hidden");
 			attr(textarea, "aria-label", textarea_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[36].name + /*i*/ ctx[35]);
 			textarea.value = textarea_value_value = /*table_data*/ ctx[0][/*i*/ ctx[35]][/*column_order*/ ctx[36].name];
-			attr(div, "id", div_id_value = /*k*/ ctx[41] + "-" + /*j*/ ctx[38]);
+			attr(div1, "id", div1_id_value = /*k*/ ctx[41] + "-" + /*j*/ ctx[38]);
 
-			attr(div, "class", div_class_value = "td " + (/*genericCrudTable*/ ctx[4].isShowField(/*column_order*/ ctx[36].name) === false
+			attr(div1, "class", div1_class_value = "td " + (/*genericCrudTable*/ ctx[4].isShowField(/*column_order*/ ctx[36].name) === false
 			? "hidden"
 			: "shown"));
 
-			attr(div, "style", div_style_value = /*getWidth*/ ctx[15](/*j*/ ctx[38]));
+			attr(div1, "style", div1_style_value = /*getWidth*/ ctx[15](/*j*/ ctx[38]));
 		},
 		m(target, anchor) {
-			insert(target, div, anchor);
-			if_block.m(div, null);
-			append(div, t);
-			append(div, textarea);
+			insert(target, div1, anchor);
+			append(div1, div0);
+			if_block.m(div0, null);
+			append(div1, t);
+			append(div1, textarea);
 		},
 		p(ctx, dirty) {
 			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
@@ -953,8 +961,16 @@ function create_if_block_9(ctx) {
 
 				if (if_block) {
 					if_block.c();
-					if_block.m(div, t);
+					if_block.m(div0, null);
 				}
+			}
+
+			if (dirty[0] & /*name, table_config, table_data*/ 7 && div0_id_value !== (div0_id_value = /*name*/ ctx[2] + /*column_order*/ ctx[36].name + /*i*/ ctx[35] + ":disabled")) {
+				attr(div0, "id", div0_id_value);
+			}
+
+			if (dirty[0] & /*name, table_config, table_data*/ 7 && div0_aria_label_value !== (div0_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[36].name + /*i*/ ctx[35] + ":disabled")) {
+				attr(div0, "aria-label", div0_aria_label_value);
 			}
 
 			if (dirty[0] & /*name, table_config, table_data*/ 7 && textarea_id_value !== (textarea_id_value = /*name*/ ctx[2] + /*column_order*/ ctx[36].name + /*i*/ ctx[35])) {
@@ -969,57 +985,41 @@ function create_if_block_9(ctx) {
 				textarea.value = textarea_value_value;
 			}
 
-			if (dirty[0] & /*genericCrudTable, table_config*/ 18 && div_class_value !== (div_class_value = "td " + (/*genericCrudTable*/ ctx[4].isShowField(/*column_order*/ ctx[36].name) === false
+			if (dirty[0] & /*genericCrudTable, table_config*/ 18 && div1_class_value !== (div1_class_value = "td " + (/*genericCrudTable*/ ctx[4].isShowField(/*column_order*/ ctx[36].name) === false
 			? "hidden"
 			: "shown"))) {
-				attr(div, "class", div_class_value);
+				attr(div1, "class", div1_class_value);
 			}
 		},
 		d(detaching) {
-			if (detaching) detach(div);
+			if (detaching) detach(div1);
 			if_block.d();
 		}
 	};
 }
 
-// (211:44) {:else}
+// (214:44) {:else}
 function create_else_block_1(ctx) {
-	let div;
 	let t_value = /*table_data*/ ctx[0][/*i*/ ctx[35]][/*column_order*/ ctx[36].name] + "";
 	let t;
-	let div_id_value;
-	let div_aria_label_value;
 
 	return {
 		c() {
-			div = element("div");
 			t = text(t_value);
-			attr(div, "id", div_id_value = /*name*/ ctx[2] + /*column_order*/ ctx[36].name + /*i*/ ctx[35] + ":disabled");
-			attr(div, "class", "td-disabled shown");
-			attr(div, "aria-label", div_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[36].name + /*i*/ ctx[35] + ":disabled");
 		},
 		m(target, anchor) {
-			insert(target, div, anchor);
-			append(div, t);
+			insert(target, t, anchor);
 		},
 		p(ctx, dirty) {
 			if (dirty[0] & /*table_data, table_config*/ 3 && t_value !== (t_value = /*table_data*/ ctx[0][/*i*/ ctx[35]][/*column_order*/ ctx[36].name] + "")) set_data(t, t_value);
-
-			if (dirty[0] & /*name, table_config, table_data*/ 7 && div_id_value !== (div_id_value = /*name*/ ctx[2] + /*column_order*/ ctx[36].name + /*i*/ ctx[35] + ":disabled")) {
-				attr(div, "id", div_id_value);
-			}
-
-			if (dirty[0] & /*name, table_config, table_data*/ 7 && div_aria_label_value !== (div_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[36].name + /*i*/ ctx[35] + ":disabled")) {
-				attr(div, "aria-label", div_aria_label_value);
-			}
 		},
 		d(detaching) {
-			if (detaching) detach(div);
+			if (detaching) detach(t);
 		}
 	};
 }
 
-// (209:40) {#if column_order.type === 'html'}
+// (212:44) {#if column_order.type === 'html'}
 function create_if_block_10(ctx) {
 	let html_tag;
 	let raw_value = /*table_data*/ ctx[0][/*i*/ ctx[35]][/*column_order*/ ctx[36].name] + "";
