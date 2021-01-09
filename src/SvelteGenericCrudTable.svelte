@@ -172,7 +172,7 @@
         {#if Array.isArray(table_data)}
             <div class="table">
                 <div class="thead"
-                     style="border-left: 0.1em solid #efefef;max-height:{(table_config.row_settings !== undefined) && (table_config.row_settings.height !== undefined) ? table_config.row_settings.height : table_config_default.row_settings.height};">
+                     style="max-height:{(table_config.row_settings !== undefined) && (table_config.row_settings.height !== undefined) ? table_config.row_settings.height : table_config_default.row_settings.height};">
                     <!-- /* istanbul ignore next line */ -->
                     {#each table_config.columns_setting as elem, index}
                         <!-- /* istanbul ignore next line */ -->
@@ -200,8 +200,8 @@
 
                 <!-- /* istanbul ignore next line */ -->
                 {#each table_data as tableRow, i (tableRow)}
-                    <div class="row"
-                         style="background-color:{i % 2 === 0 ? '#efefef' : '#ffffff'};min-height:{(table_config.row_settings !== undefined) && (table_config.row_settings.height !== undefined) ? table_config.row_settings.height : table_config_default.row_settings.height};">
+                    <div class="row {i % 2 === 0 ? 'dark' : ''}"
+                         style="min-height:{(table_config.row_settings !== undefined) && (table_config.row_settings.height !== undefined) ? table_config.row_settings.height : table_config_default.row_settings.height};">
                         {#each table_config.columns_setting as column_order, j}
                             {#each Object.entries(tableRow) as elem, k}
                                 <!-- /* istanbul ignore next */ -->
@@ -342,8 +342,12 @@
         resize: vertical;
     }
 
-    .row:hover {
+    .dark {
         background-color: #efefef;
+    }
+
+    .row:hover {
+        background-color: rgba(0,0,0,0.1);
     }
 
     .td {
