@@ -722,7 +722,6 @@ function create_if_block_1(ctx) {
 			attr(div0, "id", "labelOptions");
 			attr(div0, "class", "td headline");
 			attr(div1, "class", "thead");
-			set_style(div1, "border-left", "0.1em solid #efefef");
 
 			set_style(div1, "max-height", /*table_config*/ ctx[1].row_settings !== undefined && /*table_config*/ ctx[1].row_settings.height !== undefined
 			? /*table_config*/ ctx[1].row_settings.height
@@ -1661,6 +1660,7 @@ function create_each_block_1(ctx) {
 function create_each_block(key_1, ctx) {
 	let div;
 	let t;
+	let div_class_value;
 	let each_value_1 = /*table_config*/ ctx[1].columns_setting;
 	let each_blocks = [];
 
@@ -1679,8 +1679,7 @@ function create_each_block(key_1, ctx) {
 			}
 
 			t = space();
-			attr(div, "class", "row");
-			set_style(div, "background-color", /*i*/ ctx[35] % 2 === 0 ? "#efefef" : "#ffffff");
+			attr(div, "class", div_class_value = "row " + (/*i*/ ctx[35] % 2 === 0 ? "dark" : ""));
 
 			set_style(div, "min-height", /*table_config*/ ctx[1].row_settings !== undefined && /*table_config*/ ctx[1].row_settings.height !== undefined
 			? /*table_config*/ ctx[1].row_settings.height
@@ -1723,8 +1722,8 @@ function create_each_block(key_1, ctx) {
 				each_blocks.length = each_value_1.length;
 			}
 
-			if (dirty[0] & /*table_data*/ 1) {
-				set_style(div, "background-color", /*i*/ ctx[35] % 2 === 0 ? "#efefef" : "#ffffff");
+			if (dirty[0] & /*table_data*/ 1 && div_class_value !== (div_class_value = "row " + (/*i*/ ctx[35] % 2 === 0 ? "dark" : ""))) {
+				attr(div, "class", div_class_value);
 			}
 
 			if (dirty[0] & /*table_config*/ 2) {
@@ -2000,7 +1999,7 @@ function instance($$self, $$props, $$invalidate) {
 class SvelteGenericCrudTable extends SvelteElement {
 	constructor(options) {
 		super();
-		this.shadowRoot.innerHTML = `<style>main{position:inherit;padding-top:0.4em}.red:hover{fill:red;fill-opacity:80%}.green:hover{fill:limegreen;fill-opacity:80%}.blue:hover{fill:dodgerblue;fill-opacity:80%}.table{display:inline-grid;text-align:left}.thead{display:inline-flex;padding:0 0 0.4em 0}.row{display:inline-flex;padding:0;margin:0 0 1px;resize:vertical}.row:hover{background-color:#efefef}.td{color:#5f5f5f;border:none;border-left:0.1em solid transparent;font-weight:100;padding:0.2em 0 0.1em 0.4em;float:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;resize:none}.td-disabled{vertical-align:middle;color:#5f5f5f;border:none;font-weight:200;float:left;line-height:1em;min-height:1.3em;max-height:1.3em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;width:-moz-available;width:-webkit-fill-available;width:stretch}.headline{border-bottom:1px solid #dddddd;cursor:pointer;min-height:1.3em;max-height:1.3em;height:1.3em;font-weight:300;padding:0 0 0.3em 0.4em;margin-bottom:0.3em;resize:horizontal}#labelOptions{width:85px;resize:none}.options-field{min-height:1.3em;max-height:1.3em;width:fit-content;width:-moz-fit-content;opacity:60%;resize:inherit}.options{float:left;position:relative;width:fit-content;width:-moz-fit-content;height:16px;padding:0.2em 0.4em;cursor:pointer;fill:#999999;color:#666666;line-height:0.9em}.options:hover{color:#333333;text-decoration:underline}.options:focus{border:none;outline:none;opacity:100%}.hidden{display:none}.shown{display:block}textarea{position:relative;resize:vertical;overflow:hidden;width:100%;height:100%;min-height:1.3em;padding:1px 1px;background-color:#ffffff;border:none;font-size:0.95em;font-weight:300;font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;text-overflow:ellipsis;white-space:pre;-webkit-transition:box-shadow 0.3s;border-bottom:0.5px solid #5f5f5f;overflow-y:scroll}textarea:focus{outline:none;font-weight:300;white-space:normal;overflow:auto;padding-top:1px}textarea:not(:focus){height:100%}</style>`;
+		this.shadowRoot.innerHTML = `<style>main{position:inherit;padding-top:0.4em}.red:hover{fill:red;fill-opacity:80%}.green:hover{fill:limegreen;fill-opacity:80%}.blue:hover{fill:dodgerblue;fill-opacity:80%}.table{display:inline-grid;text-align:left}.thead{display:inline-flex;padding:0 0 0.4em 0}.row{display:inline-flex;padding:0;margin:0 0 1px;resize:vertical}.dark{background-color:#efefef}.row:hover{background-color:rgba(0,0,0,0.1)}.td{color:#5f5f5f;border:none;border-left:0.1em solid transparent;font-weight:100;padding:0.2em 0 0.1em 0.4em;float:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;resize:none}.td-disabled{vertical-align:middle;color:#5f5f5f;border:none;font-weight:200;float:left;line-height:1em;min-height:1.3em;max-height:1.3em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;width:-moz-available;width:-webkit-fill-available;width:stretch}.headline{border-bottom:1px solid #dddddd;cursor:pointer;min-height:1.3em;max-height:1.3em;height:1.3em;font-weight:300;padding:0 0 0.3em 0.4em;margin-bottom:0.3em;resize:horizontal}#labelOptions{width:85px;resize:none}.options-field{min-height:1.3em;max-height:1.3em;width:fit-content;width:-moz-fit-content;opacity:60%;resize:inherit}.options{float:left;position:relative;width:fit-content;width:-moz-fit-content;height:16px;padding:0.2em 0.4em;cursor:pointer;fill:#999999;color:#666666;line-height:0.9em}.options:hover{color:#333333;text-decoration:underline}.options:focus{border:none;outline:none;opacity:100%}.hidden{display:none}.shown{display:block}textarea{position:relative;resize:vertical;overflow:hidden;width:100%;height:100%;min-height:1.3em;padding:1px 1px;background-color:#ffffff;border:none;font-size:0.95em;font-weight:300;font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;text-overflow:ellipsis;white-space:pre;-webkit-transition:box-shadow 0.3s;border-bottom:0.5px solid #5f5f5f;overflow-y:scroll}textarea:focus{outline:none;font-weight:300;white-space:normal;overflow:auto;padding-top:1px}textarea:not(:focus){height:100%}</style>`;
 
 		init(
 			this,

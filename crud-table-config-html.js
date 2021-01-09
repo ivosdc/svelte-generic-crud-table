@@ -10,7 +10,7 @@ let table_config = {
         {name: 'private', show: true, edit: false, size: '200px'},
         {name: 'html', show: true, edit: true, size: '500px', type: 'html'}
     ],
-    row_settings: {height: '2em'}
+    row_settings: {height: '1.3em'}
 }
 
 let genericCrudTable = document.querySelector('crud-table');
