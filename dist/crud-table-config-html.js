@@ -8,8 +8,9 @@ let table_config = {
         {name: 'job', show: true, edit: true, size: '200px'},
         {name: 'name', show: true, edit: true, size: '200px'},
         {name: 'private', show: true, edit: false, size: '200px'},
-        {name: 'html', show: true, edit: true, size: '200px', type: 'html'}
-    ]
+        {name: 'html', show: true, edit: true, size: '500px', type: 'html'}
+    ],
+    row_settings: {height: '2em'}
 }
 
 let genericCrudTable = document.querySelector('crud-table');
