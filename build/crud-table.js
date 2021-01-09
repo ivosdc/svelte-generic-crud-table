@@ -729,7 +729,7 @@
     			attr(div0, "class", "td headline");
     			attr(div1, "class", "thead");
 
-    			set_style(div1, "height", /*table_config*/ ctx[1].row_settings !== undefined && /*table_config*/ ctx[1].row_settings.height !== undefined
+    			set_style(div1, "max-height", /*table_config*/ ctx[1].row_settings !== undefined && /*table_config*/ ctx[1].row_settings.height !== undefined
     			? /*table_config*/ ctx[1].row_settings.height
     			: /*table_config_default*/ ctx[5].row_settings.height);
 
@@ -792,7 +792,7 @@
     			}
 
     			if (dirty[0] & /*table_config*/ 2) {
-    				set_style(div1, "height", /*table_config*/ ctx[1].row_settings !== undefined && /*table_config*/ ctx[1].row_settings.height !== undefined
+    				set_style(div1, "max-height", /*table_config*/ ctx[1].row_settings !== undefined && /*table_config*/ ctx[1].row_settings.height !== undefined
     				? /*table_config*/ ctx[1].row_settings.height
     				: /*table_config_default*/ ctx[5].row_settings.height);
     			}
@@ -1686,7 +1686,7 @@
     			t = space();
     			attr(div, "class", "row");
 
-    			set_style(div, "height", /*table_config*/ ctx[1].row_settings !== undefined && /*table_config*/ ctx[1].row_settings.height !== undefined
+    			set_style(div, "min-height", /*table_config*/ ctx[1].row_settings !== undefined && /*table_config*/ ctx[1].row_settings.height !== undefined
     			? /*table_config*/ ctx[1].row_settings.height
     			: /*table_config_default*/ ctx[5].row_settings.height);
 
@@ -1728,7 +1728,7 @@
     			}
 
     			if (dirty[0] & /*table_config*/ 2) {
-    				set_style(div, "height", /*table_config*/ ctx[1].row_settings !== undefined && /*table_config*/ ctx[1].row_settings.height !== undefined
+    				set_style(div, "min-height", /*table_config*/ ctx[1].row_settings !== undefined && /*table_config*/ ctx[1].row_settings.height !== undefined
     				? /*table_config*/ ctx[1].row_settings.height
     				: /*table_config_default*/ ctx[5].row_settings.height);
     			}
