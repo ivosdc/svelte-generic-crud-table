@@ -18,6 +18,7 @@
         name: 'crud-table',
         options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
         columns_setting: [],
+        row_settings: {height: '1.3em'},
         details_text: 'detail'
     }
 
@@ -170,7 +171,7 @@
         <!-- /* istanbul ignore next line */ -->
         {#if Array.isArray(table_data)}
             <div class="table">
-                <div class="thead" style="max-height: 1.3em;">
+                <div class="thead" style="height:{(table_config.row_settings.height !== undefined) ? table_config.row_settings.height : table_config_default.row_settings.height};">
                     <!-- /* istanbul ignore next line */ -->
                     {#each table_config.columns_setting as elem, index}
                         <!-- /* istanbul ignore next line */ -->
@@ -198,7 +199,7 @@
 
                 <!-- /* istanbul ignore next line */ -->
                 {#each table_data as tableRow, i (tableRow)}
-                    <div class="row">
+                    <div class="row" style="height:{(table_config.row_settings.height !== undefined) ? table_config.row_settings.height : table_config_default.row_settings.height};">
                         {#each table_config.columns_setting as column_order, j}
                             {#each Object.entries(tableRow) as elem, k}
                                 <!-- /* istanbul ignore next */ -->
@@ -363,8 +364,6 @@
         font-weight: 200;
         float: left;
         line-height: 1em;
-        min-height: 1.3em;
-        max-height: 1.3em;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -377,9 +376,6 @@
     .headline {
         border-bottom: 1px solid #dddddd;
         cursor: pointer;
-        min-height: 1.3em;
-        max-height: 1.3em;
-        height: 1.3em;
         font-weight: 300;
         padding: 0 0 0.3em 0.4em;
         margin-bottom: 0.3em;
@@ -392,8 +388,6 @@
     }
 
     .options-field {
-        min-height: 1.3em;
-        max-height: 1.3em;
         width: fit-content;
         width: -moz-fit-content;
         opacity: 60%;
@@ -437,7 +431,6 @@
         resize: vertical;
         overflow: hidden;
         width: 100%;
-        min-height: 1.3em;
         height: 100%;
         padding: 1px 1px;
         background-color: #ffffff;
