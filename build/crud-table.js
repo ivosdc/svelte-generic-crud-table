@@ -1686,7 +1686,7 @@
 
     			t = space();
     			attr(div, "class", "row");
-    			set_style(div, "background-color", /*i*/ ctx[35] % 2 === 0 ? "#fefefe" : "none");
+    			set_style(div, "background-color", /*i*/ ctx[35] % 2 === 0 ? "#efefef" : "#ffffff");
 
     			set_style(div, "min-height", /*table_config*/ ctx[1].row_settings !== undefined && /*table_config*/ ctx[1].row_settings.height !== undefined
     			? /*table_config*/ ctx[1].row_settings.height
@@ -1730,7 +1730,7 @@
     			}
 
     			if (dirty[0] & /*table_data*/ 1) {
-    				set_style(div, "background-color", /*i*/ ctx[35] % 2 === 0 ? "#fefefe" : "none");
+    				set_style(div, "background-color", /*i*/ ctx[35] % 2 === 0 ? "#efefef" : "#ffffff");
     			}
 
     			if (dirty[0] & /*table_config*/ 2) {
