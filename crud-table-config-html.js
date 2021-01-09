@@ -7,7 +7,8 @@ let table_config = {
         {name: 'id', show: false, edit: true, size: '200px'},
         {name: 'job', show: true, edit: true, size: '200px'},
         {name: 'name', show: true, edit: true, size: '200px'},
-        {name: 'private', show: true, edit: false, size: '200px'}
+        {name: 'private', show: true, edit: false, size: '200px'},
+        {name: 'html', show: true, edit: true, size: '200px', type: 'html'}
     ]
 }
 
