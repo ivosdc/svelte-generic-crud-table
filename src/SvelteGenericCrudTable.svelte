@@ -206,15 +206,15 @@
                                     <div id={k + '-' + j}
                                          class="td {genericCrudTable.isShowField(column_order.name) === false ? 'hidden' : 'shown'}"
                                          style={getWidth(j)}>
-                                        {#if column_order.type === 'html'}
-                                            {@html table_data[i][column_order.name]}
-                                            {:else}
                                         <div id={name + column_order.name + i + ':disabled'}
                                              class="td-disabled shown"
                                              aria-label={name + column_order.name + i + ':disabled'}>
-                                            {table_data[i][column_order.name]}
-                                        </div>
+                                            {#if column_order.type === 'html'}
+                                                {@html table_data[i][column_order.name]}
+                                            {:else}
+                                                {table_data[i][column_order.name]}
                                             {/if}
+                                        </div>
                                         <textarea id={name + column_order.name + i}
                                                   class="hidden"
                                                   aria-label={name + column_order.name + i}>{table_data[i][column_order.name]}</textarea>
