@@ -366,6 +366,8 @@
         font-weight: 200;
         float: left;
         line-height: 1em;
+        min-height: 1.3em;
+        max-height: 1.3em;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -378,6 +380,9 @@
     .headline {
         border-bottom: 1px solid #dddddd;
         cursor: pointer;
+        min-height: 1.3em;
+        max-height: 1.3em;
+        height: 1.3em;
         font-weight: 300;
         padding: 0 0 0.3em 0.4em;
         margin-bottom: 0.3em;
@@ -390,6 +395,8 @@
     }
 
     .options-field {
+        min-height: 1.3em;
+        max-height: 1.3em;
         width: fit-content;
         width: -moz-fit-content;
         opacity: 60%;
@@ -434,6 +441,7 @@
         overflow: hidden;
         width: 100%;
         height: 100%;
+        min-height: 1.3em;
         padding: 1px 1px;
         background-color: #ffffff;
         border: none;
