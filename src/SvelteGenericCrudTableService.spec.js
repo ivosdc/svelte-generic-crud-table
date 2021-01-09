@@ -6,7 +6,8 @@ const config = {
     columns_setting: [
         {name: 'id', show: false, edit: true, width: '200px'},
         {name: 'name', show: true, edit: true, width: '200px'}
-    ]
+    ],
+    row_settings: {height: '1.3em'}
 }
 
 
