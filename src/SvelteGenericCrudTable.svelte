@@ -382,7 +382,6 @@
     }
 
     .headline {
-        border-bottom: 1px solid #dddddd;
         cursor: pointer;
         min-height: 1.3em;
         max-height: 1.3em;
