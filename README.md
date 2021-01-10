@@ -29,7 +29,7 @@ Use the svelte-generic-crud-table in your component to show and, if you like, ed
 Just include the table as seen in the example below.
 
 ## column settings
-Settings regarding acolumn can be specified in the table_config:
+Settings regarding a column can be specified in the table_config:
 ```html
     const table_config = {
         name: 'Awesome',
@@ -49,6 +49,7 @@ There are two types:
 - text: Default.
 - html: NEW! The value/text will be interpreted as HTML.
 
+[See example:](https://ivosdc.github.io/svelte-generic-crud-table/ "GeneralCrudTable Example")
 
 ### `<crud-table></crud-table>`
 ```html
