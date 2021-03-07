@@ -36,18 +36,22 @@ Settings regarding a column can be specified in the table_config:
         options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
         columns_setting: [
             {name: 'id', show: false, edit: true, width: '200px'},
-            {name: 'job', show: true, edit: true, width: '100px'},
+            {name: 'job', show: true, edit: true, width: '100px', description: 'Your job'},
             {name: 'name', show: true, edit: true, width: '200px',
-            {name: 'private', show: true, edit: false, width: '200px'},
+            {name: 'private', show: true, edit: false, width: '200px', description: 'Your thigs'},
             {name: 'url', show: true, edit: true, width: '200px', type: 'html'}
         ],
         details_text: 'detail'   // replace the standard icon with an text-link
     }
 ```
-
-There are two types:
-- text: Default.
-- html: NEW! The value/text will be interpreted as HTML.
+- *name*: the key from your data-array. This is used as column name.
+- *show*: true/false; Should this column displayed?
+- *edit*: true/false; Set this field editable or not.
+- *width*: px/em; set the field width.
+- *description*: A tooltip for the columns name. 
+- *type*: There are two types:
+    - *text*: Default.
+    - *html*: The value/text will be interpreted as HTML.
 
 [See example:](https://ivosdc.github.io/svelte-generic-crud-table/ "GeneralCrudTable Example")
 
@@ -150,9 +154,9 @@ There are two types:
         options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
         columns_setting: [
             {name: 'id', show: false, edit: true, width: '200px'},
-            {name: 'job', show: true, edit: true, width: '100px'},
+            {name: 'job', show: true, edit: true, width: '100px', description: 'Your Job'},
             {name: 'name', show: true, edit: true, width: '200px'},
-            {name: 'private', show: true, edit: false, width: '200px'},
+            {name: 'private', show: true, edit: false, width: '200px', description: 'Your things'},
             {name: 'html', show: true, edit: true, size: '200px', type: 'html'}
         ],
         details_text: 'detail'   // replace the standard icon with an text-link

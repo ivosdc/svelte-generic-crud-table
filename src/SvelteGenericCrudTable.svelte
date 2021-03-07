@@ -14,6 +14,9 @@
     const CREATE = 'CREATE';
     const DETAILS = 'DETAILS';
 
+    const SHOW = true;
+    const HIDE = false;
+
     const table_config_default = {
         name: 'crud-table',
         options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
@@ -164,6 +167,28 @@
         return "width:" + width + ";"
     }
 
+    function tooltip(e, text) {
+        if (text === undefined) {
+            return;
+        }
+        let element = document.createElement('div');
+        let targetElem = e.target;
+        element.style.backgroundColor = 'white';
+        element.style.width = e.target.width;
+        element.style.maxWidth = 'max-content';
+        element.style.padding = '3px'
+        element.style.position = 'fixed';
+        element.style.border = 'solid 1px black'
+        element.style.top = (e.pageY - window.scrollY - 10) + 'px';
+        element.innerHTML = text;
+        targetElem.appendChild(element);
+        targetElem.addEventListener('mouseleave', event => {
+            if (element.parentNode === targetElem) {
+                targetElem.removeChild(element);
+            }
+        })
+    }
+
 </script>
 
 <main>
@@ -182,7 +207,8 @@
                              on:mousedown={handleResize}
                              on:mouseup={handleResize}>
                             <span aria-label="Sort{elem.name}"
-                                  on:click={(e) => handleSort(elem.name, e)}>
+                                  on:click={(e) => handleSort(elem.name, e)}
+                                  on:mouseenter={(e)=>{tooltip(e, elem.description)}}>
                                 {genericCrudTable.makeCapitalLead(elem.name)}
                             </span>
                         </div>
@@ -347,7 +373,7 @@
     }
 
     .row:hover {
-        background-color: rgba(0,0,0,0.1);
+        background-color: rgba(0, 0, 0, 0.1);
     }
 
     .td {
