@@ -1818,7 +1818,7 @@ function tooltip(event, x, y, text) {
 	let targetElem = event.target;
 	element.style.backgroundColor = "white";
 	element.style.width = event.target.width;
-	element.style.maxWidth = "33%";
+	element.style.maxWidth = "25%";
 	element.style.padding = "3px";
 	element.style.position = "fixed";
 	element.style.border = "solid 1px black";

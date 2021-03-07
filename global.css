@@ -64,3 +64,16 @@ button:not(:disabled):active {
 button:focus {
 	border-color: #666;
 }
+
+pre {
+    background: #f4f4f4;
+    border-left: 3px solid #f36d33;
+    color: #666;
+    page-break-inside: avoid;
+    font-family: monospace;
+    overflow: auto;
+    padding: 1em;
+    display: block;
+    word-wrap: break-word;
+    width: fit-content;
+}
