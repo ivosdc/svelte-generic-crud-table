@@ -16,7 +16,7 @@ Allows CRUD-operations for Object-Arrays.
 ## Install
 
 ```
-npm install svelte-generic-crud-table
+npm install svelte-generic-crud-table --save-dev
 ```
 
 
@@ -42,7 +42,8 @@ Only wanted keys of your source array have to be mapped by columns_settings *nam
             {name: 'job', show: true, edit: true, width: '150px', description: 'The job'},
             {name: 'name', show: true, edit: true, width: '150px', tooltip: true},
             {name: 'private', show: true, edit: false, width: '200px', description: 'your things', tooltip: true},
-            {name: 'html', show: true, edit: true, width: '500px', type: 'html', description: 'You can use HTML'}        ],
+            {name: 'html', show: true, edit: true, width: '500px', type: 'html', description: 'You can use HTML', tooltip: true}
+        ],
         details_text: 'detail'   // replace the standard icon with an text-link
     }
 ```
