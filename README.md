@@ -29,27 +29,30 @@ Use the svelte-generic-crud-table in your component to show and, if you like, ed
 Just include the table as seen in the example below.
 
 ## column settings
-Settings regarding a column can be specified in the table_config:
+All fields are optional.
+
+Settings regarding a column behaviour can be specified in the table_config.
+Only wanted keys of your source array have to be mapped by columns_settings *name*. All other attributes are optional.
 ```html
     const table_config = {
         name: 'Awesome',
         options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
         columns_setting: [
-            {name: 'id', show: false, edit: true, width: '200px'},
-            {name: 'job', show: true, edit: true, width: '100px', description: 'Your job'},
-            {name: 'name', show: true, edit: true, width: '200px',
-            {name: 'private', show: true, edit: false, width: '200px', description: 'Your thigs'},
-            {name: 'url', show: true, edit: true, width: '200px', type: 'html'}
-        ],
+            {name: 'id', show: false, edit: true, width: '0px'},
+            {name: 'job', show: true, edit: true, width: '150px', description: 'The job'},
+            {name: 'name', show: true, edit: true, width: '150px', tooltip: true},
+            {name: 'private', show: true, edit: false, width: '200px', description: 'your things', tooltip: true},
+            {name: 'html', show: true, edit: true, width: '500px', type: 'html', description: 'You can use HTML'}        ],
         details_text: 'detail'   // replace the standard icon with an text-link
     }
 ```
-- *name*: the key from your data-array. This is used as column name.
-- *show*: true/false; Should this column displayed?
-- *edit*: true/false; Set this field editable or not.
-- *width*: px/em; set the field width.
-- *description*: A tooltip for the columns name. 
-- *type*: There are two types:
+- <b>*name*</b>: the key from your data-array. This is used as column name.
+- *show*: true/false; Should this column displayed? (optional, default: false)
+- *edit*: true/false; Set this field editable or not. (optional, default: false)
+- *width*: px/em; set the field width.  (optional, default: 100px)
+- *description*: A tooltip for the columns name. E.g. to see the full name or other description.  (optional, default: unset)
+- *tooltip*: true/false; When the text does not fit into the field you can show the full text as tooltip.  (optional, default: false) 
+- *type*: There are two types:  (optional, default: text)
     - *text*: Default.
     - *html*: The value/text will be interpreted as HTML.
 
@@ -155,9 +158,9 @@ Settings regarding a column can be specified in the table_config:
         columns_setting: [
             {name: 'id', show: false, edit: true, width: '200px'},
             {name: 'job', show: true, edit: true, width: '100px', description: 'Your Job'},
-            {name: 'name', show: true, edit: true, width: '200px'},
+            {name: 'name', show: true, edit: true, width: '200px', tooltip: true},
             {name: 'private', show: true, edit: false, width: '200px', description: 'Your things'},
-            {name: 'html', show: true, edit: true, size: '200px', type: 'html'}
+            {name: 'html', show: true, edit: true, size: '200px', type: 'html', tooltip: true}
         ],
         details_text: 'detail'   // replace the standard icon with an text-link
     }

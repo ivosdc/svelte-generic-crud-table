@@ -157,5 +157,6 @@ export class SvelteGenericCrudTableService {
 
         return (column_setting[attr] !== undefined) ? column_setting[attr] : preset;
     }
+
 }
 

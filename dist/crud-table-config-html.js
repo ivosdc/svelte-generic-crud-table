@@ -6,9 +6,9 @@ let table_config = {
     columns_setting: [
         {name: 'id', show: false, edit: true, width: '0px'},
         {name: 'job', show: true, edit: true, width: '150px', description: 'The job'},
-        {name: 'name', show: true, edit: true, width: '150px'},
-        {name: 'private', show: true, edit: false, width: '200px', description: 'your things'},
-        {name: 'html', show: true, edit: true, width: '500px', type: 'html'}
+        {name: 'name', show: true, edit: true, width: '150px', tooltip: true},
+        {name: 'private', show: true, edit: false, width: '200px', description: 'your things', tooltip: true},
+        {name: 'html', show: true, edit: true, width: '500px', type: 'html', description: 'You can use HTML', tooltip: true}
     ],
     row_settings: {height: '1.3em'}
 }

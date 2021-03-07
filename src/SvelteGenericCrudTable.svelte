@@ -167,27 +167,37 @@
         return "width:" + width + ";"
     }
 
-    function tooltip(e, text) {
-        if (text === undefined) {
+    function tooltip(event, x, y, text) {
+        if (text === undefined || text === '') {
             return;
         }
         let element = document.createElement('div');
-        let targetElem = e.target;
+        let targetElem = event.target;
         element.style.backgroundColor = 'white';
-        element.style.width = e.target.width;
-        element.style.maxWidth = 'max-content';
+        element.style.width = event.target.width;
+        element.style.maxWidth = '33%';
         element.style.padding = '3px'
         element.style.position = 'fixed';
         element.style.border = 'solid 1px black'
-        element.style.top = (e.pageY - window.scrollY - 10) + 'px';
+        element.style.whiteSpace = 'break-spaces';
         element.innerHTML = text;
+        element.style.zIndex = (10000).toString();
         targetElem.appendChild(element);
-        targetElem.addEventListener('mouseleave', event => {
+        element.style.top = (event.pageY - window.scrollY - (element.clientHeight / 2) - y) + 'px';
+        element.style.left = (event.pageX - window.scrollX - (element.clientWidth / 2) - x) + 'px';
+        targetElem.addEventListener('mouseleave', e => {
             if (element.parentNode === targetElem) {
                 targetElem.removeChild(element);
             }
         })
     }
+
+    function showTooltipByConfig(event, show, text) {
+        if (show) {
+            tooltip(event, 0, 0, text)
+        }
+    }
+
 
 </script>
 
@@ -208,7 +218,7 @@
                              on:mouseup={handleResize}>
                             <span aria-label="Sort{elem.name}"
                                   on:click={(e) => handleSort(elem.name, e)}
-                                  on:mouseenter={(e)=>{tooltip(e, elem.description)}}>
+                                  on:mouseenter={(e)=>{tooltip(e, 0, 12, elem.description)}}>
                                 {genericCrudTable.makeCapitalLead(elem.name)}
                             </span>
                         </div>
@@ -234,10 +244,12 @@
                                 {#if (column_order.name === genericCrudTable.getKey(elem))}
                                     <div id={k + '-' + j}
                                          class="td {genericCrudTable.isShowField(column_order.name) === false ? 'hidden' : 'shown'}"
-                                         style={getWidth(j)}>
+                                         style="{getWidth(j)}">
                                         <div id={name + column_order.name + i + ':disabled'}
                                              class="td-disabled shown"
-                                             aria-label={name + column_order.name + i + ':disabled'}>
+                                             aria-label={name + column_order.name + i + ':disabled'}
+                                             on:mouseenter={(e) => {
+                                             showTooltipByConfig(e, column_order.tooltip, table_data[i][column_order.name])}}>
                                             {#if column_order.type === 'html'}
                                                 {@html table_data[i][column_order.name]}
                                             {:else}
