@@ -5,9 +5,9 @@ let table_config = {
     options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
     columns_setting: [
         {name: 'id', show: false, edit: true, width: '0px'},
-        {name: 'job', show: true, edit: true, width: '150px'},
+        {name: 'job', show: true, edit: true, width: '150px', description: 'The job'},
         {name: 'name', show: true, edit: true, width: '150px'},
-        {name: 'private', show: true, edit: false, width: '200px'},
+        {name: 'private', show: true, edit: false, width: '200px', description: 'your things'},
         {name: 'html', show: true, edit: true, width: '500px', type: 'html'}
     ],
     row_settings: {height: '1.3em'}
