@@ -142,19 +142,33 @@
 
 
     const columnsWidth = [];
+    const columnsResize = [];
 
     function handleResize(event) {
         let elem = event.target;
-        let column;
-        if (shadowed) {
-            column = document.querySelector('crud-table').shadowRoot.querySelectorAll("[id$='-" + elem.id + "']");
-        } else {
-            column = document.querySelectorAll("[id$='-" + elem.id + "']")
+        if (columnsResize[elem.id]) {
+            let column;
+            let querySelector = '[id$="' + table_config.name + '-' + elem.id + '"]';
+            if (shadowed) {
+                column = document.querySelector('crud-table').shadowRoot.querySelectorAll(querySelector);
+            } else {
+                column = document.querySelectorAll(querySelector)
+            }
+            columnsWidth[elem.id] = (elem.offsetWidth - 8) + 'px';
+            for (let i = 0; i < column.length; i++) {
+                column[i].setAttribute('style', 'width:' + (elem.offsetWidth - 8) + 'px');
+            }
         }
-        columnsWidth[elem.id] = (elem.offsetWidth - 8) + 'px';
-        for (let i = 0; i < column.length; i++) {
-            column[i].setAttribute('style', 'width:' + (elem.offsetWidth - 8) + 'px');
-        }
+    }
+
+    function startResize(event) {
+        let elem = event.target;
+        columnsResize[elem.id] = true;
+    }
+
+    function stopResize(event) {
+        let elem = event.target;
+        columnsResize[elem.id] = false;
     }
 
     function getWidth(id) {
@@ -167,7 +181,7 @@
         return "width:" + width + ";"
     }
 
-    function tooltip(event, x, y, text) {
+    function tooltip(event, x, y, text, type) {
         if (text === undefined || text === '') {
             return;
         }
@@ -180,7 +194,11 @@
         element.style.position = 'fixed';
         element.style.border = 'solid 1px black'
         element.style.whiteSpace = 'break-spaces';
-        element.innerHTML = text;
+        if (type === 'html') {
+            element.innerHTML = text;
+        } else {
+            element.innerText = text;
+        }
         element.style.zIndex = (10000).toString();
         targetElem.appendChild(element);
         element.style.top = (event.pageY - window.scrollY - (element.clientHeight / 2) - y) + 'px';
@@ -192,9 +210,9 @@
         })
     }
 
-    function showTooltipByConfig(event, show, text) {
+    function showTooltipByConfig(event, show, text, type) {
         if (show) {
-            tooltip(event, 0, 0, text)
+            tooltip(event, 0, 0, text, type)
         }
     }
 
@@ -214,8 +232,9 @@
                         <div id={index}
                              class="td headline {genericCrudTable.isShowField(elem.name) === false ? 'hidden' : 'shown'}"
                              style={setWidth(elem, index)}
-                             on:mousedown={handleResize}
-                             on:mouseup={handleResize}>
+                             on:mousedown={startResize}
+                             on:mousemove={handleResize}
+                             on:mouseup={stopResize}>
                             <span aria-label="Sort{elem.name}"
                                   on:click={(e) => handleSort(elem.name, e)}
                                   on:mouseenter={(e)=>{tooltip(e, 0, 12, elem.description)}}>
@@ -242,14 +261,14 @@
                             {#each Object.entries(tableRow) as elem, k}
                                 <!-- /* istanbul ignore next */ -->
                                 {#if (column_order.name === genericCrudTable.getKey(elem))}
-                                    <div id={k + '-' + j}
+                                    <div id={k + '-' + table_config.name + '-' + j}
                                          class="td {genericCrudTable.isShowField(column_order.name) === false ? 'hidden' : 'shown'}"
                                          style="{getWidth(j)}">
                                         <div id={name + column_order.name + i + ':disabled'}
                                              class="td-disabled shown"
                                              aria-label={name + column_order.name + i + ':disabled'}
                                              on:mouseenter={(e) => {
-                                             showTooltipByConfig(e, column_order.tooltip, table_data[i][column_order.name])}}>
+                                             showTooltipByConfig(e, column_order.tooltip, table_data[i][column_order.name], column_order.type)}}>
                                             {#if column_order.type === 'html'}
                                                 {@html table_data[i][column_order.name]}
                                             {:else}
@@ -285,7 +304,8 @@
                                             <!-- /* istanbul ignore next */ -->
                                             {#if options.includes(DETAILS)}
                                                 <div class="options blue" on:click="{(e) => {handleDetails(i, e)}}"
-                                                     title="Details" tabindex="0">
+                                                     title="{table_config.details_text !== undefined ? table_config.details_text : 'Details'}"
+                                                     tabindex="0">
                                                     {#if table_config.details_text !== undefined}
                                                         {table_config.details_text}
                                                     {:else}
