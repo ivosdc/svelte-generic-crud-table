@@ -176,9 +176,10 @@
     }
 
     function setWidth(elem, i) {
-        const width = genericCrudTable.getShowFieldWidth(elem.name); // incl.px
-        columnsWidth[i] = width;
-        return "width:" + width + ";"
+        if (columnsWidth[i] === undefined) {
+            columnsWidth[i] = genericCrudTable.getShowFieldWidth(elem.name); // incl.px;
+        }
+        return "width:" + columnsWidth[i] + ";"
     }
 
     function tooltip(event, x, y, text, type) {
