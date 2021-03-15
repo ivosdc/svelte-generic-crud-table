@@ -4,11 +4,10 @@ let table_config = {
     name: 'Awesome',
     options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
     columns_setting: [
-        {name: 'id', show: false, edit: true, width: '0px'},
-        {name: 'job', show: true, edit: true, width: '150px', description: 'The job'},
         {name: 'name', show: true, edit: true, width: '150px', tooltip: true},
-        {name: 'private', show: true, edit: false, width: '200px', description: 'your things', tooltip: true},
-        {name: 'html', show: true, edit: true, width: '500px', type: 'html', description: 'You can use HTML', tooltip: true}
+        {name: 'job', show: true, edit: true, width: '150px', description: 'The job'},
+        {name: 'private', show: true, edit: true, width: '200px', description: 'your things', tooltip: true},
+        {name: 'html', show: true, edit: false, width: '500px', type: 'html', description: 'You can use HTML', tooltip: true}
     ],
     row_settings: {height: '1.3em'}
 }
@@ -22,7 +21,7 @@ genericCrudTable.setAttribute('table_data', JSON.stringify(myData));
 
 genericCrudTable.addEventListener('create', () => {
     console.log('create');
-    myData.push({name: 'myName', job: 'code', private: 'not editable'});
+    myData.unshift({name: 'A_NEW', job: 'none', private: 'set hard', html: 'a <b>b</b> <i>c</i>'});
     refresh();
 });
 
