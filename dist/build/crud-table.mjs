@@ -1849,8 +1849,8 @@ function tooltip(event, x, y, text, type) {
 
 	element.style.zIndex = (10000).toString();
 	targetElem.appendChild(element);
-	element.style.top = event.pageY - window.scrollY - element.clientHeight / 2 - y + "px";
-	element.style.left = event.pageX - window.scrollX - element.clientWidth / 2 - x + "px";
+	element.style.top = event.pageY - window.scrollY - element.clientHeight - y + "px";
+	element.style.left = event.pageX - window.scrollX - element.clientWidth / 2 + x + "px";
 
 	targetElem.addEventListener("mouseleave", e => {
 		if (element.parentNode === targetElem) {
@@ -1861,7 +1861,7 @@ function tooltip(event, x, y, text, type) {
 
 function showTooltipByConfig(event, show, text, type) {
 	if (show) {
-		tooltip(event, 0, 0, text, type);
+		tooltip(event, 0, 15, text, type);
 	}
 }
 
@@ -2013,7 +2013,7 @@ function instance($$self, $$props, $$invalidate) {
 	const click_handler = (elem, e) => handleSort(elem.name, e);
 
 	const mouseenter_handler = (elem, e) => {
-		tooltip(e, 0, 12, elem.description);
+		tooltip(e, 0, 15, elem.description);
 	};
 
 	const mouseenter_handler_1 = (column_order, i, e) => {

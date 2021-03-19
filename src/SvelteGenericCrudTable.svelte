@@ -202,8 +202,8 @@
         }
         element.style.zIndex = (10000).toString();
         targetElem.appendChild(element);
-        element.style.top = (event.pageY - window.scrollY - (element.clientHeight / 2) - y) + 'px';
-        element.style.left = (event.pageX - window.scrollX - (element.clientWidth / 2) - x) + 'px';
+        element.style.top = (event.pageY - window.scrollY - element.clientHeight - y) + 'px';
+        element.style.left = (event.pageX - window.scrollX - (element.clientWidth / 2) + x) + 'px';
         targetElem.addEventListener('mouseleave', e => {
             if (element.parentNode === targetElem) {
                 targetElem.removeChild(element);
@@ -213,7 +213,7 @@
 
     function showTooltipByConfig(event, show, text, type) {
         if (show) {
-            tooltip(event, 0, 0, text, type)
+            tooltip(event, 0, 15, text, type)
         }
     }
 
@@ -238,7 +238,7 @@
                              on:mouseup={stopResize}>
                             <span aria-label="Sort{elem.name}"
                                   on:click={(e) => handleSort(elem.name, e)}
-                                  on:mouseenter={(e)=>{tooltip(e, 0, 12, elem.description)}}>
+                                  on:mouseenter={(e)=>{tooltip(e, 0, 15, elem.description)}}>
                                 {genericCrudTable.makeCapitalLead(elem.name)}
                             </span>
                         </div>

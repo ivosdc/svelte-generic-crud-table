@@ -21,7 +21,7 @@ genericCrudTable.setAttribute('table_data', JSON.stringify(myData));
 
 genericCrudTable.addEventListener('create', () => {
     console.log('create');
-    myData.unshift({name: 'A_NEW', job: 'none', private: 'set hard', html: 'a <b>b</b> <i>c</i>'});
+    myData.unshift({id: Date.now().toString(), name: 'A_NEW', job: 'none', private: 'set hard', html: 'a <b>b</b> <i>c</i>'});
     refresh();
 });
 
