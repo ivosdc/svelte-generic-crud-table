@@ -1,9 +1,8 @@
 export class SvelteGenericCrudTableService {
 
-    constructor(table_config, shadowed) {
+    constructor(table_config) {
         this.name = table_config.name;
         this.table_config = table_config;
-        this.shadowed = shadowed;
     }
 
     getKey(elem) {
@@ -20,104 +19,94 @@ export class SvelteGenericCrudTableService {
 
 
     resetEditMode(id, event) {
-        let parentrow = event.target.closest('.row');
+        let parentrow = this.getParentrow(event);
         this.table_config.columns_setting.forEach((toEdit) => {
-            let elemEnabled = parentrow.querySelector('#' + this.name + toEdit.name + id);
-            let elemDisabled = parentrow.querySelector('#' + this.name + toEdit.name + id+ '-disabled');
-            if (elemEnabled !== null && elemDisabled !== null) {
+            let rowEnabled = parentrow.querySelector('#' + this.name + toEdit.name + id);
+            let rowDisabled = parentrow.querySelector('#' + this.name + toEdit.name + id + '-disabled');
+            if (rowEnabled !== null && rowDisabled !== null) {
                 if (this.isEditField(toEdit.name)) {
-                    elemEnabled.classList.add("hidden");
-                    elemEnabled.classList.remove("shown");
-                    elemDisabled.classList.add("shown");
-                    elemDisabled.classList.remove("hidden");
+                    rowEnabled.classList.add("hidden");
+                    rowEnabled.classList.remove("shown");
+                    rowDisabled.classList.add("shown");
+                    rowDisabled.classList.remove("hidden");
                 }
             }
         })
-        let buttonsDefault = parentrow.querySelector('#' + this.name + 'options-default' + id);
-        let buttonsEdit = parentrow.querySelector('#' + this.name + 'options-edit' + id);
-        if (buttonsDefault !== null && buttonsEdit !== null) {
-            buttonsDefault.classList.remove('hidden');
-            buttonsDefault.classList.add('shown');
-            buttonsEdit.classList.remove('shown');
-            buttonsEdit.classList.add('hidden');
+        let optionsDefault = parentrow.querySelector('#' + this.name + 'options-default' + id);
+        let optionsEdit = parentrow.querySelector('#' + this.name + 'options-edit' + id);
+        if (optionsDefault !== null && optionsEdit !== null) {
+            optionsDefault.classList.remove('hidden');
+            optionsDefault.classList.add('shown');
+            optionsEdit.classList.remove('shown');
+            optionsEdit.classList.add('hidden');
         }
     }
 
-    resetDeleteMode(id) {
-        if (this.shadowed) {
-            document.querySelector('crud-table').shadowRoot.getElementById(this.name + 'options-default' + id).classList.remove('hidden');
-            document.querySelector('crud-table').shadowRoot.getElementById(this.name + 'options-default' + id).classList.add('shown');
-            document.querySelector('crud-table').shadowRoot.getElementById(this.name + 'options-delete' + id).classList.remove('shown');
-            document.querySelector('crud-table').shadowRoot.getElementById(this.name + 'options-delete' + id).classList.add('hidden');
-        } else {
-            document.getElementById(this.name + 'options-default' + id).classList.remove('hidden');
-            document.getElementById(this.name + 'options-default' + id).classList.add('shown');
-            document.getElementById(this.name + 'options-delete' + id).classList.remove('shown');
-            document.getElementById(this.name + 'options-delete' + id).classList.add('hidden');
+    resetDeleteMode(id, event) {
+        let parentrow = this.getParentrow(event);
+        let optionsDefault = parentrow.querySelector('#' + this.name + 'options-default' + id);
+        let optionsDelete = parentrow.querySelector('#' + this.name + 'options-delete' + id);
+        if (optionsDefault !== null && optionsDelete !== null) {
+            optionsDefault.classList.remove('hidden');
+            optionsDefault.classList.add('shown');
+            optionsDelete.classList.remove('shown');
+            optionsDelete.classList.add('hidden');
         }
     }
 
-    setEditMode(id) {
-        if (this.shadowed) {
-            this.table_config.columns_setting.forEach((toEdit) => {
-                if (this.isEditField(toEdit.name)) {
-                    document.querySelector('crud-table').shadowRoot.getElementById(this.name + toEdit.name + id + '-disabled').classList.add("hidden");
-                    document.querySelector('crud-table').shadowRoot.getElementById(this.name + toEdit.name + id + '-disabled').classList.remove("shown");
-                    document.querySelector('crud-table').shadowRoot.getElementById(this.name + toEdit.name + id).classList.add("shown");
-                    document.querySelector('crud-table').shadowRoot.getElementById(this.name + toEdit.name + id).classList.remove("hidden");
-                }
-            })
-            document.querySelector('crud-table').shadowRoot.getElementById(this.name + 'options-default' + id).classList.add('hidden');
-            document.querySelector('crud-table').shadowRoot.getElementById(this.name + 'options-default' + id).classList.remove('shown');
-            document.querySelector('crud-table').shadowRoot.getElementById(this.name + 'options-edit' + id).classList.remove('hidden');
-            document.querySelector('crud-table').shadowRoot.getElementById(this.name + 'options-edit' + id).classList.add('shown');
-        } else {
-            this.table_config.columns_setting.forEach((toEdit) => {
-                if (this.isEditField(toEdit.name)) {
-                    document.getElementById(this.name + toEdit.name + id + "-disabled").classList.add("hidden");
-                    document.getElementById(this.name + toEdit.name + id + "-disabled").classList.remove("shown");
-                    document.getElementById(this.name + toEdit.name + id).classList.add("shown");
-                    document.getElementById(this.name + toEdit.name + id).classList.remove("hidden");
-                }
-            })
-            document.getElementById(this.name + 'options-default' + id).classList.add('hidden');
-            document.getElementById(this.name + 'options-default' + id).classList.remove('shown');
-            document.getElementById(this.name + 'options-edit' + id).classList.remove('hidden');
-            document.getElementById(this.name + 'options-edit' + id).classList.add('shown');
+    setEditMode(id, event) {
+        let parentrow = this.getParentrow(event);
+        this.table_config.columns_setting.forEach((toEdit) => {
+            let rowEnabled = parentrow.querySelector('#' + this.name + toEdit.name + id);
+            let rowDisabled = parentrow.querySelector('#' + this.name + toEdit.name + id + "-disabled");
+            if (rowEnabled !== null && rowDisabled !== null && this.isEditField(toEdit.name)) {
+                rowDisabled.classList.add("hidden");
+                rowDisabled.classList.remove("shown");
+                rowEnabled.classList.add("shown");
+                rowEnabled.classList.remove("hidden");
+            }
+        })
+        let optionsDefault = parentrow.querySelector('#' + this.name + 'options-default' + id);
+        let optionsEdit = parentrow.querySelector('#' + this.name + 'options-edit' + id);
+        if (optionsDefault !== null && optionsEdit !== null) {
+            optionsDefault.classList.add('hidden');
+            optionsDefault.classList.remove('shown');
+            optionsEdit.classList.remove('hidden');
+            optionsEdit.classList.add('shown');
         }
     }
 
-    setDeleteMode(id) {
-        if (this.shadowed) {
-            document.querySelector('crud-table').shadowRoot.getElementById(this.name + 'options-default' + id).classList.add('hidden');
-            document.querySelector('crud-table').shadowRoot.getElementById(this.name + 'options-default' + id).classList.remove('shown');
-            document.querySelector('crud-table').shadowRoot.getElementById(this.name + 'options-delete' + id).classList.remove('hidden');
-            document.querySelector('crud-table').shadowRoot.getElementById(this.name + 'options-delete' + id).classList.add('shown');
-        } else {
-            document.getElementById(this.name + 'options-default' + id).classList.add('hidden');
-            document.getElementById(this.name + 'options-default' + id).classList.remove('shown');
-            document.getElementById(this.name + 'options-delete' + id).classList.remove('hidden');
-            document.getElementById(this.name + 'options-delete' + id).classList.add('shown');
+
+    setDeleteMode(id, event) {
+        let parentrow = this.getParentrow(event);
+        let optionsDefault = parentrow.querySelector('#' + this.name + 'options-default' + id);
+        let optionsDelete = parentrow.querySelector('#' + this.name + 'options-delete' + id);
+        if (optionsDefault !== null && optionsDelete !== null) {
+            optionsDefault.classList.add('hidden');
+            optionsDefault.classList.remove('shown');
+            optionsDelete.classList.remove('hidden');
+            optionsDelete.classList.add('shown');
         }
     }
 
-    gatherUpdates(id, table) {
+    gatherUpdates(id, table, event) {
+        let parentrow = this.getParentrow(event);
         const body = table[id];
         this.table_config.columns_setting.forEach((elem) => {
-            if (elem.show) {
-                if (this.shadowed) {
-                    body[elem.name] = document.querySelector('crud-table').shadowRoot
-                        .getElementById(this.name + elem.name + id).value;
-                } else {
-                    body[elem.name] = document.getElementById(this.name + elem.name + id).value;
-                }
+            let domElement = parentrow.querySelector('#' + this.name + elem.name + id);
+            if (elem.show && domElement !== null) {
+                    body[elem.name] = domElement.value;
             }
         })
         return body;
     }
 
+    getParentrow(event) {
+        return event.target.closest('.row');
+    }
+
     resetRawValues(id, table, event) {
-        let parentrow = event.target.closest('.row');
+        let parentrow = this.getParentrow(event);
         this.table_config.columns_setting.forEach((elem) => {
             if (elem.show) {
                 parentrow.querySelector('#' + this.name + elem.name + id).value = table[id][elem.name];

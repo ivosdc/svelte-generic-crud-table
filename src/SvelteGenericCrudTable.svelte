@@ -44,77 +44,57 @@
 
     const NO_ROW_IN_EDIT_MODE = -1;
     let cursor = NO_ROW_IN_EDIT_MODE;
-    let genericCrudTable = new SvelteGenericCrudTableService(table_config, shadowed);
-    $: genericCrudTable = new SvelteGenericCrudTableService(table_config, shadowed);
+    let genericCrudTableService = new SvelteGenericCrudTableService(table_config);
+    $: genericCrudTableService = new SvelteGenericCrudTableService(table_config);
 
-
-    function queryParentElement(el, selector) {
-        let isIDSelector = selector.indexOf("#") === 0
-        if (selector.indexOf('.') === 0 || selector.indexOf('#') === 0) {
-            selector = selector.slice(1)
-        }
-        while (el) {
-            if (isIDSelector) {
-                if (el.id === selector) {
-                    return el
-                }
-            }
-            else if (el.classList.contains(selector)) {
-                return el;
-            }
-            el = el.parentElement;
-        }
-        return null;
-    }
 
     function handleEdit(id, event) {
-        console.log(event.target.closest('.row'))
         resetRawInEditMode(id, event);
         cursor = id;
         for (let i = 0; i < table_data.length; i++) {
-            genericCrudTable.resetEditMode(i, event);
+            genericCrudTableService.resetEditMode(i, event);
         }
-        genericCrudTable.setEditMode(id);
+        genericCrudTableService.setEditMode(id, event);
     }
 
     function handleCancelEdit(id, event) {
-        genericCrudTable.resetRawValues(id, table_data, event);
-        genericCrudTable.resetEditMode(id, event);
-        genericCrudTable.resetDeleteMode(id, event);
+        genericCrudTableService.resetRawValues(id, table_data, event);
+        genericCrudTableService.resetEditMode(id, event);
+        genericCrudTableService.resetDeleteMode(id, event);
         cursor = NO_ROW_IN_EDIT_MODE;
     }
 
     function handleEditConfirmation(id, event) {
         resetRawInEditMode(id, event);
-        const body = genericCrudTable.gatherUpdates(id, table_data);
+        const body = genericCrudTableService.gatherUpdates(id, table_data, event);
         table_data[id] = body;
         const details = {
             id: id,
             body: body
         };
-        genericCrudTable.resetEditMode(id);
+        genericCrudTableService.resetEditMode(id, event);
         dispatcher('update', details, event);
     }
 
     function handleDelete(id, event) {
-        resetRawInEditMode(id, event.target.closest('.row'));
-        genericCrudTable.resetDeleteMode(id)
+        resetRawInEditMode(id, event);
+        genericCrudTableService.resetDeleteMode(id, event)
         cursor = id;
-        genericCrudTable.setDeleteMode(id);
+        genericCrudTableService.setDeleteMode(id, event);
     }
 
-    function handleCancelDelete(id) {
-        genericCrudTable.resetEditMode(id);
-        genericCrudTable.resetDeleteMode(id);
+    function handleCancelDelete(id, event) {
+        genericCrudTableService.resetEditMode(id, event);
+        genericCrudTableService.resetDeleteMode(id, event);
     }
 
     function handleDeleteConfirmation(id, event) {
-        const body = genericCrudTable.gatherUpdates(id, table_data);
+        const body = genericCrudTableService.gatherUpdates(id, table_data, event);
         const details = {
             id: id,
             body: body
         };
-        genericCrudTable.resetDeleteMode(id);
+        genericCrudTableService.resetDeleteMode(id, event);
         cursor = NO_ROW_IN_EDIT_MODE;
         dispatcher('delete', details, event);
     }
@@ -140,7 +120,7 @@
 
     function handleDetails(id, event) {
         resetRawInEditMode(id, event);
-        const body = genericCrudTable.gatherUpdates(id, table_data);
+        const body = genericCrudTableService.gatherUpdates(id, table_data, event);
         const details = {
             id: id,
             body: body
@@ -168,12 +148,8 @@
         let elem = event.target;
         if (columnsResize[elem.id]) {
             let column;
-            let querySelector = '[id$="' + table_config.name + '-' + elem.id + '"]';
-            if (shadowed) {
-                column = document.querySelector('crud-table').shadowRoot.querySelectorAll(querySelector);
-            } else {
-                column = document.querySelectorAll(querySelector)
-            }
+            let querySelector = '[id^="' + elem.id + '-' + table_config.name + '"]';
+            column = elem.closest('.table').querySelectorAll(querySelector);
             columnsWidth[elem.id] = (elem.offsetWidth - 8) + 'px';
             for (let i = 0; i < column.length; i++) {
                 column[i].setAttribute('style', 'width:' + (elem.offsetWidth - 8) + 'px');
@@ -197,7 +173,7 @@
 
     function setWidth(elem, i) {
         if (columnsWidth[i] === undefined) {
-            columnsWidth[i] = genericCrudTable.getShowFieldWidth(elem.name); // incl.px;
+            columnsWidth[i] = genericCrudTableService.getShowFieldWidth(elem.name); // incl.px;
         }
         return "width:" + columnsWidth[i] + ";"
     }
@@ -251,7 +227,7 @@
                     {#each table_config.columns_setting as elem, index}
                         <!-- /* istanbul ignore next line */ -->
                         <div id={index}
-                             class="td headline {genericCrudTable.isShowField(elem.name) === false ? 'hidden' : 'shown'}"
+                             class="td headline {genericCrudTableService.isShowField(elem.name) === false ? 'hidden' : 'shown'}"
                              style={setWidth(elem, index)}
                              on:mousedown={startResize}
                              on:mousemove={handleResize}
@@ -259,7 +235,7 @@
                             <span aria-label="Sort{elem.name}"
                                   on:click={(e) => handleSort(elem.name, e)}
                                   on:mouseenter={(e)=>{tooltip(e, 0, 15, elem.description)}}>
-                                {genericCrudTable.makeCapitalLead(elem.name)}
+                                {genericCrudTableService.makeCapitalLead(elem.name)}
                             </span>
                         </div>
                     {/each}
@@ -281,9 +257,9 @@
                         {#each table_config.columns_setting as column_order, j}
                             {#each Object.entries(tableRow) as elem, k}
                                 <!-- /* istanbul ignore next */ -->
-                                {#if (column_order.name === genericCrudTable.getKey(elem))}
-                                    <div id={k + '-' + table_config.name + '-' + i}
-                                         class="td {genericCrudTable.isShowField(column_order.name) === false ? 'hidden' : 'shown'}"
+                                {#if (column_order.name === genericCrudTableService.getKey(elem))}
+                                    <div id={j + '-' + table_config.name + '-' + k}
+                                         class="td {genericCrudTableService.isShowField(column_order.name) === false ? 'hidden' : 'shown'}"
                                          style="{getWidth(j)}">
                                         <div id={name + column_order.name + i + '-disabled'}
                                              class="td-disabled shown"

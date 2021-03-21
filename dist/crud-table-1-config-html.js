@@ -23,7 +23,7 @@ genericCrudTable.setAttribute('table_data', JSON.stringify(myData));
 genericCrudTable.addEventListener('create', () => {
     console.log('create');
     myData.unshift({id: Date.now().toString(), name: 'A_NEW', job: 'none', private: 'set hard', html: 'a <b>b</b> <i>c</i>'});
-    refresh(genericCrudTable);
+    genericCrudTable.setAttribute('table_data', JSON.stringify(myData));
 });
 
 genericCrudTable.addEventListener('details', (e) => {
@@ -35,12 +35,12 @@ genericCrudTable.addEventListener('update', (e) => {
     console.log('update');
     console.log(e.detail.body);
     for(let i = 0; i < myData.length; i++) {
-        if (JSON.stringify(myData[i]) === JSON.stringify(table_data[e.detail.id])) {
+        if (JSON.stringify(myData[i]) === JSON.stringify(myData[e.detail.id])) {
             myData[i] = e.detail.body;
             break;
         }
     }
-    refresh(genericCrudTable);
+    genericCrudTable.setAttribute('table_data', JSON.stringify(myData));
 });
 
 genericCrudTable.addEventListener('delete', (e) => {
@@ -52,7 +52,7 @@ genericCrudTable.addEventListener('delete', (e) => {
             break;
         }
     }
-    refresh(genericCrudTable);
+    genericCrudTable.setAttribute('table_data', JSON.stringify(myData));
 });
 
 genericCrudTable.addEventListener('sort', (e) => {
@@ -78,5 +78,5 @@ genericCrudTable.addEventListener('sort', (e) => {
     };
 
     myData = myData.sort(tableSort);
-    refresh(genericCrudTable);
+    genericCrudTable.setAttribute('table_data', JSON.stringify(myData));
 });
