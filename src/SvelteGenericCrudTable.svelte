@@ -3,9 +3,6 @@
     import {SvelteGenericCrudTableService} from "./SvelteGenericCrudTableService";
     import {icontrash, iconedit, iconsend, icondetail, iconcancel, iconcreate, iconsave} from './svgIcon'
 
-    /* istanbul ignore next line */
-    export let shadowed = false;
-
     const EDIT = 'EDIT';
     const DELETE = 'DELETE';
     const CREATE = 'CREATE';

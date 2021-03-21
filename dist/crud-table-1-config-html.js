@@ -16,7 +16,6 @@ let table_config = {
 let genericCrudTable = document.getElementById('crud-table-1');
 const sortStore = [];
 
-genericCrudTable.setAttribute('shadowed', 'true');
 genericCrudTable.setAttribute('table_config', JSON.stringify(table_config));
 genericCrudTable.setAttribute('table_data', JSON.stringify(myData));
 
