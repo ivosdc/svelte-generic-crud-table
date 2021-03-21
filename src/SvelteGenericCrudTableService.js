@@ -1,7 +1,7 @@
 export class SvelteGenericCrudTableService {
 
-    constructor(table_config) {
-        this.name = table_config.name;
+    constructor(table_config, name) {
+        this.name = name;
         this.table_config = table_config;
     }
 
@@ -16,7 +16,6 @@ export class SvelteGenericCrudTableService {
     getValue(elem) {
         return elem[1];
     }
-
 
     resetEditMode(id, event) {
         let parentrow = this.getTable(event);

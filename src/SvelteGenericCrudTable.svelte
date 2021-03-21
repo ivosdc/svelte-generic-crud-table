@@ -44,8 +44,8 @@
 
     const NO_ROW_IN_EDIT_MODE = -1;
     let cursor = NO_ROW_IN_EDIT_MODE;
-    let genericCrudTableService = new SvelteGenericCrudTableService(table_config);
-    $: genericCrudTableService = new SvelteGenericCrudTableService(table_config);
+    let genericCrudTableService = new SvelteGenericCrudTableService(table_config, name);
+    $: genericCrudTableService = new SvelteGenericCrudTableService(table_config, name);
 
 
     function handleEdit(id, event) {

@@ -430,8 +430,8 @@ if (typeof HTMLElement === 'function') {
 
 class SvelteGenericCrudTableService {
 
-    constructor(table_config) {
-        this.name = table_config.name;
+    constructor(table_config, name) {
+        this.name = name;
         this.table_config = table_config;
     }
 
@@ -446,7 +446,6 @@ class SvelteGenericCrudTableService {
     getValue(elem) {
         return elem[1];
     }
-
 
     resetEditMode(id, event) {
         let parentrow = this.getTable(event);
@@ -1858,7 +1857,7 @@ function instance($$self, $$props, $$invalidate) {
 	let options = [];
 	const NO_ROW_IN_EDIT_MODE = -1;
 	let cursor = NO_ROW_IN_EDIT_MODE;
-	let genericCrudTableService = new SvelteGenericCrudTableService(table_config);
+	let genericCrudTableService = new SvelteGenericCrudTableService(table_config, name);
 
 	function handleEdit(id, event) {
 		resetRawInEditMode(id, event);
@@ -2049,8 +2048,8 @@ function instance($$self, $$props, $$invalidate) {
 			: []);
 		}
 
-		if ($$self.$$.dirty[0] & /*table_config*/ 2) {
-			$$invalidate(4, genericCrudTableService = new SvelteGenericCrudTableService(table_config));
+		if ($$self.$$.dirty[0] & /*table_config, name*/ 6) {
+			$$invalidate(4, genericCrudTableService = new SvelteGenericCrudTableService(table_config, name));
 		}
 	};
 
