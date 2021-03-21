@@ -178,41 +178,11 @@
         return "width:" + columnsWidth[i] + ";"
     }
 
-    function tooltip(event, x, y, text, type) {
-        if (text === undefined || text === '') {
-            return;
-        }
-        let element = document.createElement('div');
-        let targetElem = event.target;
-        element.style.backgroundColor = 'white';
-        element.style.width = event.target.width;
-        element.style.maxWidth = '25%';
-        element.style.padding = '3px'
-        element.style.position = 'fixed';
-        element.style.border = 'solid 1px black'
-        element.style.whiteSpace = 'break-spaces';
-        if (type === 'html') {
-            element.innerHTML = text;
-        } else {
-            element.innerText = text;
-        }
-        element.style.zIndex = (10000).toString();
-        targetElem.appendChild(element);
-        element.style.top = (event.pageY - window.scrollY - element.clientHeight - y) + 'px';
-        element.style.left = (event.pageX - window.scrollX - (element.clientWidth / 2) + x) + 'px';
-        targetElem.addEventListener('mouseleave', e => {
-            if (element.parentNode === targetElem) {
-                targetElem.removeChild(element);
-            }
-        })
-    }
-
     function showTooltipByConfig(event, show, text, type) {
         if (show) {
-            tooltip(event, 0, 15, text, type)
+            genericCrudTableService.tooltip(event, 0, 15, text, type)
         }
     }
-
 
 </script>
 
@@ -234,7 +204,7 @@
                              on:mouseup={stopResize}>
                             <span aria-label="Sort{elem.name}"
                                   on:click={(e) => handleSort(elem.name, e)}
-                                  on:mouseenter={(e)=>{tooltip(e, 0, 15, elem.description)}}>
+                                  on:mouseenter={(e)=>{genericCrudTableService.tooltip(e, 0, 15, elem.description)}}>
                                 {genericCrudTableService.makeCapitalLead(elem.name)}
                             </span>
                         </div>

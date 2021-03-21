@@ -138,5 +138,34 @@ export class SvelteGenericCrudTableService {
         return (column_setting[attr] !== undefined) ? column_setting[attr] : preset;
     }
 
+    tooltip(event, x, y, text, type) {
+        if (text === undefined || text === '') {
+            return;
+        }
+        let element = document.createElement('div');
+        let targetElem = event.target;
+        element.style.backgroundColor = 'white';
+        element.style.width = event.target.width;
+        element.style.maxWidth = '25%';
+        element.style.padding = '3px'
+        element.style.position = 'fixed';
+        element.style.border = 'solid 1px black'
+        element.style.whiteSpace = 'break-spaces';
+        if (type === 'html') {
+            element.innerHTML = text;
+        } else {
+            element.innerText = text;
+        }
+        element.style.zIndex = (10000).toString();
+        targetElem.appendChild(element);
+        element.style.top = (event.pageY - window.scrollY - element.clientHeight - y) + 'px';
+        element.style.left = (event.pageX - window.scrollX - (element.clientWidth / 2) + x) + 'px';
+        targetElem.addEventListener('mouseleave', e => {
+            if (element.parentNode === targetElem) {
+                targetElem.removeChild(element);
+            }
+        })
+    }
+
 }
 
