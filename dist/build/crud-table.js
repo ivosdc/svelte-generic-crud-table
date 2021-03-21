@@ -455,7 +455,7 @@
 
 
         resetEditMode(id, event) {
-            let parentrow = this.getParentrow(event);
+            let parentrow = this.getTable(event);
             this.table_config.columns_setting.forEach((toEdit) => {
                 let rowEnabled = parentrow.querySelector('#' + this.name + toEdit.name + id);
                 let rowDisabled = parentrow.querySelector('#' + this.name + toEdit.name + id + '-disabled');
@@ -479,7 +479,7 @@
         }
 
         resetDeleteMode(id, event) {
-            let parentrow = this.getParentrow(event);
+            let parentrow = this.getTable(event);
             let optionsDefault = parentrow.querySelector('#' + this.name + 'options-default' + id);
             let optionsDelete = parentrow.querySelector('#' + this.name + 'options-delete' + id);
             if (optionsDefault !== null && optionsDelete !== null) {
@@ -491,7 +491,7 @@
         }
 
         setEditMode(id, event) {
-            let parentrow = this.getParentrow(event);
+            let parentrow = this.getRow(event);
             this.table_config.columns_setting.forEach((toEdit) => {
                 let rowEnabled = parentrow.querySelector('#' + this.name + toEdit.name + id);
                 let rowDisabled = parentrow.querySelector('#' + this.name + toEdit.name + id + "-disabled");
@@ -514,7 +514,7 @@
 
 
         setDeleteMode(id, event) {
-            let parentrow = this.getParentrow(event);
+            let parentrow = this.getRow(event);
             let optionsDefault = parentrow.querySelector('#' + this.name + 'options-default' + id);
             let optionsDelete = parentrow.querySelector('#' + this.name + 'options-delete' + id);
             if (optionsDefault !== null && optionsDelete !== null) {
@@ -526,7 +526,7 @@
         }
 
         gatherUpdates(id, table, event) {
-            let parentrow = this.getParentrow(event);
+            let parentrow = this.getRow(event);
             const body = table[id];
             this.table_config.columns_setting.forEach((elem) => {
                 let domElement = parentrow.querySelector('#' + this.name + elem.name + id);
@@ -537,15 +537,20 @@
             return body;
         }
 
-        getParentrow(event) {
+        getRow(event) {
             return event.target.closest('.row');
         }
 
+        getTable(event) {
+            return event.target.closest('.table');
+        }
+
         resetRawValues(id, table, event) {
-            let parentrow = this.getParentrow(event);
+            let parentrow = this.getTable(event);
             this.table_config.columns_setting.forEach((elem) => {
-                if (elem.show) {
-                    parentrow.querySelector('#' + this.name + elem.name + id).value = table[id][elem.name];
+                let element = parentrow.querySelector('#' + this.name + elem.name + id);
+                if (elem.show && element !== null) {
+                    element.value = table[id][elem.name];
                 }
             });
         }
