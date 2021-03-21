@@ -1,13 +1,10 @@
 <svelte:options tag={'crud-table'}/>
 <script>
-    import {createEventDispatcher} from 'svelte';
     import {SvelteGenericCrudTableService} from "./SvelteGenericCrudTableService";
     import {icontrash, iconedit, iconsend, icondetail, iconcancel, iconcreate, iconsave} from './svgIcon'
 
     /* istanbul ignore next line */
     export let shadowed = false;
-
-    const dispatch = createEventDispatcher();
 
     const EDIT = 'EDIT';
     const DELETE = 'DELETE';
@@ -105,16 +102,11 @@
     }
 
     function dispatcher(name, details, event) {
-        /* istanbul ignore next */
-        if (shadowed) {
-            event.target.dispatchEvent(
-                new CustomEvent(name, {
-                    composed: true,
-                    detail: details
-                }))
-        } else {
-            dispatch(name, details);
-        }
+        event.target.dispatchEvent(
+            new CustomEvent(name, {
+                composed: true,
+                detail: details
+            }))
     }
 
 

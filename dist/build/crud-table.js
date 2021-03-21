@@ -663,7 +663,7 @@
     	return child_ctx;
     }
 
-    // (194:4) {#if (table_data !== undefined)}
+    // (189:4) {#if (table_data !== undefined)}
     function create_if_block(ctx) {
     	let show_if = Array.isArray(/*table_data*/ ctx[0]);
     	let if_block_anchor;
@@ -701,7 +701,7 @@
     	};
     }
 
-    // (196:8) {#if Array.isArray(table_data)}
+    // (191:8) {#if Array.isArray(table_data)}
     function create_if_block_1(ctx) {
     	let div2;
     	let div1;
@@ -835,7 +835,7 @@
     	};
     }
 
-    // (201:20) {#each table_config.columns_setting as elem, index}
+    // (196:20) {#each table_config.columns_setting as elem, index}
     function create_each_block_3(ctx) {
     	let div;
     	let span;
@@ -912,7 +912,7 @@
     	};
     }
 
-    // (218:24) {#if options.includes(CREATE)}
+    // (213:24) {#if options.includes(CREATE)}
     function create_if_block_11(ctx) {
     	let div;
     	let mounted;
@@ -942,7 +942,7 @@
     	};
     }
 
-    // (234:32) {#if (column_order.name === genericCrudTableService.getKey(elem))}
+    // (229:32) {#if (column_order.name === genericCrudTableService.getKey(elem))}
     function create_if_block_9(ctx) {
     	let div1;
     	let div0;
@@ -1058,7 +1058,7 @@
     	};
     }
 
-    // (245:44) {:else}
+    // (240:44) {:else}
     function create_else_block_1(ctx) {
     	let t_value = /*table_data*/ ctx[0][/*i*/ ctx[42]][/*column_order*/ ctx[43].name] + "";
     	let t;
@@ -1079,7 +1079,7 @@
     	};
     }
 
-    // (243:44) {#if column_order.type === 'html'}
+    // (238:44) {#if column_order.type === 'html'}
     function create_if_block_10(ctx) {
     	let html_tag;
     	let raw_value = /*table_data*/ ctx[0][/*i*/ ctx[42]][/*column_order*/ ctx[43].name] + "";
@@ -1104,7 +1104,7 @@
     	};
     }
 
-    // (255:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
+    // (250:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
     function create_if_block_2(ctx) {
     	let div3;
     	let div0;
@@ -1277,7 +1277,7 @@
     	};
     }
 
-    // (261:44) {#if options.includes(DELETE)}
+    // (256:44) {#if options.includes(DELETE)}
     function create_if_block_8(ctx) {
     	let div;
     	let div_aria_label_value;
@@ -1320,7 +1320,7 @@
     	};
     }
 
-    // (269:44) {#if options.includes(EDIT)}
+    // (264:44) {#if options.includes(EDIT)}
     function create_if_block_7(ctx) {
     	let div;
     	let mounted;
@@ -1357,7 +1357,7 @@
     	};
     }
 
-    // (276:44) {#if options.includes(DETAILS)}
+    // (271:44) {#if options.includes(DETAILS)}
     function create_if_block_5(ctx) {
     	let div;
     	let div_title_value;
@@ -1427,7 +1427,7 @@
     	};
     }
 
-    // (282:52) {:else}
+    // (277:52) {:else}
     function create_else_block(ctx) {
     	let html_tag;
     	let html_anchor;
@@ -1449,7 +1449,7 @@
     	};
     }
 
-    // (280:52) {#if table_config.details_text !== undefined}
+    // (275:52) {#if table_config.details_text !== undefined}
     function create_if_block_6(ctx) {
     	let t_value = /*table_config*/ ctx[1].details_text + "";
     	let t;
@@ -1470,7 +1470,7 @@
     	};
     }
 
-    // (291:44) {#if options.includes(EDIT)}
+    // (286:44) {#if options.includes(EDIT)}
     function create_if_block_4(ctx) {
     	let div0;
     	let t;
@@ -1533,7 +1533,7 @@
     	};
     }
 
-    // (309:44) {#if options.includes(DELETE)}
+    // (304:44) {#if options.includes(DELETE)}
     function create_if_block_3(ctx) {
     	let div0;
     	let div0_aria_label_value;
@@ -1602,7 +1602,7 @@
     	};
     }
 
-    // (232:28) {#each Object.entries(tableRow) as elem, k}
+    // (227:28) {#each Object.entries(tableRow) as elem, k}
     function create_each_block_2(ctx) {
     	let show_if_1 = /*column_order*/ ctx[43].name === /*genericCrudTableService*/ ctx[4].getKey(/*elem*/ ctx[46]);
     	let t;
@@ -1664,7 +1664,7 @@
     	};
     }
 
-    // (231:24) {#each table_config.columns_setting as column_order, j}
+    // (226:24) {#each table_config.columns_setting as column_order, j}
     function create_each_block_1(ctx) {
     	let each_1_anchor;
     	let each_value_2 = Object.entries(/*tableRow*/ ctx[40]);
@@ -1720,7 +1720,7 @@
     	};
     }
 
-    // (228:16) {#each table_data as tableRow, i (tableRow)}
+    // (223:16) {#each table_data as tableRow, i (tableRow)}
     function create_each_block(key_1, ctx) {
     	let div;
     	let t;
@@ -1847,7 +1847,7 @@
 
     function instance($$self, $$props, $$invalidate) {
     	let { shadowed = false } = $$props;
-    	const dispatch = createEventDispatcher();
+    	createEventDispatcher();
 
     	const table_config_default = {
     		name: "crud-table",
@@ -1918,12 +1918,7 @@
     	}
 
     	function dispatcher(name, details, event) {
-    		/* istanbul ignore next */
-    		if (shadowed) {
-    			event.target.dispatchEvent(new CustomEvent(name, { composed: true, detail: details }));
-    		} else {
-    			dispatch(name, details);
-    		}
+    		event.target.dispatchEvent(new CustomEvent(name, { composed: true, detail: details }));
     	}
 
     	function handleDetails(id, event) {
