@@ -72,11 +72,6 @@
     function set_style(node, key, value, important) {
         node.style.setProperty(key, value, important ? 'important' : '');
     }
-    function custom_event(type, detail) {
-        const e = document.createEvent('CustomEvent');
-        e.initCustomEvent(type, false, false, detail);
-        return e;
-    }
     class HtmlTag {
         constructor(anchor = null) {
             this.a = anchor;
@@ -119,25 +114,6 @@
     let current_component;
     function set_current_component(component) {
         current_component = component;
-    }
-    function get_current_component() {
-        if (!current_component)
-            throw new Error('Function called outside component initialization');
-        return current_component;
-    }
-    function createEventDispatcher() {
-        const component = get_current_component();
-        return (type, detail) => {
-            const callbacks = component.$$.callbacks[type];
-            if (callbacks) {
-                // TODO are there situations where events could be dispatched
-                // in a server (non-DOM) environment?
-                const event = custom_event(type, detail);
-                callbacks.slice().forEach(fn => {
-                    fn.call(component, event);
-                });
-            }
-        };
     }
 
     const dirty_components = [];
@@ -637,33 +613,33 @@
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[40] = list[i];
-    	child_ctx[42] = i;
+    	child_ctx[39] = list[i];
+    	child_ctx[41] = i;
     	return child_ctx;
     }
 
     function get_each_context_1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[43] = list[i];
-    	child_ctx[45] = i;
+    	child_ctx[42] = list[i];
+    	child_ctx[44] = i;
     	return child_ctx;
     }
 
     function get_each_context_2(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[46] = list[i];
-    	child_ctx[48] = i;
+    	child_ctx[45] = list[i];
+    	child_ctx[47] = i;
     	return child_ctx;
     }
 
     function get_each_context_3(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[46] = list[i];
-    	child_ctx[50] = i;
+    	child_ctx[45] = list[i];
+    	child_ctx[49] = i;
     	return child_ctx;
     }
 
-    // (194:4) {#if (table_data !== undefined)}
+    // (186:4) {#if (table_data !== undefined)}
     function create_if_block(ctx) {
     	let show_if = Array.isArray(/*table_data*/ ctx[0]);
     	let if_block_anchor;
@@ -701,7 +677,7 @@
     	};
     }
 
-    // (196:8) {#if Array.isArray(table_data)}
+    // (188:8) {#if Array.isArray(table_data)}
     function create_if_block_1(ctx) {
     	let div2;
     	let div1;
@@ -720,7 +696,7 @@
 
     	let if_block = show_if && create_if_block_11(ctx);
     	let each_value = /*table_data*/ ctx[0];
-    	const get_key = ctx => /*tableRow*/ ctx[40];
+    	const get_key = ctx => /*tableRow*/ ctx[39];
 
     	for (let i = 0; i < each_value.length; i += 1) {
     		let child_ctx = get_each_context(ctx, each_value, i);
@@ -835,11 +811,11 @@
     	};
     }
 
-    // (201:20) {#each table_config.columns_setting as elem, index}
+    // (193:20) {#each table_config.columns_setting as elem, index}
     function create_each_block_3(ctx) {
     	let div;
     	let span;
-    	let t_value = /*genericCrudTableService*/ ctx[4].makeCapitalLead(/*elem*/ ctx[46].name) + "";
+    	let t_value = /*genericCrudTableService*/ ctx[4].makeCapitalLead(/*elem*/ ctx[45].name) + "";
     	let t;
     	let span_aria_label_value;
     	let div_class_value;
@@ -848,11 +824,11 @@
     	let dispose;
 
     	function click_handler(...args) {
-    		return /*click_handler*/ ctx[23](/*elem*/ ctx[46], ...args);
+    		return /*click_handler*/ ctx[23](/*elem*/ ctx[45], ...args);
     	}
 
     	function mouseenter_handler(...args) {
-    		return /*mouseenter_handler*/ ctx[24](/*elem*/ ctx[46], ...args);
+    		return /*mouseenter_handler*/ ctx[24](/*elem*/ ctx[45], ...args);
     	}
 
     	return {
@@ -860,14 +836,14 @@
     			div = element("div");
     			span = element("span");
     			t = text(t_value);
-    			attr(span, "aria-label", span_aria_label_value = "Sort" + /*elem*/ ctx[46].name);
-    			attr(div, "id", /*index*/ ctx[50]);
+    			attr(span, "aria-label", span_aria_label_value = "Sort" + /*elem*/ ctx[45].name);
+    			attr(div, "id", /*index*/ ctx[49]);
 
-    			attr(div, "class", div_class_value = "td headline " + (/*genericCrudTableService*/ ctx[4].isShowField(/*elem*/ ctx[46].name) === false
+    			attr(div, "class", div_class_value = "td headline " + (/*genericCrudTableService*/ ctx[4].isShowField(/*elem*/ ctx[45].name) === false
     			? "hidden"
     			: "shown"));
 
-    			attr(div, "style", div_style_value = /*setWidth*/ ctx[20](/*elem*/ ctx[46], /*index*/ ctx[50]));
+    			attr(div, "style", div_style_value = /*setWidth*/ ctx[20](/*elem*/ ctx[45], /*index*/ ctx[49]));
     		},
     		m(target, anchor) {
     			insert(target, div, anchor);
@@ -888,19 +864,19 @@
     		},
     		p(new_ctx, dirty) {
     			ctx = new_ctx;
-    			if (dirty[0] & /*genericCrudTableService, table_config*/ 18 && t_value !== (t_value = /*genericCrudTableService*/ ctx[4].makeCapitalLead(/*elem*/ ctx[46].name) + "")) set_data(t, t_value);
+    			if (dirty[0] & /*genericCrudTableService, table_config*/ 18 && t_value !== (t_value = /*genericCrudTableService*/ ctx[4].makeCapitalLead(/*elem*/ ctx[45].name) + "")) set_data(t, t_value);
 
-    			if (dirty[0] & /*table_config*/ 2 && span_aria_label_value !== (span_aria_label_value = "Sort" + /*elem*/ ctx[46].name)) {
+    			if (dirty[0] & /*table_config*/ 2 && span_aria_label_value !== (span_aria_label_value = "Sort" + /*elem*/ ctx[45].name)) {
     				attr(span, "aria-label", span_aria_label_value);
     			}
 
-    			if (dirty[0] & /*genericCrudTableService, table_config*/ 18 && div_class_value !== (div_class_value = "td headline " + (/*genericCrudTableService*/ ctx[4].isShowField(/*elem*/ ctx[46].name) === false
+    			if (dirty[0] & /*genericCrudTableService, table_config*/ 18 && div_class_value !== (div_class_value = "td headline " + (/*genericCrudTableService*/ ctx[4].isShowField(/*elem*/ ctx[45].name) === false
     			? "hidden"
     			: "shown"))) {
     				attr(div, "class", div_class_value);
     			}
 
-    			if (dirty[0] & /*table_config*/ 2 && div_style_value !== (div_style_value = /*setWidth*/ ctx[20](/*elem*/ ctx[46], /*index*/ ctx[50]))) {
+    			if (dirty[0] & /*table_config*/ 2 && div_style_value !== (div_style_value = /*setWidth*/ ctx[20](/*elem*/ ctx[45], /*index*/ ctx[49]))) {
     				attr(div, "style", div_style_value);
     			}
     		},
@@ -912,7 +888,7 @@
     	};
     }
 
-    // (218:24) {#if options.includes(CREATE)}
+    // (210:24) {#if options.includes(CREATE)}
     function create_if_block_11(ctx) {
     	let div;
     	let mounted;
@@ -942,7 +918,7 @@
     	};
     }
 
-    // (234:32) {#if (column_order.name === genericCrudTableService.getKey(elem))}
+    // (226:32) {#if (column_order.name === genericCrudTableService.getKey(elem))}
     function create_if_block_9(ctx) {
     	let div1;
     	let div0;
@@ -959,7 +935,7 @@
     	let dispose;
 
     	function select_block_type(ctx, dirty) {
-    		if (/*column_order*/ ctx[43].type === "html") return create_if_block_10;
+    		if (/*column_order*/ ctx[42].type === "html") return create_if_block_10;
     		return create_else_block_1;
     	}
 
@@ -967,7 +943,7 @@
     	let if_block = current_block_type(ctx);
 
     	function mouseenter_handler_1(...args) {
-    		return /*mouseenter_handler_1*/ ctx[25](/*column_order*/ ctx[43], /*i*/ ctx[42], ...args);
+    		return /*mouseenter_handler_1*/ ctx[25](/*column_order*/ ctx[42], /*i*/ ctx[41], ...args);
     	}
 
     	return {
@@ -977,20 +953,20 @@
     			if_block.c();
     			t = space();
     			textarea = element("textarea");
-    			attr(div0, "id", div0_id_value = /*name*/ ctx[2] + /*column_order*/ ctx[43].name + /*i*/ ctx[42] + "-disabled");
+    			attr(div0, "id", div0_id_value = /*name*/ ctx[2] + /*column_order*/ ctx[42].name + /*i*/ ctx[41] + "-disabled");
     			attr(div0, "class", "td-disabled shown");
-    			attr(div0, "aria-label", div0_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[43].name + /*i*/ ctx[42] + "-disabled");
-    			attr(textarea, "id", textarea_id_value = /*name*/ ctx[2] + /*column_order*/ ctx[43].name + /*i*/ ctx[42]);
+    			attr(div0, "aria-label", div0_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[42].name + /*i*/ ctx[41] + "-disabled");
+    			attr(textarea, "id", textarea_id_value = /*name*/ ctx[2] + /*column_order*/ ctx[42].name + /*i*/ ctx[41]);
     			attr(textarea, "class", "hidden");
-    			attr(textarea, "aria-label", textarea_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[43].name + /*i*/ ctx[42]);
-    			textarea.value = textarea_value_value = /*table_data*/ ctx[0][/*i*/ ctx[42]][/*column_order*/ ctx[43].name];
-    			attr(div1, "id", div1_id_value = /*j*/ ctx[45] + "-" + /*tableNameToId*/ ctx[15](/*table_config*/ ctx[1].name) + "-" + /*k*/ ctx[48]);
+    			attr(textarea, "aria-label", textarea_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[42].name + /*i*/ ctx[41]);
+    			textarea.value = textarea_value_value = /*table_data*/ ctx[0][/*i*/ ctx[41]][/*column_order*/ ctx[42].name];
+    			attr(div1, "id", div1_id_value = /*j*/ ctx[44] + "-" + /*tableNameToId*/ ctx[15](/*table_config*/ ctx[1].name) + "-" + /*k*/ ctx[47]);
 
-    			attr(div1, "class", div1_class_value = "td " + (/*genericCrudTableService*/ ctx[4].isShowField(/*column_order*/ ctx[43].name) === false
+    			attr(div1, "class", div1_class_value = "td " + (/*genericCrudTableService*/ ctx[4].isShowField(/*column_order*/ ctx[42].name) === false
     			? "hidden"
     			: "shown"));
 
-    			attr(div1, "style", /*getWidth*/ ctx[19](/*j*/ ctx[45]));
+    			attr(div1, "style", /*getWidth*/ ctx[19](/*j*/ ctx[44]));
     		},
     		m(target, anchor) {
     			insert(target, div1, anchor);
@@ -1019,31 +995,31 @@
     				}
     			}
 
-    			if (dirty[0] & /*name, table_config, table_data*/ 7 && div0_id_value !== (div0_id_value = /*name*/ ctx[2] + /*column_order*/ ctx[43].name + /*i*/ ctx[42] + "-disabled")) {
+    			if (dirty[0] & /*name, table_config, table_data*/ 7 && div0_id_value !== (div0_id_value = /*name*/ ctx[2] + /*column_order*/ ctx[42].name + /*i*/ ctx[41] + "-disabled")) {
     				attr(div0, "id", div0_id_value);
     			}
 
-    			if (dirty[0] & /*name, table_config, table_data*/ 7 && div0_aria_label_value !== (div0_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[43].name + /*i*/ ctx[42] + "-disabled")) {
+    			if (dirty[0] & /*name, table_config, table_data*/ 7 && div0_aria_label_value !== (div0_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[42].name + /*i*/ ctx[41] + "-disabled")) {
     				attr(div0, "aria-label", div0_aria_label_value);
     			}
 
-    			if (dirty[0] & /*name, table_config, table_data*/ 7 && textarea_id_value !== (textarea_id_value = /*name*/ ctx[2] + /*column_order*/ ctx[43].name + /*i*/ ctx[42])) {
+    			if (dirty[0] & /*name, table_config, table_data*/ 7 && textarea_id_value !== (textarea_id_value = /*name*/ ctx[2] + /*column_order*/ ctx[42].name + /*i*/ ctx[41])) {
     				attr(textarea, "id", textarea_id_value);
     			}
 
-    			if (dirty[0] & /*name, table_config, table_data*/ 7 && textarea_aria_label_value !== (textarea_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[43].name + /*i*/ ctx[42])) {
+    			if (dirty[0] & /*name, table_config, table_data*/ 7 && textarea_aria_label_value !== (textarea_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[42].name + /*i*/ ctx[41])) {
     				attr(textarea, "aria-label", textarea_aria_label_value);
     			}
 
-    			if (dirty[0] & /*table_data, table_config*/ 3 && textarea_value_value !== (textarea_value_value = /*table_data*/ ctx[0][/*i*/ ctx[42]][/*column_order*/ ctx[43].name])) {
+    			if (dirty[0] & /*table_data, table_config*/ 3 && textarea_value_value !== (textarea_value_value = /*table_data*/ ctx[0][/*i*/ ctx[41]][/*column_order*/ ctx[42].name])) {
     				textarea.value = textarea_value_value;
     			}
 
-    			if (dirty[0] & /*table_config*/ 2 && div1_id_value !== (div1_id_value = /*j*/ ctx[45] + "-" + /*tableNameToId*/ ctx[15](/*table_config*/ ctx[1].name) + "-" + /*k*/ ctx[48])) {
+    			if (dirty[0] & /*table_config*/ 2 && div1_id_value !== (div1_id_value = /*j*/ ctx[44] + "-" + /*tableNameToId*/ ctx[15](/*table_config*/ ctx[1].name) + "-" + /*k*/ ctx[47])) {
     				attr(div1, "id", div1_id_value);
     			}
 
-    			if (dirty[0] & /*genericCrudTableService, table_config*/ 18 && div1_class_value !== (div1_class_value = "td " + (/*genericCrudTableService*/ ctx[4].isShowField(/*column_order*/ ctx[43].name) === false
+    			if (dirty[0] & /*genericCrudTableService, table_config*/ 18 && div1_class_value !== (div1_class_value = "td " + (/*genericCrudTableService*/ ctx[4].isShowField(/*column_order*/ ctx[42].name) === false
     			? "hidden"
     			: "shown"))) {
     				attr(div1, "class", div1_class_value);
@@ -1058,9 +1034,9 @@
     	};
     }
 
-    // (245:44) {:else}
+    // (237:44) {:else}
     function create_else_block_1(ctx) {
-    	let t_value = /*table_data*/ ctx[0][/*i*/ ctx[42]][/*column_order*/ ctx[43].name] + "";
+    	let t_value = /*table_data*/ ctx[0][/*i*/ ctx[41]][/*column_order*/ ctx[42].name] + "";
     	let t;
 
     	return {
@@ -1071,7 +1047,7 @@
     			insert(target, t, anchor);
     		},
     		p(ctx, dirty) {
-    			if (dirty[0] & /*table_data, table_config*/ 3 && t_value !== (t_value = /*table_data*/ ctx[0][/*i*/ ctx[42]][/*column_order*/ ctx[43].name] + "")) set_data(t, t_value);
+    			if (dirty[0] & /*table_data, table_config*/ 3 && t_value !== (t_value = /*table_data*/ ctx[0][/*i*/ ctx[41]][/*column_order*/ ctx[42].name] + "")) set_data(t, t_value);
     		},
     		d(detaching) {
     			if (detaching) detach(t);
@@ -1079,10 +1055,10 @@
     	};
     }
 
-    // (243:44) {#if column_order.type === 'html'}
+    // (235:44) {#if column_order.type === 'html'}
     function create_if_block_10(ctx) {
     	let html_tag;
-    	let raw_value = /*table_data*/ ctx[0][/*i*/ ctx[42]][/*column_order*/ ctx[43].name] + "";
+    	let raw_value = /*table_data*/ ctx[0][/*i*/ ctx[41]][/*column_order*/ ctx[42].name] + "";
     	let html_anchor;
 
     	return {
@@ -1095,7 +1071,7 @@
     			insert(target, html_anchor, anchor);
     		},
     		p(ctx, dirty) {
-    			if (dirty[0] & /*table_data, table_config*/ 3 && raw_value !== (raw_value = /*table_data*/ ctx[0][/*i*/ ctx[42]][/*column_order*/ ctx[43].name] + "")) html_tag.p(raw_value);
+    			if (dirty[0] & /*table_data, table_config*/ 3 && raw_value !== (raw_value = /*table_data*/ ctx[0][/*i*/ ctx[41]][/*column_order*/ ctx[42].name] + "")) html_tag.p(raw_value);
     		},
     		d(detaching) {
     			if (detaching) detach(html_anchor);
@@ -1104,7 +1080,7 @@
     	};
     }
 
-    // (255:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
+    // (247:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
     function create_if_block_2(ctx) {
     	let div3;
     	let div0;
@@ -1145,13 +1121,13 @@
     			t3 = space();
     			div2 = element("div");
     			if (if_block4) if_block4.c();
-    			attr(div0, "id", div0_id_value = "" + (/*name*/ ctx[2] + "options-default" + /*i*/ ctx[42]));
-    			attr(div0, "aria-label", div0_aria_label_value = "" + (/*name*/ ctx[2] + "options-default" + /*i*/ ctx[42]));
+    			attr(div0, "id", div0_id_value = "" + (/*name*/ ctx[2] + "options-default" + /*i*/ ctx[41]));
+    			attr(div0, "aria-label", div0_aria_label_value = "" + (/*name*/ ctx[2] + "options-default" + /*i*/ ctx[41]));
     			attr(div0, "class", "options-field shown");
-    			attr(div1, "id", div1_id_value = "" + (/*name*/ ctx[2] + "options-edit" + /*i*/ ctx[42]));
+    			attr(div1, "id", div1_id_value = "" + (/*name*/ ctx[2] + "options-edit" + /*i*/ ctx[41]));
     			attr(div1, "class", "options-field hidden");
-    			attr(div2, "id", div2_id_value = "" + (/*name*/ ctx[2] + "options-delete" + /*i*/ ctx[42]));
-    			attr(div2, "aria-label", div2_aria_label_value = "" + (/*name*/ ctx[2] + "options-delete" + /*i*/ ctx[42]));
+    			attr(div2, "id", div2_id_value = "" + (/*name*/ ctx[2] + "options-delete" + /*i*/ ctx[41]));
+    			attr(div2, "aria-label", div2_aria_label_value = "" + (/*name*/ ctx[2] + "options-delete" + /*i*/ ctx[41]));
     			attr(div2, "class", "options-field hidden");
     			attr(div3, "class", "td");
     		},
@@ -1216,11 +1192,11 @@
     				if_block2 = null;
     			}
 
-    			if (dirty[0] & /*name, table_data*/ 5 && div0_id_value !== (div0_id_value = "" + (/*name*/ ctx[2] + "options-default" + /*i*/ ctx[42]))) {
+    			if (dirty[0] & /*name, table_data*/ 5 && div0_id_value !== (div0_id_value = "" + (/*name*/ ctx[2] + "options-default" + /*i*/ ctx[41]))) {
     				attr(div0, "id", div0_id_value);
     			}
 
-    			if (dirty[0] & /*name, table_data*/ 5 && div0_aria_label_value !== (div0_aria_label_value = "" + (/*name*/ ctx[2] + "options-default" + /*i*/ ctx[42]))) {
+    			if (dirty[0] & /*name, table_data*/ 5 && div0_aria_label_value !== (div0_aria_label_value = "" + (/*name*/ ctx[2] + "options-default" + /*i*/ ctx[41]))) {
     				attr(div0, "aria-label", div0_aria_label_value);
     			}
 
@@ -1239,7 +1215,7 @@
     				if_block3 = null;
     			}
 
-    			if (dirty[0] & /*name, table_data*/ 5 && div1_id_value !== (div1_id_value = "" + (/*name*/ ctx[2] + "options-edit" + /*i*/ ctx[42]))) {
+    			if (dirty[0] & /*name, table_data*/ 5 && div1_id_value !== (div1_id_value = "" + (/*name*/ ctx[2] + "options-edit" + /*i*/ ctx[41]))) {
     				attr(div1, "id", div1_id_value);
     			}
 
@@ -1258,11 +1234,11 @@
     				if_block4 = null;
     			}
 
-    			if (dirty[0] & /*name, table_data*/ 5 && div2_id_value !== (div2_id_value = "" + (/*name*/ ctx[2] + "options-delete" + /*i*/ ctx[42]))) {
+    			if (dirty[0] & /*name, table_data*/ 5 && div2_id_value !== (div2_id_value = "" + (/*name*/ ctx[2] + "options-delete" + /*i*/ ctx[41]))) {
     				attr(div2, "id", div2_id_value);
     			}
 
-    			if (dirty[0] & /*name, table_data*/ 5 && div2_aria_label_value !== (div2_aria_label_value = "" + (/*name*/ ctx[2] + "options-delete" + /*i*/ ctx[42]))) {
+    			if (dirty[0] & /*name, table_data*/ 5 && div2_aria_label_value !== (div2_aria_label_value = "" + (/*name*/ ctx[2] + "options-delete" + /*i*/ ctx[41]))) {
     				attr(div2, "aria-label", div2_aria_label_value);
     			}
     		},
@@ -1277,7 +1253,7 @@
     	};
     }
 
-    // (261:44) {#if options.includes(DELETE)}
+    // (253:44) {#if options.includes(DELETE)}
     function create_if_block_8(ctx) {
     	let div;
     	let div_aria_label_value;
@@ -1285,7 +1261,7 @@
     	let dispose;
 
     	function click_handler_1(...args) {
-    		return /*click_handler_1*/ ctx[26](/*i*/ ctx[42], ...args);
+    		return /*click_handler_1*/ ctx[26](/*i*/ ctx[41], ...args);
     	}
 
     	return {
@@ -1293,7 +1269,7 @@
     			div = element("div");
     			attr(div, "class", "options red");
     			attr(div, "title", "Delete");
-    			attr(div, "aria-label", div_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[43].name + /*i*/ ctx[42] + "delete");
+    			attr(div, "aria-label", div_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[42].name + /*i*/ ctx[41] + "delete");
     			attr(div, "tabindex", "0");
     		},
     		m(target, anchor) {
@@ -1308,7 +1284,7 @@
     		p(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (dirty[0] & /*name, table_config, table_data*/ 7 && div_aria_label_value !== (div_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[43].name + /*i*/ ctx[42] + "delete")) {
+    			if (dirty[0] & /*name, table_config, table_data*/ 7 && div_aria_label_value !== (div_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[42].name + /*i*/ ctx[41] + "delete")) {
     				attr(div, "aria-label", div_aria_label_value);
     			}
     		},
@@ -1320,14 +1296,14 @@
     	};
     }
 
-    // (269:44) {#if options.includes(EDIT)}
+    // (261:44) {#if options.includes(EDIT)}
     function create_if_block_7(ctx) {
     	let div;
     	let mounted;
     	let dispose;
 
     	function click_handler_2(...args) {
-    		return /*click_handler_2*/ ctx[27](/*i*/ ctx[42], ...args);
+    		return /*click_handler_2*/ ctx[27](/*i*/ ctx[41], ...args);
     	}
 
     	return {
@@ -1357,7 +1333,7 @@
     	};
     }
 
-    // (276:44) {#if options.includes(DETAILS)}
+    // (268:44) {#if options.includes(DETAILS)}
     function create_if_block_5(ctx) {
     	let div;
     	let div_title_value;
@@ -1373,7 +1349,7 @@
     	let if_block = current_block_type(ctx);
 
     	function click_handler_3(...args) {
-    		return /*click_handler_3*/ ctx[28](/*i*/ ctx[42], ...args);
+    		return /*click_handler_3*/ ctx[28](/*i*/ ctx[41], ...args);
     	}
 
     	return {
@@ -1427,7 +1403,7 @@
     	};
     }
 
-    // (282:52) {:else}
+    // (274:52) {:else}
     function create_else_block(ctx) {
     	let html_tag;
     	let html_anchor;
@@ -1449,7 +1425,7 @@
     	};
     }
 
-    // (280:52) {#if table_config.details_text !== undefined}
+    // (272:52) {#if table_config.details_text !== undefined}
     function create_if_block_6(ctx) {
     	let t_value = /*table_config*/ ctx[1].details_text + "";
     	let t;
@@ -1470,7 +1446,7 @@
     	};
     }
 
-    // (291:44) {#if options.includes(EDIT)}
+    // (283:44) {#if options.includes(EDIT)}
     function create_if_block_4(ctx) {
     	let div0;
     	let t;
@@ -1480,11 +1456,11 @@
     	let dispose;
 
     	function click_handler_4(...args) {
-    		return /*click_handler_4*/ ctx[29](/*i*/ ctx[42], ...args);
+    		return /*click_handler_4*/ ctx[29](/*i*/ ctx[41], ...args);
     	}
 
     	function click_handler_5(...args) {
-    		return /*click_handler_5*/ ctx[30](/*i*/ ctx[42], ...args);
+    		return /*click_handler_5*/ ctx[30](/*i*/ ctx[41], ...args);
     	}
 
     	return {
@@ -1497,7 +1473,7 @@
     			attr(div0, "tabindex", "0");
     			attr(div1, "class", "options red");
     			attr(div1, "title", "Cancel");
-    			attr(div1, "aria-label", div1_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[43].name + /*i*/ ctx[42] + "editCancel");
+    			attr(div1, "aria-label", div1_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[42].name + /*i*/ ctx[41] + "editCancel");
     			attr(div1, "tabindex", "0");
     		},
     		m(target, anchor) {
@@ -1519,7 +1495,7 @@
     		p(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (dirty[0] & /*name, table_config, table_data*/ 7 && div1_aria_label_value !== (div1_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[43].name + /*i*/ ctx[42] + "editCancel")) {
+    			if (dirty[0] & /*name, table_config, table_data*/ 7 && div1_aria_label_value !== (div1_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[42].name + /*i*/ ctx[41] + "editCancel")) {
     				attr(div1, "aria-label", div1_aria_label_value);
     			}
     		},
@@ -1533,7 +1509,7 @@
     	};
     }
 
-    // (309:44) {#if options.includes(DELETE)}
+    // (301:44) {#if options.includes(DELETE)}
     function create_if_block_3(ctx) {
     	let div0;
     	let div0_aria_label_value;
@@ -1544,11 +1520,11 @@
     	let dispose;
 
     	function click_handler_6(...args) {
-    		return /*click_handler_6*/ ctx[31](/*i*/ ctx[42], ...args);
+    		return /*click_handler_6*/ ctx[31](/*i*/ ctx[41], ...args);
     	}
 
     	function click_handler_7(...args) {
-    		return /*click_handler_7*/ ctx[32](/*i*/ ctx[42], ...args);
+    		return /*click_handler_7*/ ctx[32](/*i*/ ctx[41], ...args);
     	}
 
     	return {
@@ -1558,11 +1534,11 @@
     			div1 = element("div");
     			attr(div0, "class", "options red");
     			attr(div0, "title", "Cancel");
-    			attr(div0, "aria-label", div0_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[43].name + /*i*/ ctx[42] + "deleteCancel");
+    			attr(div0, "aria-label", div0_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[42].name + /*i*/ ctx[41] + "deleteCancel");
     			attr(div0, "tabindex", "0");
     			attr(div1, "class", "options green");
     			attr(div1, "title", "Delete");
-    			attr(div1, "aria-label", div1_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[43].name + /*i*/ ctx[42] + "deleteConfirmation");
+    			attr(div1, "aria-label", div1_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[42].name + /*i*/ ctx[41] + "deleteConfirmation");
     			attr(div1, "tabindex", "0");
     		},
     		m(target, anchor) {
@@ -1584,11 +1560,11 @@
     		p(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (dirty[0] & /*name, table_config, table_data*/ 7 && div0_aria_label_value !== (div0_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[43].name + /*i*/ ctx[42] + "deleteCancel")) {
+    			if (dirty[0] & /*name, table_config, table_data*/ 7 && div0_aria_label_value !== (div0_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[42].name + /*i*/ ctx[41] + "deleteCancel")) {
     				attr(div0, "aria-label", div0_aria_label_value);
     			}
 
-    			if (dirty[0] & /*name, table_config, table_data*/ 7 && div1_aria_label_value !== (div1_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[43].name + /*i*/ ctx[42] + "deleteConfirmation")) {
+    			if (dirty[0] & /*name, table_config, table_data*/ 7 && div1_aria_label_value !== (div1_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[42].name + /*i*/ ctx[41] + "deleteConfirmation")) {
     				attr(div1, "aria-label", div1_aria_label_value);
     			}
     		},
@@ -1602,11 +1578,11 @@
     	};
     }
 
-    // (232:28) {#each Object.entries(tableRow) as elem, k}
+    // (224:28) {#each Object.entries(tableRow) as elem, k}
     function create_each_block_2(ctx) {
-    	let show_if_1 = /*column_order*/ ctx[43].name === /*genericCrudTableService*/ ctx[4].getKey(/*elem*/ ctx[46]);
+    	let show_if_1 = /*column_order*/ ctx[42].name === /*genericCrudTableService*/ ctx[4].getKey(/*elem*/ ctx[45]);
     	let t;
-    	let show_if = /*table_config*/ ctx[1].columns_setting.length - 1 === /*j*/ ctx[45] && Object.entries(/*tableRow*/ ctx[40]).length - 1 === /*k*/ ctx[48];
+    	let show_if = /*table_config*/ ctx[1].columns_setting.length - 1 === /*j*/ ctx[44] && Object.entries(/*tableRow*/ ctx[39]).length - 1 === /*k*/ ctx[47];
     	let if_block1_anchor;
     	let if_block0 = show_if_1 && create_if_block_9(ctx);
     	let if_block1 = show_if && create_if_block_2(ctx);
@@ -1625,7 +1601,7 @@
     			insert(target, if_block1_anchor, anchor);
     		},
     		p(ctx, dirty) {
-    			if (dirty[0] & /*table_config, genericCrudTableService, table_data*/ 19) show_if_1 = /*column_order*/ ctx[43].name === /*genericCrudTableService*/ ctx[4].getKey(/*elem*/ ctx[46]);
+    			if (dirty[0] & /*table_config, genericCrudTableService, table_data*/ 19) show_if_1 = /*column_order*/ ctx[42].name === /*genericCrudTableService*/ ctx[4].getKey(/*elem*/ ctx[45]);
 
     			if (show_if_1) {
     				if (if_block0) {
@@ -1640,7 +1616,7 @@
     				if_block0 = null;
     			}
 
-    			if (dirty[0] & /*table_config, table_data*/ 3) show_if = /*table_config*/ ctx[1].columns_setting.length - 1 === /*j*/ ctx[45] && Object.entries(/*tableRow*/ ctx[40]).length - 1 === /*k*/ ctx[48];
+    			if (dirty[0] & /*table_config, table_data*/ 3) show_if = /*table_config*/ ctx[1].columns_setting.length - 1 === /*j*/ ctx[44] && Object.entries(/*tableRow*/ ctx[39]).length - 1 === /*k*/ ctx[47];
 
     			if (show_if) {
     				if (if_block1) {
@@ -1664,10 +1640,10 @@
     	};
     }
 
-    // (231:24) {#each table_config.columns_setting as column_order, j}
+    // (223:24) {#each table_config.columns_setting as column_order, j}
     function create_each_block_1(ctx) {
     	let each_1_anchor;
-    	let each_value_2 = Object.entries(/*tableRow*/ ctx[40]);
+    	let each_value_2 = Object.entries(/*tableRow*/ ctx[39]);
     	let each_blocks = [];
 
     	for (let i = 0; i < each_value_2.length; i += 1) {
@@ -1691,7 +1667,7 @@
     		},
     		p(ctx, dirty) {
     			if (dirty[0] & /*name, table_data, table_config, handleDeleteConfirmation, handleCancelDelete, options, handleCancelEdit, handleEditConfirmation, handleDetails, handleEdit, handleDelete, tableNameToId, genericCrudTableService, getWidth, showTooltipByConfig*/ 2666463) {
-    				each_value_2 = Object.entries(/*tableRow*/ ctx[40]);
+    				each_value_2 = Object.entries(/*tableRow*/ ctx[39]);
     				let i;
 
     				for (i = 0; i < each_value_2.length; i += 1) {
@@ -1720,7 +1696,7 @@
     	};
     }
 
-    // (228:16) {#each table_data as tableRow, i (tableRow)}
+    // (220:16) {#each table_data as tableRow, i (tableRow)}
     function create_each_block(key_1, ctx) {
     	let div;
     	let t;
@@ -1743,7 +1719,7 @@
     			}
 
     			t = space();
-    			attr(div, "class", div_class_value = "row " + (/*i*/ ctx[42] % 2 === 0 ? "dark" : ""));
+    			attr(div, "class", div_class_value = "row " + (/*i*/ ctx[41] % 2 === 0 ? "dark" : ""));
 
     			set_style(div, "min-height", /*table_config*/ ctx[1].row_settings !== undefined && /*table_config*/ ctx[1].row_settings.height !== undefined
     			? /*table_config*/ ctx[1].row_settings.height
@@ -1786,7 +1762,7 @@
     				each_blocks.length = each_value_1.length;
     			}
 
-    			if (dirty[0] & /*table_data*/ 1 && div_class_value !== (div_class_value = "row " + (/*i*/ ctx[42] % 2 === 0 ? "dark" : ""))) {
+    			if (dirty[0] & /*table_data*/ 1 && div_class_value !== (div_class_value = "row " + (/*i*/ ctx[41] % 2 === 0 ? "dark" : ""))) {
     				attr(div, "class", div_class_value);
     			}
 
@@ -1847,7 +1823,6 @@
 
     function instance($$self, $$props, $$invalidate) {
     	let { shadowed = false } = $$props;
-    	const dispatch = createEventDispatcher();
 
     	const table_config_default = {
     		name: "crud-table",
@@ -1918,12 +1893,7 @@
     	}
 
     	function dispatcher(name, details, event) {
-    		/* istanbul ignore next */
-    		if (shadowed) {
-    			event.target.dispatchEvent(new CustomEvent(name, { composed: true, detail: details }));
-    		} else {
-    			dispatch(name, details);
-    		}
+    		event.target.dispatchEvent(new CustomEvent(name, { composed: true, detail: details }));
     	}
 
     	function handleDetails(id, event) {
