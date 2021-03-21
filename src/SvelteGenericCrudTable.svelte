@@ -69,24 +69,23 @@
 
     function handleEdit(id, event) {
         console.log(event.target.closest('.row'))
-        resetRawInEditMode(id, event.target.closest('.row'));
+        resetRawInEditMode(id, event);
         cursor = id;
         for (let i = 0; i < table_data.length; i++) {
-            genericCrudTable.resetEditMode(i);
+            genericCrudTable.resetEditMode(i, event);
         }
         genericCrudTable.setEditMode(id);
     }
 
     function handleCancelEdit(id, event) {
-        console.log(event.target.closest('.row'))
-        genericCrudTable.resetRawValues(id, table_data, event.target.closest('.row'));
-        genericCrudTable.resetEditMode(id);
-        genericCrudTable.resetDeleteMode(id);
+        genericCrudTable.resetRawValues(id, table_data, event);
+        genericCrudTable.resetEditMode(id, event);
+        genericCrudTable.resetDeleteMode(id, event);
         cursor = NO_ROW_IN_EDIT_MODE;
     }
 
     function handleEditConfirmation(id, event) {
-        resetRawInEditMode(id, event.target.closest('.row'));
+        resetRawInEditMode(id, event);
         const body = genericCrudTable.gatherUpdates(id, table_data);
         table_data[id] = body;
         const details = {
@@ -286,9 +285,9 @@
                                     <div id={k + '-' + table_config.name + '-' + i}
                                          class="td {genericCrudTable.isShowField(column_order.name) === false ? 'hidden' : 'shown'}"
                                          style="{getWidth(j)}">
-                                        <div id={name + column_order.name + i + ':disabled'}
+                                        <div id={name + column_order.name + i + '-disabled'}
                                              class="td-disabled shown"
-                                             aria-label={name + column_order.name + i + ':disabled'}
+                                             aria-label={name + column_order.name + i + '-disabled'}
                                              on:mouseenter={(e) => {
                                              showTooltipByConfig(e, column_order.tooltip, table_data[i][column_order.name], column_order.type)}}>
                                             {#if column_order.type === 'html'}
