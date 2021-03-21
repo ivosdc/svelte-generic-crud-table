@@ -1,7 +1,7 @@
 //config crud-table
 
 let table_config = {
-    name: 'Awesome',
+    name: 'Awesome:',
     options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
     columns_setting: [
         {name: 'name', show: true, edit: true, width: '150px', tooltip: true},
