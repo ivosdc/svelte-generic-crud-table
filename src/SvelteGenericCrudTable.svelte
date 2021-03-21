@@ -36,7 +36,7 @@
     $: table_config = (typeof table_config === 'string') ? JSON.parse(table_config) : table_config;
 
     let name = '';
-    $: name = table_config.name;
+    $: name = tableNameToId(table_config.name);
 
     let options = [];
     /* istanbul ignore next line */
@@ -144,11 +144,15 @@
     const columnsWidth = [];
     const columnsResize = [];
 
+    function tableNameToId(name) {
+        return name.replace(':', '').replace(' ', '');
+    }
+
     function handleResize(event) {
         let elem = event.target;
         if (columnsResize[elem.id]) {
             let column;
-            let querySelector = '[id^="' + elem.id + '-' + table_config.name + '"]';
+            let querySelector = '[id^="' + elem.id + '-' + tableNameToId(table_config.name) + '"]';
             column = elem.closest('.table').querySelectorAll(querySelector);
             columnsWidth[elem.id] = (elem.offsetWidth - 8) + 'px';
             for (let i = 0; i < column.length; i++) {
@@ -228,7 +232,7 @@
                             {#each Object.entries(tableRow) as elem, k}
                                 <!-- /* istanbul ignore next */ -->
                                 {#if (column_order.name === genericCrudTableService.getKey(elem))}
-                                    <div id={j + '-' + table_config.name + '-' + k}
+                                    <div id={j + '-' + tableNameToId(table_config.name) + '-' + k}
                                          class="td {genericCrudTableService.isShowField(column_order.name) === false ? 'hidden' : 'shown'}"
                                          style="{getWidth(j)}">
                                         <div id={name + column_order.name + i + '-disabled'}

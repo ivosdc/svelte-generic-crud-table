@@ -1,6 +1,6 @@
 {
   "name": "svelte-generic-crud-table",
-  "version": "1.5.78",
+  "version": "1.5.79",
   "description": "<crud-table> renders object-arrays with options-panel and inline edit per row. Dispatches events for ongoing data handling. As self-containing webcomponent or for Svelte in 60KB",
   "main": "dist/build/crud-table.js",
   "module": "dist/build/crud-table.mjs",
@@ -48,7 +48,7 @@
     "jest": "^26.6.3",
     "jest-mock": "^26.6.2",
     "jest-svelte-resolver": "^1.0.0",
-    "rollup": "^2.42.0",
+    "rollup": "^2.42.1",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-svelte": "^6.1.1",
     "svelte": "^3.35.0",
