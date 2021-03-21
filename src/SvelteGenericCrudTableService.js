@@ -122,14 +122,10 @@ export class SvelteGenericCrudTableService {
         return body;
     }
 
-    resetRawValues(id, table) {
+    resetRawValues(id, table, parentrow) {
         this.table_config.columns_setting.forEach((elem) => {
             if (elem.show) {
-                if (this.shadowed) {
-                    document.querySelector('crud-table').shadowRoot.getElementById(this.name + elem.name + id).value = table[id][elem.name]
-                } else {
-                    document.getElementById(this.name + elem.name + id).value = table[id][elem.name];
-                }
+                parentrow.querySelector('#' + this.name + elem.name + id).value = table[id][elem.name];
             }
         })
     }

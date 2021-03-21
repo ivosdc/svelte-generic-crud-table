@@ -48,8 +48,28 @@
     $: genericCrudTable = new SvelteGenericCrudTableService(table_config, shadowed);
 
 
-    function handleEdit(id) {
-        resetRawInEditMode(id);
+    function queryParentElement(el, selector) {
+        let isIDSelector = selector.indexOf("#") === 0
+        if (selector.indexOf('.') === 0 || selector.indexOf('#') === 0) {
+            selector = selector.slice(1)
+        }
+        while (el) {
+            if (isIDSelector) {
+                if (el.id === selector) {
+                    return el
+                }
+            }
+            else if (el.classList.contains(selector)) {
+                return el;
+            }
+            el = el.parentElement;
+        }
+        return null;
+    }
+
+    function handleEdit(id, event) {
+        console.log(event.target.closest('.row'))
+        resetRawInEditMode(id, event.target.closest('.row'));
         cursor = id;
         for (let i = 0; i < table_data.length; i++) {
             genericCrudTable.resetEditMode(i);
@@ -57,15 +77,16 @@
         genericCrudTable.setEditMode(id);
     }
 
-    function handleCancelEdit(id) {
-        genericCrudTable.resetRawValues(id, table_data);
+    function handleCancelEdit(id, event) {
+        console.log(event.target.closest('.row'))
+        genericCrudTable.resetRawValues(id, table_data, event.target.closest('.row'));
         genericCrudTable.resetEditMode(id);
         genericCrudTable.resetDeleteMode(id);
         cursor = NO_ROW_IN_EDIT_MODE;
     }
 
     function handleEditConfirmation(id, event) {
-        resetRawInEditMode(id);
+        resetRawInEditMode(id, event.target.closest('.row'));
         const body = genericCrudTable.gatherUpdates(id, table_data);
         table_data[id] = body;
         const details = {
@@ -76,8 +97,8 @@
         dispatcher('update', details, event);
     }
 
-    function handleDelete(id) {
-        resetRawInEditMode(id);
+    function handleDelete(id, event) {
+        resetRawInEditMode(id, event.target.closest('.row'));
         genericCrudTable.resetDeleteMode(id)
         cursor = id;
         genericCrudTable.setDeleteMode(id);
@@ -119,7 +140,7 @@
 
 
     function handleDetails(id, event) {
-        resetRawInEditMode(id);
+        resetRawInEditMode(id, event);
         const body = genericCrudTable.gatherUpdates(id, table_data);
         const details = {
             id: id,
@@ -129,9 +150,9 @@
     }
 
 
-    function resetRawInEditMode(id) {
+    function resetRawInEditMode(id, event) {
         if ((cursor !== id) && (cursor !== NO_ROW_IN_EDIT_MODE)) {
-            handleCancelEdit(cursor);
+            handleCancelEdit(cursor, event);
         }
     }
 
@@ -262,7 +283,7 @@
                             {#each Object.entries(tableRow) as elem, k}
                                 <!-- /* istanbul ignore next */ -->
                                 {#if (column_order.name === genericCrudTable.getKey(elem))}
-                                    <div id={k + '-' + table_config.name + '-' + j}
+                                    <div id={k + '-' + table_config.name + '-' + i}
                                          class="td {genericCrudTable.isShowField(column_order.name) === false ? 'hidden' : 'shown'}"
                                          style="{getWidth(j)}">
                                         <div id={name + column_order.name + i + ':disabled'}
@@ -289,7 +310,7 @@
                                              class="options-field shown">
                                             <!-- /* istanbul ignore next */ -->
                                             {#if options.includes(DELETE)}
-                                                <div class="options red" on:click={() => handleDelete(i)}
+                                                <div class="options red" on:click={(e) => handleDelete(i, e)}
                                                      title="Delete"
                                                      aria-label={name + column_order.name + i + 'delete'} tabindex="0">
                                                     {@html icontrash}
@@ -324,7 +345,7 @@
                                                      title="Update" tabindex="0">
                                                     {@html iconsave}
                                                 </div>
-                                                <div class="options red" on:click="{() => {handleCancelEdit(i)}}"
+                                                <div class="options red" on:click="{(e) => {handleCancelEdit(i, e)}}"
                                                      title="Cancel"
                                                      aria-label={name + column_order.name + i + 'editCancel'}
                                                      tabindex="0">
@@ -337,7 +358,7 @@
                                              class="options-field hidden">
                                             <!-- /* istanbul ignore next */ -->
                                             {#if options.includes(DELETE)}
-                                                <div class="options red" on:click={() => handleCancelDelete(i)}
+                                                <div class="options red" on:click={(e) => handleCancelDelete(i, e)}
                                                      title="Cancel"
                                                      aria-label={name + column_order.name + i + 'deleteCancel'}
                                                      tabindex="0">

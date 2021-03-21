@@ -552,14 +552,12 @@ class SvelteGenericCrudTableService {
         return body;
     }
 
-    resetRawValues(id, table) {
+    resetRawValues(id, table, parentrow) {
+        console.log(parentrow);
         this.table_config.columns_setting.forEach((elem) => {
             if (elem.show) {
-                if (this.shadowed) {
-                    document.querySelector('crud-table').shadowRoot.getElementById(this.name + elem.name + id).value = table[id][elem.name];
-                } else {
-                    document.getElementById(this.name + elem.name + id).value = table[id][elem.name];
-                }
+                console.log(parentrow.querySelector('#' + this.name + elem.name + id));
+                parentrow.querySelector('#' + this.name + elem.name + id).value = table[id][elem.name];
             }
         });
     }
@@ -644,7 +642,7 @@ function get_each_context_3(ctx, list, i) {
 	return child_ctx;
 }
 
-// (224:4) {#if (table_data !== undefined)}
+// (245:4) {#if (table_data !== undefined)}
 function create_if_block(ctx) {
 	let show_if = Array.isArray(/*table_data*/ ctx[0]);
 	let if_block_anchor;
@@ -682,7 +680,7 @@ function create_if_block(ctx) {
 	};
 }
 
-// (226:8) {#if Array.isArray(table_data)}
+// (247:8) {#if Array.isArray(table_data)}
 function create_if_block_1(ctx) {
 	let div2;
 	let div1;
@@ -816,7 +814,7 @@ function create_if_block_1(ctx) {
 	};
 }
 
-// (231:20) {#each table_config.columns_setting as elem, index}
+// (252:20) {#each table_config.columns_setting as elem, index}
 function create_each_block_3(ctx) {
 	let div;
 	let span;
@@ -893,7 +891,7 @@ function create_each_block_3(ctx) {
 	};
 }
 
-// (248:24) {#if options.includes(CREATE)}
+// (269:24) {#if options.includes(CREATE)}
 function create_if_block_11(ctx) {
 	let div;
 	let mounted;
@@ -923,7 +921,7 @@ function create_if_block_11(ctx) {
 	};
 }
 
-// (264:32) {#if (column_order.name === genericCrudTable.getKey(elem))}
+// (285:32) {#if (column_order.name === genericCrudTable.getKey(elem))}
 function create_if_block_9(ctx) {
 	let div1;
 	let div0;
@@ -965,7 +963,7 @@ function create_if_block_9(ctx) {
 			attr(textarea, "class", "hidden");
 			attr(textarea, "aria-label", textarea_aria_label_value = /*name*/ ctx[2] + /*column_order*/ ctx[41].name + /*i*/ ctx[40]);
 			textarea.value = textarea_value_value = /*table_data*/ ctx[0][/*i*/ ctx[40]][/*column_order*/ ctx[41].name];
-			attr(div1, "id", div1_id_value = /*k*/ ctx[46] + "-" + /*table_config*/ ctx[1].name + "-" + /*j*/ ctx[43]);
+			attr(div1, "id", div1_id_value = /*k*/ ctx[46] + "-" + /*table_config*/ ctx[1].name + "-" + /*i*/ ctx[40]);
 
 			attr(div1, "class", div1_class_value = "td " + (/*genericCrudTable*/ ctx[4].isShowField(/*column_order*/ ctx[41].name) === false
 			? "hidden"
@@ -1020,7 +1018,7 @@ function create_if_block_9(ctx) {
 				textarea.value = textarea_value_value;
 			}
 
-			if (dirty[0] & /*table_config*/ 2 && div1_id_value !== (div1_id_value = /*k*/ ctx[46] + "-" + /*table_config*/ ctx[1].name + "-" + /*j*/ ctx[43])) {
+			if (dirty[0] & /*table_config, table_data*/ 3 && div1_id_value !== (div1_id_value = /*k*/ ctx[46] + "-" + /*table_config*/ ctx[1].name + "-" + /*i*/ ctx[40])) {
 				attr(div1, "id", div1_id_value);
 			}
 
@@ -1039,7 +1037,7 @@ function create_if_block_9(ctx) {
 	};
 }
 
-// (275:44) {:else}
+// (296:44) {:else}
 function create_else_block_1(ctx) {
 	let t_value = /*table_data*/ ctx[0][/*i*/ ctx[40]][/*column_order*/ ctx[41].name] + "";
 	let t;
@@ -1060,7 +1058,7 @@ function create_else_block_1(ctx) {
 	};
 }
 
-// (273:44) {#if column_order.type === 'html'}
+// (294:44) {#if column_order.type === 'html'}
 function create_if_block_10(ctx) {
 	let html_tag;
 	let raw_value = /*table_data*/ ctx[0][/*i*/ ctx[40]][/*column_order*/ ctx[41].name] + "";
@@ -1085,7 +1083,7 @@ function create_if_block_10(ctx) {
 	};
 }
 
-// (285:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
+// (306:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
 function create_if_block_2(ctx) {
 	let div3;
 	let div0;
@@ -1258,15 +1256,15 @@ function create_if_block_2(ctx) {
 	};
 }
 
-// (291:44) {#if options.includes(DELETE)}
+// (312:44) {#if options.includes(DELETE)}
 function create_if_block_8(ctx) {
 	let div;
 	let div_aria_label_value;
 	let mounted;
 	let dispose;
 
-	function click_handler_1() {
-		return /*click_handler_1*/ ctx[24](/*i*/ ctx[40]);
+	function click_handler_1(...args) {
+		return /*click_handler_1*/ ctx[24](/*i*/ ctx[40], ...args);
 	}
 
 	return {
@@ -1301,7 +1299,7 @@ function create_if_block_8(ctx) {
 	};
 }
 
-// (299:44) {#if options.includes(EDIT)}
+// (320:44) {#if options.includes(EDIT)}
 function create_if_block_7(ctx) {
 	let div;
 	let mounted;
@@ -1338,7 +1336,7 @@ function create_if_block_7(ctx) {
 	};
 }
 
-// (306:44) {#if options.includes(DETAILS)}
+// (327:44) {#if options.includes(DETAILS)}
 function create_if_block_5(ctx) {
 	let div;
 	let div_title_value;
@@ -1408,7 +1406,7 @@ function create_if_block_5(ctx) {
 	};
 }
 
-// (312:52) {:else}
+// (333:52) {:else}
 function create_else_block(ctx) {
 	let html_tag;
 	let html_anchor;
@@ -1430,7 +1428,7 @@ function create_else_block(ctx) {
 	};
 }
 
-// (310:52) {#if table_config.details_text !== undefined}
+// (331:52) {#if table_config.details_text !== undefined}
 function create_if_block_6(ctx) {
 	let t_value = /*table_config*/ ctx[1].details_text + "";
 	let t;
@@ -1451,7 +1449,7 @@ function create_if_block_6(ctx) {
 	};
 }
 
-// (321:44) {#if options.includes(EDIT)}
+// (342:44) {#if options.includes(EDIT)}
 function create_if_block_4(ctx) {
 	let div0;
 	let t;
@@ -1464,8 +1462,8 @@ function create_if_block_4(ctx) {
 		return /*click_handler_4*/ ctx[27](/*i*/ ctx[40], ...args);
 	}
 
-	function click_handler_5() {
-		return /*click_handler_5*/ ctx[28](/*i*/ ctx[40]);
+	function click_handler_5(...args) {
+		return /*click_handler_5*/ ctx[28](/*i*/ ctx[40], ...args);
 	}
 
 	return {
@@ -1514,7 +1512,7 @@ function create_if_block_4(ctx) {
 	};
 }
 
-// (339:44) {#if options.includes(DELETE)}
+// (360:44) {#if options.includes(DELETE)}
 function create_if_block_3(ctx) {
 	let div0;
 	let div0_aria_label_value;
@@ -1524,8 +1522,8 @@ function create_if_block_3(ctx) {
 	let mounted;
 	let dispose;
 
-	function click_handler_6() {
-		return /*click_handler_6*/ ctx[29](/*i*/ ctx[40]);
+	function click_handler_6(...args) {
+		return /*click_handler_6*/ ctx[29](/*i*/ ctx[40], ...args);
 	}
 
 	function click_handler_7(...args) {
@@ -1583,7 +1581,7 @@ function create_if_block_3(ctx) {
 	};
 }
 
-// (262:28) {#each Object.entries(tableRow) as elem, k}
+// (283:28) {#each Object.entries(tableRow) as elem, k}
 function create_each_block_2(ctx) {
 	let show_if_1 = /*column_order*/ ctx[41].name === /*genericCrudTable*/ ctx[4].getKey(/*elem*/ ctx[44]);
 	let t;
@@ -1645,7 +1643,7 @@ function create_each_block_2(ctx) {
 	};
 }
 
-// (261:24) {#each table_config.columns_setting as column_order, j}
+// (282:24) {#each table_config.columns_setting as column_order, j}
 function create_each_block_1(ctx) {
 	let each_1_anchor;
 	let each_value_2 = Object.entries(/*tableRow*/ ctx[38]);
@@ -1701,7 +1699,7 @@ function create_each_block_1(ctx) {
 	};
 }
 
-// (258:16) {#each table_data as tableRow, i (tableRow)}
+// (279:16) {#each table_data as tableRow, i (tableRow)}
 function create_each_block(key_1, ctx) {
 	let div;
 	let t;
@@ -1885,8 +1883,9 @@ function instance($$self, $$props, $$invalidate) {
 	let cursor = NO_ROW_IN_EDIT_MODE;
 	let genericCrudTable = new SvelteGenericCrudTableService(table_config, shadowed);
 
-	function handleEdit(id) {
-		resetRawInEditMode(id);
+	function handleEdit(id, event) {
+		console.log(event.target.closest(".row"));
+		resetRawInEditMode(id, event.target.closest(".row"));
 		cursor = id;
 
 		for (let i = 0; i < table_data.length; i++) {
@@ -1896,15 +1895,16 @@ function instance($$self, $$props, $$invalidate) {
 		genericCrudTable.setEditMode(id);
 	}
 
-	function handleCancelEdit(id) {
-		genericCrudTable.resetRawValues(id, table_data);
+	function handleCancelEdit(id, event) {
+		console.log(event.target.closest(".row"));
+		genericCrudTable.resetRawValues(id, table_data, event.target.closest(".row"));
 		genericCrudTable.resetEditMode(id);
 		genericCrudTable.resetDeleteMode(id);
 		cursor = NO_ROW_IN_EDIT_MODE;
 	}
 
 	function handleEditConfirmation(id, event) {
-		resetRawInEditMode(id);
+		resetRawInEditMode(id, event.target.closest(".row"));
 		const body = genericCrudTable.gatherUpdates(id, table_data);
 		$$invalidate(0, table_data[id] = body, table_data);
 		const details = { id, body };
@@ -1912,8 +1912,8 @@ function instance($$self, $$props, $$invalidate) {
 		dispatcher("update", details, event);
 	}
 
-	function handleDelete(id) {
-		resetRawInEditMode(id);
+	function handleDelete(id, event) {
+		resetRawInEditMode(id, event.target.closest(".row"));
 		genericCrudTable.resetDeleteMode(id);
 		cursor = id;
 		genericCrudTable.setDeleteMode(id);
@@ -1947,15 +1947,15 @@ function instance($$self, $$props, $$invalidate) {
 	}
 
 	function handleDetails(id, event) {
-		resetRawInEditMode(id);
+		resetRawInEditMode(id, event);
 		const body = genericCrudTable.gatherUpdates(id, table_data);
 		const details = { id, body };
 		dispatcher("details", details, event);
 	}
 
-	function resetRawInEditMode(id) {
+	function resetRawInEditMode(id, event) {
 		if (cursor !== id && cursor !== NO_ROW_IN_EDIT_MODE) {
-			handleCancelEdit(cursor);
+			handleCancelEdit(cursor, event);
 		}
 	}
 
@@ -2020,8 +2020,8 @@ function instance($$self, $$props, $$invalidate) {
 		showTooltipByConfig(e, column_order.tooltip, table_data[i][column_order.name], column_order.type);
 	};
 
-	const click_handler_1 = i => handleDelete(i);
-	const click_handler_2 = (i, e) => handleEdit(i);
+	const click_handler_1 = (i, e) => handleDelete(i, e);
+	const click_handler_2 = (i, e) => handleEdit(i, e);
 
 	const click_handler_3 = (i, e) => {
 		handleDetails(i, e);
@@ -2031,11 +2031,11 @@ function instance($$self, $$props, $$invalidate) {
 		handleEditConfirmation(i, e);
 	};
 
-	const click_handler_5 = i => {
-		handleCancelEdit(i);
+	const click_handler_5 = (i, e) => {
+		handleCancelEdit(i, e);
 	};
 
-	const click_handler_6 = i => handleCancelDelete(i);
+	const click_handler_6 = (i, e) => handleCancelDelete(i);
 	const click_handler_7 = (i, e) => handleDeleteConfirmation(i, e);
 
 	$$self.$$set = $$props => {
