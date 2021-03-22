@@ -14,6 +14,12 @@
 <p>Agnostic web-component for object-arrays with CRUD functionality.</p>
 <span style="background-color: #dddddd; padding: 0.4em; display:inline-block">&gt; npm install svelte-generic-crud-table --save-dev</span>
 <p></p>
+<hr>
+<p>Table 1:</p>
+<crud-table id="crud-table-2"></crud-table>
+<br>
+<hr>
+<p>Table 2 configuration example:</p>
 <blockquote><pre><code>
 const table_config = {
     name: 'Awesome',
@@ -28,7 +34,6 @@ const table_config = {
     details_text: 'detail'   // replace the standard icon with an text-link
 }
 </code></pre></blockquote>
-<hr>
 <crud-table id="crud-table-1"></crud-table>
 <hr>
 </span style="text-align: right"><a href="https://ivolution.one">ivolution.one product - MIT License</a>
@@ -44,7 +49,9 @@ const table_config = {
     <img src="https://github.com/ivosdc/svelte-generic-crud-table/raw/master/assets/donate.gif" title="donate">
 </a></p>
 </body>
-<script src='test-data.js'></script>
 <script src='array-utils.js'></script>
+<script src='test-data.js'></script>
 <script src='crud-table-1-config-html.js'></script>
+<script src='test-data2.js'></script>
+<script src='crud-table-2-config-html.js'></script>
 </html>
