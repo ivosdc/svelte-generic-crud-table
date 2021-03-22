@@ -8,9 +8,6 @@
     const CREATE = 'CREATE';
     const DETAILS = 'DETAILS';
 
-    const SHOW = true;
-    const HIDE = false;
-
     const table_config_default = {
         name: 'crud-table',
         options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
@@ -133,8 +130,8 @@
     const columnsWidth = [];
     const columnsResize = [];
 
-    function tableNameToId(name) {
-        return name.replace(':', '').replace(' ', '');
+    function tableNameToId(tableName) {
+        return tableName.replace(':', '').replace(' ', '');
     }
 
     function handleResize(event) {
