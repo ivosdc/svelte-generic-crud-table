@@ -13,7 +13,7 @@ const config = {
 
 describe('Test SvelteGenericCrudTableService', () => {
 
-    const genericCrudTable = new SvelteGenericCrudTableService(config);
+    const genericCrudTable = new SvelteGenericCrudTableService(config, '');
 
 
     it('testGetKey', async () => {
@@ -54,7 +54,9 @@ describe('Test SvelteGenericCrudTableService', () => {
         const shadowRoot = crudTable.attachShadow({mode: 'open'});
         shadowRoot.innerHTML = documentHTML;
 
-        let actual = genericCrudTable.resetEditMode(0)
+        let row = document.getElementsByClassName('row')[0];
+        let e = {target: {closest: ()=> row}}
+        genericCrudTable.resetEditMode(0, e)
 
         expect(document.getElementById(config.name + toEdit + '0-disabled').classList.contains('shown')).toBe(true);
 
@@ -85,7 +87,10 @@ describe('Test SvelteGenericCrudTableService', () => {
         const shadowRoot = crudTable.attachShadow({mode: 'open'});
         shadowRoot.innerHTML = documentHTML;
 
-        let actual = genericCrudTable.setEditMode(0)
+        let row = document.getElementsByClassName('row')[0];
+        let e = {target: {closest: ()=> row}}
+
+        genericCrudTable.setEditMode(0, e)
 
 
         expect(document.getElementById(config.name + toEdit + '0').classList.contains('shown')).toBe(true)
@@ -115,9 +120,9 @@ describe('Test SvelteGenericCrudTableService', () => {
         shadowRoot.innerHTML = documentHTML;
         let target = document.getElementById('options-default');
 
-        let e = new CustomEvent('dummy', { target: target })
-
-        let actual = genericCrudTable.resetDeleteMode('', e)
+        let table = document.getElementsByClassName('table')[0];
+        let e = {target: {closest: ()=> table}}
+        genericCrudTable.resetDeleteMode('', e)
 
         expect(document.getElementById(config.name + "options-default").classList.contains('hidden')).toBe(false);
         expect(document.getElementById(config.name + "options-default").classList.contains('shown')).toBe(true);
@@ -144,7 +149,9 @@ describe('Test SvelteGenericCrudTableService', () => {
         const shadowRoot = crudTable.attachShadow({mode: 'open'});
         shadowRoot.innerHTML = documentHTML;
 
-        let actual = genericCrudTable.setDeleteMode('')
+        let table = document.getElementsByClassName('table')[0];
+        let e = {target: {closest: ()=> table}}
+        genericCrudTable.setDeleteMode('', e)
 
         expect(document.getElementById(config.name + "options-default").classList.contains('hidden')).toBe(true);
         expect(document.getElementById(config.name + "options-default").classList.contains('shown')).toBe(false);
@@ -172,7 +179,9 @@ describe('Test SvelteGenericCrudTableService', () => {
         const shadowRoot = crudTable.attachShadow({mode: 'open'});
         shadowRoot.innerHTML = documentHTML;
 
-        let actual = genericCrudTable.gatherUpdates(0, table);
+        let tableelem = document.getElementsByClassName('table')[0];
+        let e = {target: {closest: ()=> tableelem}}
+        let actual = genericCrudTable.gatherUpdates(0, table, e);
 
         expect(table[0]).toStrictEqual(actual);
     })
@@ -195,7 +204,9 @@ describe('Test SvelteGenericCrudTableService', () => {
         const shadowRoot = crudTable.attachShadow({mode: 'open'});
         shadowRoot.innerHTML = documentHTML;
 
-        genericCrudTable.resetRawValues(0, table);
+        let tableelem = document.getElementsByClassName('table')[0];
+        let e = {target: {closest: ()=> tableelem}}
+        genericCrudTable.resetRawValues(0, table, e);
 
         expect(document.getElementById(config.name + 'id0').value).toBe('424242');
         expect(document.getElementById(config.name + 'name0').value).toBe('A_NAME');
