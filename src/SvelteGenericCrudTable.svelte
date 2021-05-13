@@ -419,7 +419,8 @@
     }
 
     #labelOptions {
-        width: 85px;
+        width: fit-content;
+        width: -moz-fit-content;
         resize: none;
     }
 
