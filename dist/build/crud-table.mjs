@@ -705,6 +705,7 @@ function create_if_block_1(ctx) {
 	let t1;
 	let each_blocks = [];
 	let each1_lookup = new Map();
+	let t2;
 	let each_value_3 = /*table_config*/ ctx[1].columns_setting;
 	let each_blocks_1 = [];
 
@@ -712,7 +713,7 @@ function create_if_block_1(ctx) {
 		each_blocks_1[i] = create_each_block_3(get_each_context_3(ctx, each_value_3, i));
 	}
 
-	let if_block = show_if && create_if_block_11(ctx);
+	let if_block0 = show_if && create_if_block_13(ctx);
 	let each_value = /*table_data*/ ctx[0];
 	const get_key = ctx => /*tableRow*/ ctx[39];
 
@@ -721,6 +722,8 @@ function create_if_block_1(ctx) {
 		let key = get_key(child_ctx);
 		each1_lookup.set(key, each_blocks[i] = create_each_block(key, child_ctx));
 	}
+
+	let if_block1 = /*table_data*/ ctx[0].length === 0 && create_if_block_2(ctx);
 
 	return {
 		c() {
@@ -733,13 +736,15 @@ function create_if_block_1(ctx) {
 
 			t0 = space();
 			div0 = element("div");
-			if (if_block) if_block.c();
+			if (if_block0) if_block0.c();
 			t1 = space();
 
 			for (let i = 0; i < each_blocks.length; i += 1) {
 				each_blocks[i].c();
 			}
 
+			t2 = space();
+			if (if_block1) if_block1.c();
 			attr(div0, "id", "labelOptions");
 			attr(div0, "class", "td headline");
 			attr(div1, "class", "thead");
@@ -760,12 +765,15 @@ function create_if_block_1(ctx) {
 
 			append(div1, t0);
 			append(div1, div0);
-			if (if_block) if_block.m(div0, null);
+			if (if_block0) if_block0.m(div0, null);
 			append(div2, t1);
 
 			for (let i = 0; i < each_blocks.length; i += 1) {
 				each_blocks[i].m(div2, null);
 			}
+
+			append(div2, t2);
+			if (if_block1) if_block1.m(div2, null);
 		},
 		p(ctx, dirty) {
 			if (dirty[0] & /*genericCrudTableService, table_config, setWidth, startResize, handleResize, stopResize, handleSort*/ 770066) {
@@ -794,16 +802,16 @@ function create_if_block_1(ctx) {
 			if (dirty[0] & /*options*/ 8) show_if = /*options*/ ctx[3].includes(CREATE);
 
 			if (show_if) {
-				if (if_block) {
-					if_block.p(ctx, dirty);
+				if (if_block0) {
+					if_block0.p(ctx, dirty);
 				} else {
-					if_block = create_if_block_11(ctx);
-					if_block.c();
-					if_block.m(div0, null);
+					if_block0 = create_if_block_13(ctx);
+					if_block0.c();
+					if_block0.m(div0, null);
 				}
-			} else if (if_block) {
-				if_block.d(1);
-				if_block = null;
+			} else if (if_block0) {
+				if_block0.d(1);
+				if_block0 = null;
 			}
 
 			if (dirty[0] & /*table_config*/ 2) {
@@ -814,17 +822,32 @@ function create_if_block_1(ctx) {
 
 			if (dirty[0] & /*table_data, table_config, table_config_default, name, handleDeleteConfirmation, handleCancelDelete, options, handleCancelEdit, handleEditConfirmation, handleDetails, handleEdit, handleDelete, genericCrudTableService, getWidth, showTooltipByConfig*/ 1323007) {
 				each_value = /*table_data*/ ctx[0];
-				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each1_lookup, div2, destroy_block, create_each_block, null, get_each_context);
+				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each1_lookup, div2, destroy_block, create_each_block, t2, get_each_context);
+			}
+
+			if (/*table_data*/ ctx[0].length === 0) {
+				if (if_block1) {
+					if_block1.p(ctx, dirty);
+				} else {
+					if_block1 = create_if_block_2(ctx);
+					if_block1.c();
+					if_block1.m(div2, null);
+				}
+			} else if (if_block1) {
+				if_block1.d(1);
+				if_block1 = null;
 			}
 		},
 		d(detaching) {
 			if (detaching) detach(div2);
 			destroy_each(each_blocks_1, detaching);
-			if (if_block) if_block.d();
+			if (if_block0) if_block0.d();
 
 			for (let i = 0; i < each_blocks.length; i += 1) {
 				each_blocks[i].d();
 			}
+
+			if (if_block1) if_block1.d();
 		}
 	};
 }
@@ -907,7 +930,7 @@ function create_each_block_3(ctx) {
 }
 
 // (215:24) {#if options.includes(CREATE)}
-function create_if_block_11(ctx) {
+function create_if_block_13(ctx) {
 	let div;
 	let mounted;
 	let dispose;
@@ -937,7 +960,7 @@ function create_if_block_11(ctx) {
 }
 
 // (231:32) {#if (column_order.name === genericCrudTableService.getKey(elem))}
-function create_if_block_9(ctx) {
+function create_if_block_11(ctx) {
 	let div1;
 	let div0;
 	let div0_id_value;
@@ -953,7 +976,7 @@ function create_if_block_9(ctx) {
 	let dispose;
 
 	function select_block_type(ctx, dirty) {
-		if (/*column_order*/ ctx[42].type === "html") return create_if_block_10;
+		if (/*column_order*/ ctx[42].type === "html") return create_if_block_12;
 		return create_else_block_1;
 	}
 
@@ -1074,7 +1097,7 @@ function create_else_block_1(ctx) {
 }
 
 // (240:44) {#if column_order.type === 'html'}
-function create_if_block_10(ctx) {
+function create_if_block_12(ctx) {
 	let html_tag;
 	let raw_value = /*table_data*/ ctx[0][/*i*/ ctx[41]][/*column_order*/ ctx[42].name] + "";
 	let html_anchor;
@@ -1099,7 +1122,7 @@ function create_if_block_10(ctx) {
 }
 
 // (252:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
-function create_if_block_2(ctx) {
+function create_if_block_4(ctx) {
 	let div3;
 	let div0;
 	let show_if_4 = /*options*/ ctx[3].includes(DELETE);
@@ -1118,11 +1141,11 @@ function create_if_block_2(ctx) {
 	let show_if = /*options*/ ctx[3].includes(DELETE);
 	let div2_id_value;
 	let div2_aria_label_value;
-	let if_block0 = show_if_4 && create_if_block_8(ctx);
-	let if_block1 = show_if_3 && create_if_block_7(ctx);
-	let if_block2 = show_if_2 && create_if_block_5(ctx);
-	let if_block3 = show_if_1 && create_if_block_4(ctx);
-	let if_block4 = show_if && create_if_block_3(ctx);
+	let if_block0 = show_if_4 && create_if_block_10(ctx);
+	let if_block1 = show_if_3 && create_if_block_9(ctx);
+	let if_block2 = show_if_2 && create_if_block_7(ctx);
+	let if_block3 = show_if_1 && create_if_block_6(ctx);
+	let if_block4 = show_if && create_if_block_5(ctx);
 
 	return {
 		c() {
@@ -1171,7 +1194,7 @@ function create_if_block_2(ctx) {
 				if (if_block0) {
 					if_block0.p(ctx, dirty);
 				} else {
-					if_block0 = create_if_block_8(ctx);
+					if_block0 = create_if_block_10(ctx);
 					if_block0.c();
 					if_block0.m(div0, t0);
 				}
@@ -1186,7 +1209,7 @@ function create_if_block_2(ctx) {
 				if (if_block1) {
 					if_block1.p(ctx, dirty);
 				} else {
-					if_block1 = create_if_block_7(ctx);
+					if_block1 = create_if_block_9(ctx);
 					if_block1.c();
 					if_block1.m(div0, t1);
 				}
@@ -1201,7 +1224,7 @@ function create_if_block_2(ctx) {
 				if (if_block2) {
 					if_block2.p(ctx, dirty);
 				} else {
-					if_block2 = create_if_block_5(ctx);
+					if_block2 = create_if_block_7(ctx);
 					if_block2.c();
 					if_block2.m(div0, null);
 				}
@@ -1224,7 +1247,7 @@ function create_if_block_2(ctx) {
 				if (if_block3) {
 					if_block3.p(ctx, dirty);
 				} else {
-					if_block3 = create_if_block_4(ctx);
+					if_block3 = create_if_block_6(ctx);
 					if_block3.c();
 					if_block3.m(div1, null);
 				}
@@ -1243,7 +1266,7 @@ function create_if_block_2(ctx) {
 				if (if_block4) {
 					if_block4.p(ctx, dirty);
 				} else {
-					if_block4 = create_if_block_3(ctx);
+					if_block4 = create_if_block_5(ctx);
 					if_block4.c();
 					if_block4.m(div2, null);
 				}
@@ -1272,7 +1295,7 @@ function create_if_block_2(ctx) {
 }
 
 // (258:44) {#if options.includes(DELETE)}
-function create_if_block_8(ctx) {
+function create_if_block_10(ctx) {
 	let div;
 	let div_aria_label_value;
 	let mounted;
@@ -1315,7 +1338,7 @@ function create_if_block_8(ctx) {
 }
 
 // (266:44) {#if options.includes(EDIT)}
-function create_if_block_7(ctx) {
+function create_if_block_9(ctx) {
 	let div;
 	let mounted;
 	let dispose;
@@ -1352,14 +1375,14 @@ function create_if_block_7(ctx) {
 }
 
 // (273:44) {#if options.includes(DETAILS)}
-function create_if_block_5(ctx) {
+function create_if_block_7(ctx) {
 	let div;
 	let div_title_value;
 	let mounted;
 	let dispose;
 
 	function select_block_type_1(ctx, dirty) {
-		if (/*table_config*/ ctx[1].details_text !== undefined) return create_if_block_6;
+		if (/*table_config*/ ctx[1].details_text !== undefined) return create_if_block_8;
 		return create_else_block;
 	}
 
@@ -1444,7 +1467,7 @@ function create_else_block(ctx) {
 }
 
 // (277:52) {#if table_config.details_text !== undefined}
-function create_if_block_6(ctx) {
+function create_if_block_8(ctx) {
 	let t_value = /*table_config*/ ctx[1].details_text + "";
 	let t;
 
@@ -1465,7 +1488,7 @@ function create_if_block_6(ctx) {
 }
 
 // (288:44) {#if options.includes(EDIT)}
-function create_if_block_4(ctx) {
+function create_if_block_6(ctx) {
 	let div0;
 	let t;
 	let div1;
@@ -1528,7 +1551,7 @@ function create_if_block_4(ctx) {
 }
 
 // (306:44) {#if options.includes(DELETE)}
-function create_if_block_3(ctx) {
+function create_if_block_5(ctx) {
 	let div0;
 	let div0_aria_label_value;
 	let t;
@@ -1602,8 +1625,8 @@ function create_each_block_2(ctx) {
 	let t;
 	let show_if = /*table_config*/ ctx[1].columns_setting.length - 1 === /*j*/ ctx[44] && Object.entries(/*tableRow*/ ctx[39]).length - 1 === /*k*/ ctx[47];
 	let if_block1_anchor;
-	let if_block0 = show_if_1 && create_if_block_9(ctx);
-	let if_block1 = show_if && create_if_block_2(ctx);
+	let if_block0 = show_if_1 && create_if_block_11(ctx);
+	let if_block1 = show_if && create_if_block_4(ctx);
 
 	return {
 		c() {
@@ -1625,7 +1648,7 @@ function create_each_block_2(ctx) {
 				if (if_block0) {
 					if_block0.p(ctx, dirty);
 				} else {
-					if_block0 = create_if_block_9(ctx);
+					if_block0 = create_if_block_11(ctx);
 					if_block0.c();
 					if_block0.m(t.parentNode, t);
 				}
@@ -1640,7 +1663,7 @@ function create_each_block_2(ctx) {
 				if (if_block1) {
 					if_block1.p(ctx, dirty);
 				} else {
-					if_block1 = create_if_block_2(ctx);
+					if_block1 = create_if_block_4(ctx);
 					if_block1.c();
 					if_block1.m(if_block1_anchor.parentNode, if_block1_anchor);
 				}
@@ -1717,7 +1740,6 @@ function create_each_block_1(ctx) {
 // (225:16) {#each table_data as tableRow, i (tableRow)}
 function create_each_block(key_1, ctx) {
 	let div;
-	let t;
 	let div_class_value;
 	let each_value_1 = /*table_config*/ ctx[1].columns_setting;
 	let each_blocks = [];
@@ -1736,7 +1758,6 @@ function create_each_block(key_1, ctx) {
 				each_blocks[i].c();
 			}
 
-			t = space();
 			attr(div, "class", div_class_value = "row " + (/*i*/ ctx[41] % 2 === 0 ? "dark" : ""));
 
 			set_style(div, "min-height", /*table_config*/ ctx[1].row_settings !== undefined && /*table_config*/ ctx[1].row_settings.height !== undefined
@@ -1751,8 +1772,6 @@ function create_each_block(key_1, ctx) {
 			for (let i = 0; i < each_blocks.length; i += 1) {
 				each_blocks[i].m(div, null);
 			}
-
-			append(div, t);
 		},
 		p(new_ctx, dirty) {
 			ctx = new_ctx;
@@ -1769,7 +1788,7 @@ function create_each_block(key_1, ctx) {
 					} else {
 						each_blocks[i] = create_each_block_1(child_ctx);
 						each_blocks[i].c();
-						each_blocks[i].m(div, t);
+						each_blocks[i].m(div, null);
 					}
 				}
 
@@ -1793,6 +1812,80 @@ function create_each_block(key_1, ctx) {
 		d(detaching) {
 			if (detaching) detach(div);
 			destroy_each(each_blocks, detaching);
+		}
+	};
+}
+
+// (328:16) {#if table_data.length === 0}
+function create_if_block_2(ctx) {
+	let br;
+	let t0;
+	let div;
+	let t1;
+	let show_if = /*options*/ ctx[3].includes(CREATE);
+	let if_block = show_if && create_if_block_3();
+
+	return {
+		c() {
+			br = element("br");
+			t0 = space();
+			div = element("div");
+			t1 = text("No entries.\n                        ");
+			if (if_block) if_block.c();
+			attr(div, "class", "no-entries");
+		},
+		m(target, anchor) {
+			insert(target, br, anchor);
+			insert(target, t0, anchor);
+			insert(target, div, anchor);
+			append(div, t1);
+			if (if_block) if_block.m(div, null);
+		},
+		p(ctx, dirty) {
+			if (dirty[0] & /*options*/ 8) show_if = /*options*/ ctx[3].includes(CREATE);
+
+			if (show_if) {
+				if (if_block) {
+					if_block.p(ctx, dirty);
+				} else {
+					if_block = create_if_block_3();
+					if_block.c();
+					if_block.m(div, null);
+				}
+			} else if (if_block) {
+				if_block.d(1);
+				if_block = null;
+			}
+		},
+		d(detaching) {
+			if (detaching) detach(br);
+			if (detaching) detach(t0);
+			if (detaching) detach(div);
+			if (if_block) if_block.d();
+		}
+	};
+}
+
+// (331:24) {#if options.includes(CREATE)}
+function create_if_block_3(ctx) {
+	let t;
+	let span;
+
+	return {
+		c() {
+			t = text("Press ");
+			span = element("span");
+			attr(span, "class", "no-entries-icon");
+		},
+		m(target, anchor) {
+			insert(target, t, anchor);
+			insert(target, span, anchor);
+			span.innerHTML = iconcreate;
+		},
+		p: noop,
+		d(detaching) {
+			if (detaching) detach(t);
+			if (detaching) detach(span);
 		}
 	};
 }
@@ -2092,7 +2185,7 @@ function instance($$self, $$props, $$invalidate) {
 class SvelteGenericCrudTable extends SvelteElement {
 	constructor(options) {
 		super();
-		this.shadowRoot.innerHTML = `<style>main{position:inherit;padding-top:0.4em}.red:hover{fill:red;fill-opacity:80%}.green:hover{fill:limegreen;fill-opacity:80%}.blue:hover{fill:dodgerblue;fill-opacity:80%}.table{display:inline-grid;text-align:left}.thead{display:inline-flex;padding:0 0 0.4em 0}.row{display:inline-flex;padding:0;margin:0 0 1px;resize:vertical}.dark{background-color:#efefef}.row:hover{background-color:rgba(0, 0, 0, 0.1)}.td{color:#5f5f5f;border:none;border-left:0.1em solid transparent;font-weight:100;padding:0.2em 0 0.1em 0.4em;float:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;resize:none}.td-disabled{vertical-align:middle;color:#5f5f5f;border:none;font-weight:200;float:left;line-height:1em;min-height:1.3em;max-height:1.3em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;width:-moz-available;width:-webkit-fill-available;width:stretch}.headline{cursor:pointer;min-height:1.3em;max-height:1.3em;height:1.3em;font-weight:300;padding:0 0 0.3em 0.4em;margin-bottom:0.3em;resize:horizontal}#labelOptions{width:85px;resize:none}.options-field{min-height:1.3em;max-height:1.3em;width:fit-content;width:-moz-fit-content;opacity:60%;resize:inherit}.options{float:left;position:relative;width:fit-content;width:-moz-fit-content;height:16px;padding:0.2em 0.4em;cursor:pointer;fill:#999999;color:#666666;line-height:0.9em}.options:hover{color:#333333;text-decoration:underline}.options:focus{border:none;outline:none;opacity:100%}.hidden{display:none}.shown{display:block}textarea{position:relative;resize:vertical;overflow:hidden;width:100%;height:100%;min-height:1.3em;padding:1px 1px;background-color:#ffffff;border:none;font-size:0.95em;font-weight:300;font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;text-overflow:ellipsis;white-space:pre;-webkit-transition:box-shadow 0.3s;border-bottom:0.5px solid #5f5f5f;overflow-y:scroll}textarea:focus{outline:none;font-weight:300;white-space:normal;overflow:auto;padding-top:1px}textarea:not(:focus){height:100%}</style>`;
+		this.shadowRoot.innerHTML = `<style>main{position:inherit;padding-top:0.4em}.no-entries{width:100%;color:#666666;text-align:center}.no-entries-icon{margin-left:5px;fill:#999999;color:#666666}.red:hover{fill:red;fill-opacity:80%}.green:hover{fill:limegreen;fill-opacity:80%}.blue:hover{fill:dodgerblue;fill-opacity:80%}.table{display:inline-grid;text-align:left}.thead{display:inline-flex;padding:0 0 0.4em 0}.row{display:inline-flex;padding:0;margin:0 0 1px;resize:vertical}.dark{background-color:#efefef}.row:hover{background-color:rgba(0, 0, 0, 0.1)}.td{color:#5f5f5f;border:none;border-left:0.1em solid transparent;font-weight:100;padding:0.2em 0 0.1em 0.4em;float:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;resize:none}.td-disabled{vertical-align:middle;color:#5f5f5f;border:none;font-weight:200;float:left;line-height:1em;min-height:1.3em;max-height:1.3em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;width:-moz-available;width:-webkit-fill-available;width:stretch}.headline{cursor:pointer;min-height:1.3em;max-height:1.3em;height:1.3em;font-weight:300;padding:0 0 0.3em 0.4em;margin-bottom:0.3em;resize:horizontal}#labelOptions{width:fit-content;width:-moz-fit-content;resize:none}.options-field{min-height:1.3em;max-height:1.3em;width:fit-content;width:-moz-fit-content;opacity:60%;resize:inherit}.options{float:left;position:relative;width:fit-content;width:-moz-fit-content;height:16px;padding:0.2em 0.4em;cursor:pointer;fill:#999999;color:#666666;line-height:0.9em}.options:hover{color:#333333;text-decoration:underline}.options:focus{border:none;outline:none;opacity:100%}.hidden{display:none}.shown{display:block}textarea{position:relative;resize:vertical;overflow:hidden;width:100%;height:100%;min-height:1.3em;padding:1px 1px;background-color:#ffffff;border:none;font-size:0.95em;font-weight:300;font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;text-overflow:ellipsis;white-space:pre;-webkit-transition:box-shadow 0.3s;border-bottom:0.5px solid #5f5f5f;overflow-y:scroll}textarea:focus{outline:none;font-weight:300;white-space:normal;overflow:auto;padding-top:1px}textarea:not(:focus){height:100%}</style>`;
 
 		init(
 			this,

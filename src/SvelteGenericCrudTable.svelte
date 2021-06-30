@@ -104,11 +104,11 @@
     function dispatcher(name, details, event) {
         /* istanbul ignore next */
         if (shadowed) {
-        event.target.dispatchEvent(
-            new CustomEvent(name, {
-                composed: true,
-                detail: details
-            }))
+            event.target.dispatchEvent(
+                new CustomEvent(name, {
+                    composed: true,
+                    detail: details
+                }))
         } else {
             dispatch(name, details);
         }
@@ -325,6 +325,10 @@
                         {/each}
                     </div>
                 {/each}
+                {#if table_data.length === 0}
+                    <br/>
+                    <div class="no-entries">No entries.</div>
+                {/if}
             </div>
         {/if}
     {/if}
@@ -334,6 +338,12 @@
     main {
         position: inherit;
         padding-top: 0.4em;
+    }
+
+    .no-entries {
+        width: 100%;
+        color: #666666;
+        text-align: center;
     }
 
     .red:hover {
