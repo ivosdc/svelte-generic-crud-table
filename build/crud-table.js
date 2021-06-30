@@ -24,11 +24,119 @@
         return Object.keys(obj).length === 0;
     }
 
+    // Track which nodes are claimed during hydration. Unclaimed nodes can then be removed from the DOM
+    // at the end of hydration without touching the remaining nodes.
+    let is_hydrating = false;
+    function start_hydrating() {
+        is_hydrating = true;
+    }
+    function end_hydrating() {
+        is_hydrating = false;
+    }
+    function upper_bound(low, high, key, value) {
+        // Return first index of value larger than input value in the range [low, high)
+        while (low < high) {
+            const mid = low + ((high - low) >> 1);
+            if (key(mid) <= value) {
+                low = mid + 1;
+            }
+            else {
+                high = mid;
+            }
+        }
+        return low;
+    }
+    function init_hydrate(target) {
+        if (target.hydrate_init)
+            return;
+        target.hydrate_init = true;
+        // We know that all children have claim_order values since the unclaimed have been detached
+        const children = target.childNodes;
+        /*
+        * Reorder claimed children optimally.
+        * We can reorder claimed children optimally by finding the longest subsequence of
+        * nodes that are already claimed in order and only moving the rest. The longest
+        * subsequence subsequence of nodes that are claimed in order can be found by
+        * computing the longest increasing subsequence of .claim_order values.
+        *
+        * This algorithm is optimal in generating the least amount of reorder operations
+        * possible.
+        *
+        * Proof:
+        * We know that, given a set of reordering operations, the nodes that do not move
+        * always form an increasing subsequence, since they do not move among each other
+        * meaning that they must be already ordered among each other. Thus, the maximal
+        * set of nodes that do not move form a longest increasing subsequence.
+        */
+        // Compute longest increasing subsequence
+        // m: subsequence length j => index k of smallest value that ends an increasing subsequence of length j
+        const m = new Int32Array(children.length + 1);
+        // Predecessor indices + 1
+        const p = new Int32Array(children.length);
+        m[0] = -1;
+        let longest = 0;
+        for (let i = 0; i < children.length; i++) {
+            const current = children[i].claim_order;
+            // Find the largest subsequence length such that it ends in a value less than our current value
+            // upper_bound returns first greater value, so we subtract one
+            const seqLen = upper_bound(1, longest + 1, idx => children[m[idx]].claim_order, current) - 1;
+            p[i] = m[seqLen] + 1;
+            const newLen = seqLen + 1;
+            // We can guarantee that current is the smallest value. Otherwise, we would have generated a longer sequence.
+            m[newLen] = i;
+            longest = Math.max(newLen, longest);
+        }
+        // The longest increasing subsequence of nodes (initially reversed)
+        const lis = [];
+        // The rest of the nodes, nodes that will be moved
+        const toMove = [];
+        let last = children.length - 1;
+        for (let cur = m[longest] + 1; cur != 0; cur = p[cur - 1]) {
+            lis.push(children[cur - 1]);
+            for (; last >= cur; last--) {
+                toMove.push(children[last]);
+            }
+            last--;
+        }
+        for (; last >= 0; last--) {
+            toMove.push(children[last]);
+        }
+        lis.reverse();
+        // We sort the nodes being moved to guarantee that their insertion order matches the claim order
+        toMove.sort((a, b) => a.claim_order - b.claim_order);
+        // Finally, we move the nodes
+        for (let i = 0, j = 0; i < toMove.length; i++) {
+            while (j < lis.length && toMove[i].claim_order >= lis[j].claim_order) {
+                j++;
+            }
+            const anchor = j < lis.length ? lis[j] : null;
+            target.insertBefore(toMove[i], anchor);
+        }
+    }
     function append(target, node) {
-        target.appendChild(node);
+        if (is_hydrating) {
+            init_hydrate(target);
+            if ((target.actual_end_child === undefined) || ((target.actual_end_child !== null) && (target.actual_end_child.parentElement !== target))) {
+                target.actual_end_child = target.firstChild;
+            }
+            if (node !== target.actual_end_child) {
+                target.insertBefore(node, target.actual_end_child);
+            }
+            else {
+                target.actual_end_child = node.nextSibling;
+            }
+        }
+        else if (node.parentNode !== target) {
+            target.appendChild(node);
+        }
     }
     function insert(target, node, anchor) {
-        target.insertBefore(node, anchor || null);
+        if (is_hydrating && !anchor) {
+            append(target, node);
+        }
+        else if (node.parentNode !== target || (anchor && node.nextSibling !== anchor)) {
+            target.insertBefore(node, anchor || null);
+        }
     }
     function detach(node) {
         node.parentNode.removeChild(node);
@@ -78,15 +186,20 @@
         return e;
     }
     class HtmlTag {
-        constructor(anchor = null) {
-            this.a = anchor;
+        constructor(claimed_nodes) {
             this.e = this.n = null;
+            this.l = claimed_nodes;
         }
         m(html, target, anchor = null) {
             if (!this.e) {
                 this.e = element(target.nodeName);
                 this.t = target;
-                this.h(html);
+                if (this.l) {
+                    this.n = this.l;
+                }
+                else {
+                    this.h(html);
+                }
             }
             this.i(anchor);
         }
@@ -372,6 +485,7 @@
         $$.fragment = create_fragment ? create_fragment($$.ctx) : false;
         if (options.target) {
             if (options.hydrate) {
+                start_hydrating();
                 const nodes = children(options.target);
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 $$.fragment && $$.fragment.l(nodes);
@@ -384,6 +498,7 @@
             if (options.intro)
                 transition_in(component.$$.fragment);
             mount_component(component, options.target, options.anchor, options.customElement);
+            end_hydrating();
             flush();
         }
         set_current_component(parent_component);
@@ -633,7 +748,7 @@
         '<path d="M31 12h-11v-11c0-0.552-0.448-1-1-1h-6c-0.552 0-1 0.448-1 1v11h-11c-0.552 0-1 0.448-1 1v6c0 0.552 0.448 1 1 1h11v11c0 0.552 0.448 1 1 1h6c0.552 0 1-0.448 1-1v-11h11c0.552 0 1-0.448 1-1v-6c0-0.552-0.448-1-1-1z"></path>\n' +
         '</svg>';
 
-    /* src/SvelteGenericCrudTable.svelte generated by Svelte v3.38.2 */
+    /* src/SvelteGenericCrudTable.svelte generated by Svelte v3.38.3 */
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
@@ -711,6 +826,7 @@
     	let t1;
     	let each_blocks = [];
     	let each1_lookup = new Map();
+    	let t2;
     	let each_value_3 = /*table_config*/ ctx[1].columns_setting;
     	let each_blocks_1 = [];
 
@@ -718,7 +834,7 @@
     		each_blocks_1[i] = create_each_block_3(get_each_context_3(ctx, each_value_3, i));
     	}
 
-    	let if_block = show_if && create_if_block_11(ctx);
+    	let if_block0 = show_if && create_if_block_12(ctx);
     	let each_value = /*table_data*/ ctx[0];
     	const get_key = ctx => /*tableRow*/ ctx[39];
 
@@ -727,6 +843,8 @@
     		let key = get_key(child_ctx);
     		each1_lookup.set(key, each_blocks[i] = create_each_block(key, child_ctx));
     	}
+
+    	let if_block1 = /*table_data*/ ctx[0].length === 0 && create_if_block_2();
 
     	return {
     		c() {
@@ -739,13 +857,15 @@
 
     			t0 = space();
     			div0 = element("div");
-    			if (if_block) if_block.c();
+    			if (if_block0) if_block0.c();
     			t1 = space();
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
+    			t2 = space();
+    			if (if_block1) if_block1.c();
     			attr(div0, "id", "labelOptions");
     			attr(div0, "class", "td headline");
     			attr(div1, "class", "thead");
@@ -766,12 +886,15 @@
 
     			append(div1, t0);
     			append(div1, div0);
-    			if (if_block) if_block.m(div0, null);
+    			if (if_block0) if_block0.m(div0, null);
     			append(div2, t1);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(div2, null);
     			}
+
+    			append(div2, t2);
+    			if (if_block1) if_block1.m(div2, null);
     		},
     		p(ctx, dirty) {
     			if (dirty[0] & /*genericCrudTableService, table_config, setWidth, startResize, handleResize, stopResize, handleSort*/ 770066) {
@@ -800,16 +923,16 @@
     			if (dirty[0] & /*options*/ 8) show_if = /*options*/ ctx[3].includes(CREATE);
 
     			if (show_if) {
-    				if (if_block) {
-    					if_block.p(ctx, dirty);
+    				if (if_block0) {
+    					if_block0.p(ctx, dirty);
     				} else {
-    					if_block = create_if_block_11(ctx);
-    					if_block.c();
-    					if_block.m(div0, null);
+    					if_block0 = create_if_block_12(ctx);
+    					if_block0.c();
+    					if_block0.m(div0, null);
     				}
-    			} else if (if_block) {
-    				if_block.d(1);
-    				if_block = null;
+    			} else if (if_block0) {
+    				if_block0.d(1);
+    				if_block0 = null;
     			}
 
     			if (dirty[0] & /*table_config*/ 2) {
@@ -820,17 +943,30 @@
 
     			if (dirty[0] & /*table_data, table_config, table_config_default, name, handleDeleteConfirmation, handleCancelDelete, options, handleCancelEdit, handleEditConfirmation, handleDetails, handleEdit, handleDelete, genericCrudTableService, getWidth, showTooltipByConfig*/ 1323007) {
     				each_value = /*table_data*/ ctx[0];
-    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each1_lookup, div2, destroy_block, create_each_block, null, get_each_context);
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each1_lookup, div2, destroy_block, create_each_block, t2, get_each_context);
+    			}
+
+    			if (/*table_data*/ ctx[0].length === 0) {
+    				if (if_block1) ; else {
+    					if_block1 = create_if_block_2();
+    					if_block1.c();
+    					if_block1.m(div2, null);
+    				}
+    			} else if (if_block1) {
+    				if_block1.d(1);
+    				if_block1 = null;
     			}
     		},
     		d(detaching) {
     			if (detaching) detach(div2);
     			destroy_each(each_blocks_1, detaching);
-    			if (if_block) if_block.d();
+    			if (if_block0) if_block0.d();
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].d();
     			}
+
+    			if (if_block1) if_block1.d();
     		}
     	};
     }
@@ -913,7 +1049,7 @@
     }
 
     // (215:24) {#if options.includes(CREATE)}
-    function create_if_block_11(ctx) {
+    function create_if_block_12(ctx) {
     	let div;
     	let mounted;
     	let dispose;
@@ -943,7 +1079,7 @@
     }
 
     // (231:32) {#if (column_order.name === genericCrudTableService.getKey(elem))}
-    function create_if_block_9(ctx) {
+    function create_if_block_10(ctx) {
     	let div1;
     	let div0;
     	let div0_id_value;
@@ -959,7 +1095,7 @@
     	let dispose;
 
     	function select_block_type(ctx, dirty) {
-    		if (/*column_order*/ ctx[42].type === "html") return create_if_block_10;
+    		if (/*column_order*/ ctx[42].type === "html") return create_if_block_11;
     		return create_else_block_1;
     	}
 
@@ -1080,15 +1216,16 @@
     }
 
     // (240:44) {#if column_order.type === 'html'}
-    function create_if_block_10(ctx) {
+    function create_if_block_11(ctx) {
     	let html_tag;
     	let raw_value = /*table_data*/ ctx[0][/*i*/ ctx[41]][/*column_order*/ ctx[42].name] + "";
     	let html_anchor;
 
     	return {
     		c() {
+    			html_tag = new HtmlTag();
     			html_anchor = empty();
-    			html_tag = new HtmlTag(html_anchor);
+    			html_tag.a = html_anchor;
     		},
     		m(target, anchor) {
     			html_tag.m(raw_value, target, anchor);
@@ -1105,7 +1242,7 @@
     }
 
     // (252:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
-    function create_if_block_2(ctx) {
+    function create_if_block_3(ctx) {
     	let div3;
     	let div0;
     	let show_if_4 = /*options*/ ctx[3].includes(DELETE);
@@ -1124,11 +1261,11 @@
     	let show_if = /*options*/ ctx[3].includes(DELETE);
     	let div2_id_value;
     	let div2_aria_label_value;
-    	let if_block0 = show_if_4 && create_if_block_8(ctx);
-    	let if_block1 = show_if_3 && create_if_block_7(ctx);
-    	let if_block2 = show_if_2 && create_if_block_5(ctx);
-    	let if_block3 = show_if_1 && create_if_block_4(ctx);
-    	let if_block4 = show_if && create_if_block_3(ctx);
+    	let if_block0 = show_if_4 && create_if_block_9(ctx);
+    	let if_block1 = show_if_3 && create_if_block_8(ctx);
+    	let if_block2 = show_if_2 && create_if_block_6(ctx);
+    	let if_block3 = show_if_1 && create_if_block_5(ctx);
+    	let if_block4 = show_if && create_if_block_4(ctx);
 
     	return {
     		c() {
@@ -1177,7 +1314,7 @@
     				if (if_block0) {
     					if_block0.p(ctx, dirty);
     				} else {
-    					if_block0 = create_if_block_8(ctx);
+    					if_block0 = create_if_block_9(ctx);
     					if_block0.c();
     					if_block0.m(div0, t0);
     				}
@@ -1192,7 +1329,7 @@
     				if (if_block1) {
     					if_block1.p(ctx, dirty);
     				} else {
-    					if_block1 = create_if_block_7(ctx);
+    					if_block1 = create_if_block_8(ctx);
     					if_block1.c();
     					if_block1.m(div0, t1);
     				}
@@ -1207,7 +1344,7 @@
     				if (if_block2) {
     					if_block2.p(ctx, dirty);
     				} else {
-    					if_block2 = create_if_block_5(ctx);
+    					if_block2 = create_if_block_6(ctx);
     					if_block2.c();
     					if_block2.m(div0, null);
     				}
@@ -1230,7 +1367,7 @@
     				if (if_block3) {
     					if_block3.p(ctx, dirty);
     				} else {
-    					if_block3 = create_if_block_4(ctx);
+    					if_block3 = create_if_block_5(ctx);
     					if_block3.c();
     					if_block3.m(div1, null);
     				}
@@ -1249,7 +1386,7 @@
     				if (if_block4) {
     					if_block4.p(ctx, dirty);
     				} else {
-    					if_block4 = create_if_block_3(ctx);
+    					if_block4 = create_if_block_4(ctx);
     					if_block4.c();
     					if_block4.m(div2, null);
     				}
@@ -1278,7 +1415,7 @@
     }
 
     // (258:44) {#if options.includes(DELETE)}
-    function create_if_block_8(ctx) {
+    function create_if_block_9(ctx) {
     	let div;
     	let div_aria_label_value;
     	let mounted;
@@ -1321,7 +1458,7 @@
     }
 
     // (266:44) {#if options.includes(EDIT)}
-    function create_if_block_7(ctx) {
+    function create_if_block_8(ctx) {
     	let div;
     	let mounted;
     	let dispose;
@@ -1358,14 +1495,14 @@
     }
 
     // (273:44) {#if options.includes(DETAILS)}
-    function create_if_block_5(ctx) {
+    function create_if_block_6(ctx) {
     	let div;
     	let div_title_value;
     	let mounted;
     	let dispose;
 
     	function select_block_type_1(ctx, dirty) {
-    		if (/*table_config*/ ctx[1].details_text !== undefined) return create_if_block_6;
+    		if (/*table_config*/ ctx[1].details_text !== undefined) return create_if_block_7;
     		return create_else_block;
     	}
 
@@ -1434,8 +1571,9 @@
 
     	return {
     		c() {
+    			html_tag = new HtmlTag();
     			html_anchor = empty();
-    			html_tag = new HtmlTag(html_anchor);
+    			html_tag.a = html_anchor;
     		},
     		m(target, anchor) {
     			html_tag.m(icondetail, target, anchor);
@@ -1450,7 +1588,7 @@
     }
 
     // (277:52) {#if table_config.details_text !== undefined}
-    function create_if_block_6(ctx) {
+    function create_if_block_7(ctx) {
     	let t_value = /*table_config*/ ctx[1].details_text + "";
     	let t;
 
@@ -1471,7 +1609,7 @@
     }
 
     // (288:44) {#if options.includes(EDIT)}
-    function create_if_block_4(ctx) {
+    function create_if_block_5(ctx) {
     	let div0;
     	let t;
     	let div1;
@@ -1534,7 +1672,7 @@
     }
 
     // (306:44) {#if options.includes(DELETE)}
-    function create_if_block_3(ctx) {
+    function create_if_block_4(ctx) {
     	let div0;
     	let div0_aria_label_value;
     	let t;
@@ -1608,8 +1746,8 @@
     	let t;
     	let show_if = /*table_config*/ ctx[1].columns_setting.length - 1 === /*j*/ ctx[44] && Object.entries(/*tableRow*/ ctx[39]).length - 1 === /*k*/ ctx[47];
     	let if_block1_anchor;
-    	let if_block0 = show_if_1 && create_if_block_9(ctx);
-    	let if_block1 = show_if && create_if_block_2(ctx);
+    	let if_block0 = show_if_1 && create_if_block_10(ctx);
+    	let if_block1 = show_if && create_if_block_3(ctx);
 
     	return {
     		c() {
@@ -1631,7 +1769,7 @@
     				if (if_block0) {
     					if_block0.p(ctx, dirty);
     				} else {
-    					if_block0 = create_if_block_9(ctx);
+    					if_block0 = create_if_block_10(ctx);
     					if_block0.c();
     					if_block0.m(t.parentNode, t);
     				}
@@ -1646,7 +1784,7 @@
     				if (if_block1) {
     					if_block1.p(ctx, dirty);
     				} else {
-    					if_block1 = create_if_block_2(ctx);
+    					if_block1 = create_if_block_3(ctx);
     					if_block1.c();
     					if_block1.m(if_block1_anchor.parentNode, if_block1_anchor);
     				}
@@ -1723,7 +1861,6 @@
     // (225:16) {#each table_data as tableRow, i (tableRow)}
     function create_each_block(key_1, ctx) {
     	let div;
-    	let t;
     	let div_class_value;
     	let each_value_1 = /*table_config*/ ctx[1].columns_setting;
     	let each_blocks = [];
@@ -1742,7 +1879,6 @@
     				each_blocks[i].c();
     			}
 
-    			t = space();
     			attr(div, "class", div_class_value = "row " + (/*i*/ ctx[41] % 2 === 0 ? "dark" : ""));
 
     			set_style(div, "min-height", /*table_config*/ ctx[1].row_settings !== undefined && /*table_config*/ ctx[1].row_settings.height !== undefined
@@ -1757,8 +1893,6 @@
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(div, null);
     			}
-
-    			append(div, t);
     		},
     		p(new_ctx, dirty) {
     			ctx = new_ctx;
@@ -1775,7 +1909,7 @@
     					} else {
     						each_blocks[i] = create_each_block_1(child_ctx);
     						each_blocks[i].c();
-    						each_blocks[i].m(div, t);
+    						each_blocks[i].m(div, null);
     					}
     				}
 
@@ -1799,6 +1933,33 @@
     		d(detaching) {
     			if (detaching) detach(div);
     			destroy_each(each_blocks, detaching);
+    		}
+    	};
+    }
+
+    // (328:16) {#if table_data.length === 0}
+    function create_if_block_2(ctx) {
+    	let br;
+    	let t0;
+    	let div;
+
+    	return {
+    		c() {
+    			br = element("br");
+    			t0 = space();
+    			div = element("div");
+    			div.textContent = "No entries.";
+    			attr(div, "class", "no-entries");
+    		},
+    		m(target, anchor) {
+    			insert(target, br, anchor);
+    			insert(target, t0, anchor);
+    			insert(target, div, anchor);
+    		},
+    		d(detaching) {
+    			if (detaching) detach(br);
+    			if (detaching) detach(t0);
+    			if (detaching) detach(div);
     		}
     	};
     }
@@ -2098,7 +2259,7 @@
     class SvelteGenericCrudTable extends SvelteElement {
     	constructor(options) {
     		super();
-    		this.shadowRoot.innerHTML = `<style>main{position:inherit;padding-top:0.4em}.red:hover{fill:red;fill-opacity:80%}.green:hover{fill:limegreen;fill-opacity:80%}.blue:hover{fill:dodgerblue;fill-opacity:80%}.table{display:inline-grid;text-align:left}.thead{display:inline-flex;padding:0 0 0.4em 0}.row{display:inline-flex;padding:0;margin:0 0 1px;resize:vertical}.dark{background-color:#efefef}.row:hover{background-color:rgba(0, 0, 0, 0.1)}.td{color:#5f5f5f;border:none;border-left:0.1em solid transparent;font-weight:100;padding:0.2em 0 0.1em 0.4em;float:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;resize:none}.td-disabled{vertical-align:middle;color:#5f5f5f;border:none;font-weight:200;float:left;line-height:1em;min-height:1.3em;max-height:1.3em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;width:-moz-available;width:-webkit-fill-available;width:stretch}.headline{cursor:pointer;min-height:1.3em;max-height:1.3em;height:1.3em;font-weight:300;padding:0 0 0.3em 0.4em;margin-bottom:0.3em;resize:horizontal}#labelOptions{width:fit-content;width:-moz-fit-content;resize:none}.options-field{min-height:1.3em;max-height:1.3em;width:fit-content;width:-moz-fit-content;opacity:60%;resize:inherit}.options{float:left;position:relative;width:fit-content;width:-moz-fit-content;height:16px;padding:0.2em 0.4em;cursor:pointer;fill:#999999;color:#666666;line-height:0.9em}.options:hover{color:#333333;text-decoration:underline}.options:focus{border:none;outline:none;opacity:100%}.hidden{display:none}.shown{display:block}textarea{position:relative;resize:vertical;overflow:hidden;width:100%;height:100%;min-height:1.3em;padding:1px 1px;background-color:#ffffff;border:none;font-size:0.95em;font-weight:300;font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;text-overflow:ellipsis;white-space:pre;-webkit-transition:box-shadow 0.3s;border-bottom:0.5px solid #5f5f5f;overflow-y:scroll}textarea:focus{outline:none;font-weight:300;white-space:normal;overflow:auto;padding-top:1px}textarea:not(:focus){height:100%}</style>`;
+    		this.shadowRoot.innerHTML = `<style>main{position:inherit;padding-top:0.4em}.no-entries{width:100%;color:#666666;text-align:center}.red:hover{fill:red;fill-opacity:80%}.green:hover{fill:limegreen;fill-opacity:80%}.blue:hover{fill:dodgerblue;fill-opacity:80%}.table{display:inline-grid;text-align:left}.thead{display:inline-flex;padding:0 0 0.4em 0}.row{display:inline-flex;padding:0;margin:0 0 1px;resize:vertical}.dark{background-color:#efefef}.row:hover{background-color:rgba(0, 0, 0, 0.1)}.td{color:#5f5f5f;border:none;border-left:0.1em solid transparent;font-weight:100;padding:0.2em 0 0.1em 0.4em;float:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;resize:none}.td-disabled{vertical-align:middle;color:#5f5f5f;border:none;font-weight:200;float:left;line-height:1em;min-height:1.3em;max-height:1.3em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;width:-moz-available;width:-webkit-fill-available;width:stretch}.headline{cursor:pointer;min-height:1.3em;max-height:1.3em;height:1.3em;font-weight:300;padding:0 0 0.3em 0.4em;margin-bottom:0.3em;resize:horizontal}#labelOptions{width:fit-content;width:-moz-fit-content;resize:none}.options-field{min-height:1.3em;max-height:1.3em;width:fit-content;width:-moz-fit-content;opacity:60%;resize:inherit}.options{float:left;position:relative;width:fit-content;width:-moz-fit-content;height:16px;padding:0.2em 0.4em;cursor:pointer;fill:#999999;color:#666666;line-height:0.9em}.options:hover{color:#333333;text-decoration:underline}.options:focus{border:none;outline:none;opacity:100%}.hidden{display:none}.shown{display:block}textarea{position:relative;resize:vertical;overflow:hidden;width:100%;height:100%;min-height:1.3em;padding:1px 1px;background-color:#ffffff;border:none;font-size:0.95em;font-weight:300;font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;text-overflow:ellipsis;white-space:pre;-webkit-transition:box-shadow 0.3s;border-bottom:0.5px solid #5f5f5f;overflow-y:scroll}textarea:focus{outline:none;font-weight:300;white-space:normal;overflow:auto;padding-top:1px}textarea:not(:focus){height:100%}</style>`;
 
     		init(
     			this,
