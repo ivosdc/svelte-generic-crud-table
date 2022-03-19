@@ -563,7 +563,7 @@ class SvelteGenericCrudTableService {
     }
 
     resetEditMode(id, event) {
-        let parentrow = this.getTable(event);
+        let parentrow = this.getRow(event);
         this.table_config.columns_setting.forEach((toEdit) => {
             let rowEnabled = parentrow.querySelector('#' + this.name + toEdit.name + id);
             let rowDisabled = parentrow.querySelector('#' + this.name + toEdit.name + id + '-disabled');
@@ -587,7 +587,7 @@ class SvelteGenericCrudTableService {
     }
 
     resetDeleteMode(id, event) {
-        let parentrow = this.getTable(event);
+        let parentrow = this.getRow(event);
         let optionsDefault = parentrow.querySelector('#' + this.name + 'options-default' + id);
         let optionsDelete = parentrow.querySelector('#' + this.name + 'options-delete' + id);
         if (optionsDefault !== null && optionsDelete !== null) {
