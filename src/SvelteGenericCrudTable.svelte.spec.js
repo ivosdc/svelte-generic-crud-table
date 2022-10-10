@@ -129,22 +129,21 @@ describe('Test SvelteGenericCrudTable', () => {
         const dom = render(SvelteGenericCrudTable, config)
 
         const optionsDefault = dom.getByLabelText(config.table_config.name + `options-default` + 0);
-        expect(optionsDefault.classList.contains('shown'))
+        expect(optionsDefault.classList.contains('shown')).toBeTruthy();
 
         const optionsDelete = dom.getByLabelText(config.table_config.name + `options-delete` + 0);
-        expect(optionsDelete.classList.contains('hidden'))
+        expect(optionsDelete.classList.contains('hidden')).toBeTruthy();
 
         const deleteButton = dom.getByLabelText(config.table_config.name + `A_FIELD` + 0 + 'delete');
-        await fireEvent.click(deleteButton);
-
-        expect(optionsDefault.classList.contains('hidden'))
-        expect(optionsDelete.classList.contains('shown'))
-
         const anotherDeleteButton = dom.getByLabelText(config.table_config.name + `A_FIELD` + 1 + 'delete');
         await fireEvent.click(anotherDeleteButton);
+        expect(optionsDefault.classList.contains('shown')).toBeTruthy();
+        expect(optionsDelete.classList.contains('hidden')).toBeTruthy();
 
-        expect(optionsDefault.classList.contains('shown'))
-        expect(optionsDelete.classList.contains('hidden'))
+        await fireEvent.click(deleteButton);
+
+        expect(optionsDefault.classList.contains('hidden')).toBeTruthy();
+        expect(optionsDelete.classList.contains('shown')).toBeTruthy();
     })
 
     it('testSvelteGenericCrudTable_deleteCancel', async () => {
