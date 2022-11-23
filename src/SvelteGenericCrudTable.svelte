@@ -1,4 +1,3 @@
-<svelte:options tag={'crud-table'}/>
 <script>
     import {createEventDispatcher} from 'svelte';
     import {SvelteGenericCrudTableService} from "./SvelteGenericCrudTableService";
