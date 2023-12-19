@@ -331,8 +331,6 @@
 <style>
 
     :root {
-
-
         --lightgrey1: #f4f4f4;
         --lightgrey2: #efefef;
         --lightgrey3: #e1e1e1;
@@ -345,14 +343,12 @@
         --button1: #004666;
         --button2: #4A849F;
         --button3: #A4C8D8;
-
         --font-size-textarea: 1em;
     }
 
 
     main {
         position: inherit;
-        transition: all .1s ease-in;
     }
 
     .no-entries {
@@ -379,22 +375,23 @@
     .table {
         display: inline-grid;
         text-align: left;
-        border: 1px solid var(--lightgrey3);
-        border-top: 1px solid transparent;
-        border-radius: .2em;
+        border-bottom: 1px solid var(--grey1);
+        border-radius: .3em;
     }
 
     .thead {
         display: inline-flex;
         padding: 0 0 .3em .5em;
-        border-bottom: 1px solid var(--grey2);
+        border-radius: inherit;
+        border-bottom: 1px solid var(--grey1);
     }
 
     .row {
         display: inline-flex;
         padding: .5em 1em .5em 1em;
         resize: vertical;
-        border-radius: .2em;
+        border-radius: inherit;
+        border: 1px solid var(--lightgrey3);
     }
 
     .dark {
@@ -402,6 +399,7 @@
     }
 
     .row:hover {
+        transition: all .1s ease-in;
         background-color: rgba(0, 0, 0, 0.1);
     }
 
@@ -435,7 +433,7 @@
         resize: horizontal;
         padding-left: 1em;
         line-height: 1em;
-        border-radius: .3em;
+        border-radius: inherit;
     }
 
     .headline-name:hover {
@@ -501,12 +499,12 @@
         text-overflow: ellipsis;
         white-space: pre;
         overflow-y: scroll;
-        border: 1px solid var(--grey1);
+        border: 1px solid var(--lightgrey3);
     }
 
     textarea:focus {
         outline: none;
-        font-weight: 300;
+        font-weight: 100;
         white-space: normal;
         overflow: auto;
     }
