@@ -4,6 +4,7 @@ import {jest} from "@jest/globals";
 
 
 
+
 const table_config = {
     name: 'tableName',
     options: ['EDIT', 'CREATE', 'DETAILS'],

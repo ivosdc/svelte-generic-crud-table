@@ -24,7 +24,9 @@ function insert(target, node, anchor) {
     target.insertBefore(node, anchor || null);
 }
 function detach(node) {
-    node.parentNode.removeChild(node);
+    if (node.parentNode) {
+        node.parentNode.removeChild(node);
+    }
 }
 function destroy_each(iterations, detaching) {
     for (let i = 0; i < iterations.length; i += 1) {
@@ -34,6 +36,9 @@ function destroy_each(iterations, detaching) {
 }
 function element(name) {
     return document.createElement(name);
+}
+function svg_element(name) {
+    return document.createElementNS('http://www.w3.org/2000/svg', name);
 }
 function text(data) {
     return document.createTextNode(data);
@@ -59,24 +64,27 @@ function children(element) {
 }
 function set_data(text, data) {
     data = '' + data;
-    if (text.wholeText !== data)
-        text.data = data;
+    if (text.data === data)
+        return;
+    text.data = data;
 }
 function set_style(node, key, value, important) {
-    if (value === null) {
+    if (value == null) {
         node.style.removeProperty(key);
     }
     else {
         node.style.setProperty(key, value, important ? 'important' : '');
     }
 }
-function custom_event(type, detail, bubbles = false) {
+function custom_event(type, detail, { bubbles = false, cancelable = false } = {}) {
     const e = document.createEvent('CustomEvent');
-    e.initCustomEvent(type, bubbles, false, detail);
+    e.initCustomEvent(type, bubbles, cancelable, detail);
     return e;
 }
 class HtmlTag {
-    constructor() {
+    constructor(is_svg = false) {
+        this.is_svg = false;
+        this.is_svg = is_svg;
         this.e = this.n = null;
     }
     c(html) {
@@ -84,15 +92,19 @@ class HtmlTag {
     }
     m(html, target, anchor = null) {
         if (!this.e) {
-            this.e = element(target.nodeName);
-            this.t = target;
+            if (this.is_svg)
+                this.e = svg_element(target.nodeName);
+            /** #7364  target for <template> may be provided as #document-fragment(11) */
+            else
+                this.e = element((target.nodeType === 11 ? 'TEMPLATE' : target.nodeName));
+            this.t = target.tagName !== 'TEMPLATE' ? target : target.content;
             this.c(html);
         }
         this.i(anchor);
     }
     h(html) {
         this.e.innerHTML = html;
-        this.n = Array.from(this.e.childNodes);
+        this.n = Array.from(this.e.nodeName === 'TEMPLATE' ? this.e.content.childNodes : this.e.childNodes);
     }
     i(anchor) {
         for (let i = 0; i < this.n.length; i += 1) {
@@ -125,26 +137,40 @@ function get_current_component() {
         throw new Error('Function called outside component initialization');
     return current_component;
 }
+/**
+ * Creates an event dispatcher that can be used to dispatch [component events](/docs#template-syntax-component-directives-on-eventname).
+ * Event dispatchers are functions that can take two arguments: `name` and `detail`.
+ *
+ * Component events created with `createEventDispatcher` create a
+ * [CustomEvent](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent).
+ * These events do not [bubble](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Events#Event_bubbling_and_capture).
+ * The `detail` argument corresponds to the [CustomEvent.detail](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/detail)
+ * property and can contain any type of data.
+ *
+ * https://svelte.dev/docs#run-time-svelte-createeventdispatcher
+ */
 function createEventDispatcher() {
     const component = get_current_component();
-    return (type, detail) => {
+    return (type, detail, { cancelable = false } = {}) => {
         const callbacks = component.$$.callbacks[type];
         if (callbacks) {
             // TODO are there situations where events could be dispatched
             // in a server (non-DOM) environment?
-            const event = custom_event(type, detail);
+            const event = custom_event(type, detail, { cancelable });
             callbacks.slice().forEach(fn => {
                 fn.call(component, event);
             });
+            return !event.defaultPrevented;
         }
+        return true;
     };
 }
 
 const dirty_components = [];
 const binding_callbacks = [];
-const render_callbacks = [];
+let render_callbacks = [];
 const flush_callbacks = [];
-const resolved_promise = Promise.resolve();
+const resolved_promise = /* @__PURE__ */ Promise.resolve();
 let update_scheduled = false;
 function schedule_update() {
     if (!update_scheduled) {
@@ -176,15 +202,29 @@ function add_render_callback(fn) {
 const seen_callbacks = new Set();
 let flushidx = 0; // Do *not* move this inside the flush() function
 function flush() {
+    // Do not reenter flush while dirty components are updated, as this can
+    // result in an infinite loop. Instead, let the inner flush handle it.
+    // Reentrancy is ok afterwards for bindings etc.
+    if (flushidx !== 0) {
+        return;
+    }
     const saved_component = current_component;
     do {
         // first, call beforeUpdate functions
         // and update components
-        while (flushidx < dirty_components.length) {
-            const component = dirty_components[flushidx];
-            flushidx++;
-            set_current_component(component);
-            update(component.$$);
+        try {
+            while (flushidx < dirty_components.length) {
+                const component = dirty_components[flushidx];
+                flushidx++;
+                set_current_component(component);
+                update(component.$$);
+            }
+        }
+        catch (e) {
+            // reset dirty state to not end up in a deadlocked state and then rethrow
+            dirty_components.length = 0;
+            flushidx = 0;
+            throw e;
         }
         set_current_component(null);
         dirty_components.length = 0;
@@ -221,6 +261,16 @@ function update($$) {
         $$.after_update.forEach(add_render_callback);
     }
 }
+/**
+ * Useful for example to execute remaining `afterUpdate` callbacks before executing `destroy`.
+ */
+function flush_render_callbacks(fns) {
+    const filtered = [];
+    const targets = [];
+    render_callbacks.forEach((c) => fns.indexOf(c) === -1 ? filtered.push(c) : targets.push(c));
+    targets.forEach((c) => c());
+    render_callbacks = filtered;
+}
 const outroing = new Set();
 function transition_in(block, local) {
     if (block && block.i) {
@@ -243,6 +293,7 @@ function update_keyed_each(old_blocks, dirty, get_key, dynamic, ctx, list, looku
     const new_blocks = [];
     const new_lookup = new Map();
     const deltas = new Map();
+    const updates = [];
     i = n;
     while (i--) {
         const child_ctx = get_context(ctx, list, i);
@@ -253,7 +304,8 @@ function update_keyed_each(old_blocks, dirty, get_key, dynamic, ctx, list, looku
             block.c();
         }
         else if (dynamic) {
-            block.p(child_ctx, dirty);
+            // defer updates until all the DOM shuffling is done
+            updates.push(() => block.p(child_ctx, dirty));
         }
         new_lookup.set(key, new_blocks[i] = block);
         if (key in old_indexes)
@@ -306,17 +358,21 @@ function update_keyed_each(old_blocks, dirty, get_key, dynamic, ctx, list, looku
     }
     while (n)
         insert(new_blocks[n - 1]);
+    run_all(updates);
     return new_blocks;
 }
 function mount_component(component, target, anchor, customElement) {
-    const { fragment, on_mount, on_destroy, after_update } = component.$$;
+    const { fragment, after_update } = component.$$;
     fragment && fragment.m(target, anchor);
     if (!customElement) {
         // onMount happens before the initial afterUpdate
         add_render_callback(() => {
-            const new_on_destroy = on_mount.map(run).filter(is_function);
-            if (on_destroy) {
-                on_destroy.push(...new_on_destroy);
+            const new_on_destroy = component.$$.on_mount.map(run).filter(is_function);
+            // if the component was destroyed immediately
+            // it will update the `$$.on_destroy` reference to `null`.
+            // the destructured on_destroy may still reference to the old array
+            if (component.$$.on_destroy) {
+                component.$$.on_destroy.push(...new_on_destroy);
             }
             else {
                 // Edge case - component was destroyed immediately,
@@ -331,6 +387,7 @@ function mount_component(component, target, anchor, customElement) {
 function destroy_component(component, detaching) {
     const $$ = component.$$;
     if ($$.fragment !== null) {
+        flush_render_callbacks($$.after_update);
         run_all($$.on_destroy);
         $$.fragment && $$.fragment.d(detaching);
         // TODO null out other refs, including component.$$ (but need to
@@ -352,7 +409,7 @@ function init(component, options, instance, create_fragment, not_equal, props, a
     set_current_component(component);
     const $$ = component.$$ = {
         fragment: null,
-        ctx: null,
+        ctx: [],
         // state
         props,
         update: noop,
@@ -436,6 +493,9 @@ if (typeof HTMLElement === 'function') {
         }
         $on(type, callback) {
             // TODO should this delegate to addEventListener?
+            if (!is_function(callback)) {
+                return noop;
+            }
             const callbacks = (this.$$.callbacks[type] || (this.$$.callbacks[type] = []));
             callbacks.push(callback);
             return () => {
@@ -474,7 +534,7 @@ class SvelteGenericCrudTableService {
     }
 
     resetEditMode(id, event) {
-        let parentrow = this.getRow(event);
+        let parentrow = this.getTable(event);
         this.table_config.columns_setting.forEach((toEdit) => {
             let rowEnabled = parentrow.querySelector('#' + this.name + toEdit.name + id);
             let rowDisabled = parentrow.querySelector('#' + this.name + toEdit.name + id + '-disabled');
@@ -498,7 +558,7 @@ class SvelteGenericCrudTableService {
     }
 
     resetDeleteMode(id, event) {
-        let parentrow = this.getRow(event);
+        let parentrow = this.getTable(event);
         let optionsDefault = parentrow.querySelector('#' + this.name + 'options-default' + id);
         let optionsDelete = parentrow.querySelector('#' + this.name + 'options-delete' + id);
         if (optionsDefault !== null && optionsDelete !== null) {
@@ -550,7 +610,7 @@ class SvelteGenericCrudTableService {
         this.table_config.columns_setting.forEach((elem) => {
             let domElement = parentrow.querySelector('#' + this.name + elem.name + id);
             if (elem.show && domElement !== null) {
-                    body[elem.name] = domElement.value;
+                body[elem.name] = domElement.value;
             }
         });
         return body;
@@ -611,16 +671,19 @@ class SvelteGenericCrudTableService {
         element.style.position = 'fixed';
         element.style.border = 'solid 1px black';
         element.style.whiteSpace = 'break-spaces';
+        element.style.borderRadius = '.3em';
+        element.classList.add('tooltip');
+
         if (type === 'html') {
             element.innerHTML = text;
         } else {
             element.innerText = text;
         }
-        element.style.zIndex = (10000).toString();
+
         targetElem.appendChild(element);
         element.style.top = (event.pageY - window.scrollY - element.clientHeight - y) + 'px';
         element.style.left = (event.pageX - window.scrollX - (element.clientWidth / 2) + x) + 'px';
-        targetElem.addEventListener('mouseleave', e => {
+        targetElem.addEventListener('mouseleave', () => {
             if (element.parentNode === targetElem) {
                 targetElem.removeChild(element);
             }
@@ -653,7 +716,7 @@ const iconcreate = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width=
     '<path d="M31 12h-11v-11c0-0.552-0.448-1-1-1h-6c-0.552 0-1 0.448-1 1v11h-11c-0.552 0-1 0.448-1 1v6c0 0.552 0.448 1 1 1h11v11c0 0.552 0.448 1 1 1h6c0.552 0 1-0.448 1-1v-11h11c0.552 0 1-0.448 1-1v-6c0-0.552-0.448-1-1-1z"></path>\n' +
     '</svg>';
 
-/* src/SvelteGenericCrudTable.svelte generated by Svelte v3.46.6 */
+/* src/SvelteGenericCrudTable.svelte generated by Svelte v3.59.2 */
 
 function get_each_context(ctx, list, i) {
 	const child_ctx = ctx.slice();
@@ -683,7 +746,7 @@ function get_each_context_3(ctx, list, i) {
 	return child_ctx;
 }
 
-// (191:4) {#if (table_data !== undefined)}
+// (176:4) {#if (table_data !== undefined)}
 function create_if_block(ctx) {
 	let show_if = Array.isArray(/*table_data*/ ctx[0]);
 	let if_block_anchor;
@@ -721,7 +784,7 @@ function create_if_block(ctx) {
 	};
 }
 
-// (193:8) {#if Array.isArray(table_data)}
+// (178:8) {#if Array.isArray(table_data)}
 function create_if_block_1(ctx) {
 	let div2;
 	let div1;
@@ -786,7 +849,9 @@ function create_if_block_1(ctx) {
 			append(div2, div1);
 
 			for (let i = 0; i < each_blocks_1.length; i += 1) {
-				each_blocks_1[i].m(div1, null);
+				if (each_blocks_1[i]) {
+					each_blocks_1[i].m(div1, null);
+				}
 			}
 
 			append(div1, t0);
@@ -795,7 +860,9 @@ function create_if_block_1(ctx) {
 			append(div2, t1);
 
 			for (let i = 0; i < each_blocks.length; i += 1) {
-				each_blocks[i].m(div2, null);
+				if (each_blocks[i]) {
+					each_blocks[i].m(div2, null);
+				}
 			}
 
 			append(div2, t2);
@@ -876,14 +943,13 @@ function create_if_block_1(ctx) {
 	};
 }
 
-// (198:20) {#each table_config.columns_setting as elem, index}
+// (183:20) {#each table_config.columns_setting as elem, index}
 function create_each_block_3(ctx) {
 	let div;
 	let span;
 	let t_value = /*genericCrudTableService*/ ctx[4].makeCapitalLead(/*elem*/ ctx[45].name) + "";
 	let t;
 	let span_aria_label_value;
-	let div_id_value;
 	let div_class_value;
 	let div_style_value;
 	let mounted;
@@ -903,7 +969,8 @@ function create_each_block_3(ctx) {
 			span = element("span");
 			t = text(t_value);
 			attr(span, "aria-label", span_aria_label_value = "Sort" + /*elem*/ ctx[45].name);
-			attr(div, "id", div_id_value = /*index*/ ctx[49]);
+			attr(span, "class", "headline-name");
+			attr(div, "id", /*index*/ ctx[49]);
 
 			attr(div, "class", div_class_value = "td headline " + (/*genericCrudTableService*/ ctx[4].isShowField(/*elem*/ ctx[45].name) === false
 			? 'hidden'
@@ -954,7 +1021,7 @@ function create_each_block_3(ctx) {
 	};
 }
 
-// (215:24) {#if options.includes(CREATE)}
+// (201:24) {#if options.includes(CREATE)}
 function create_if_block_12(ctx) {
 	let div;
 	let mounted;
@@ -984,7 +1051,7 @@ function create_if_block_12(ctx) {
 	};
 }
 
-// (231:32) {#if (column_order.name === genericCrudTableService.getKey(elem))}
+// (218:32) {#if (column_order.name === genericCrudTableService.getKey(elem))}
 function create_if_block_10(ctx) {
 	let div1;
 	let div0;
@@ -1100,7 +1167,7 @@ function create_if_block_10(ctx) {
 	};
 }
 
-// (242:44) {:else}
+// (229:44) {:else}
 function create_else_block_1(ctx) {
 	let t_value = /*table_data*/ ctx[0][/*i*/ ctx[41]][/*column_order*/ ctx[42].name] + "";
 	let t;
@@ -1121,7 +1188,7 @@ function create_else_block_1(ctx) {
 	};
 }
 
-// (240:44) {#if column_order.type === 'html'}
+// (227:44) {#if column_order.type === 'html'}
 function create_if_block_11(ctx) {
 	let html_tag;
 	let raw_value = /*table_data*/ ctx[0][/*i*/ ctx[41]][/*column_order*/ ctx[42].name] + "";
@@ -1129,7 +1196,7 @@ function create_if_block_11(ctx) {
 
 	return {
 		c() {
-			html_tag = new HtmlTag();
+			html_tag = new HtmlTag(false);
 			html_anchor = empty();
 			html_tag.a = html_anchor;
 		},
@@ -1147,7 +1214,7 @@ function create_if_block_11(ctx) {
 	};
 }
 
-// (252:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
+// (239:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
 function create_if_block_3(ctx) {
 	let div3;
 	let div0;
@@ -1320,7 +1387,7 @@ function create_if_block_3(ctx) {
 	};
 }
 
-// (258:44) {#if options.includes(DELETE)}
+// (245:44) {#if options.includes(DELETE)}
 function create_if_block_9(ctx) {
 	let div;
 	let div_aria_label_value;
@@ -1363,7 +1430,7 @@ function create_if_block_9(ctx) {
 	};
 }
 
-// (266:44) {#if options.includes(EDIT)}
+// (254:44) {#if options.includes(EDIT)}
 function create_if_block_8(ctx) {
 	let div;
 	let mounted;
@@ -1400,7 +1467,7 @@ function create_if_block_8(ctx) {
 	};
 }
 
-// (273:44) {#if options.includes(DETAILS)}
+// (262:44) {#if options.includes(DETAILS)}
 function create_if_block_6(ctx) {
 	let div;
 	let div_title_value;
@@ -1470,14 +1537,14 @@ function create_if_block_6(ctx) {
 	};
 }
 
-// (279:52) {:else}
+// (269:52) {:else}
 function create_else_block(ctx) {
 	let html_tag;
 	let html_anchor;
 
 	return {
 		c() {
-			html_tag = new HtmlTag();
+			html_tag = new HtmlTag(false);
 			html_anchor = empty();
 			html_tag.a = html_anchor;
 		},
@@ -1493,7 +1560,7 @@ function create_else_block(ctx) {
 	};
 }
 
-// (277:52) {#if table_config.details_text !== undefined}
+// (267:52) {#if table_config.details_text !== undefined}
 function create_if_block_7(ctx) {
 	let t_value = /*table_config*/ ctx[1].details_text + "";
 	let t;
@@ -1514,7 +1581,7 @@ function create_if_block_7(ctx) {
 	};
 }
 
-// (288:44) {#if options.includes(EDIT)}
+// (278:44) {#if options.includes(EDIT)}
 function create_if_block_5(ctx) {
 	let div0;
 	let t;
@@ -1577,7 +1644,7 @@ function create_if_block_5(ctx) {
 	};
 }
 
-// (306:44) {#if options.includes(DELETE)}
+// (298:44) {#if options.includes(DELETE)}
 function create_if_block_4(ctx) {
 	let div0;
 	let div0_aria_label_value;
@@ -1646,7 +1713,7 @@ function create_if_block_4(ctx) {
 	};
 }
 
-// (229:28) {#each Object.entries(tableRow) as elem, k}
+// (216:28) {#each Object.entries(tableRow) as elem, k}
 function create_each_block_2(ctx) {
 	let show_if_1 = /*column_order*/ ctx[42].name === /*genericCrudTableService*/ ctx[4].getKey(/*elem*/ ctx[45]);
 	let t;
@@ -1708,7 +1775,7 @@ function create_each_block_2(ctx) {
 	};
 }
 
-// (228:24) {#each table_config.columns_setting as column_order, j}
+// (215:24) {#each table_config.columns_setting as column_order, j}
 function create_each_block_1(ctx) {
 	let each_1_anchor;
 	let each_value_2 = Object.entries(/*tableRow*/ ctx[39]);
@@ -1728,7 +1795,9 @@ function create_each_block_1(ctx) {
 		},
 		m(target, anchor) {
 			for (let i = 0; i < each_blocks.length; i += 1) {
-				each_blocks[i].m(target, anchor);
+				if (each_blocks[i]) {
+					each_blocks[i].m(target, anchor);
+				}
 			}
 
 			insert(target, each_1_anchor, anchor);
@@ -1764,7 +1833,7 @@ function create_each_block_1(ctx) {
 	};
 }
 
-// (225:16) {#each table_data as tableRow, i (tableRow)}
+// (212:16) {#each table_data as tableRow, i (tableRow)}
 function create_each_block(key_1, ctx) {
 	let div;
 	let div_class_value;
@@ -1797,7 +1866,9 @@ function create_each_block(key_1, ctx) {
 			insert(target, div, anchor);
 
 			for (let i = 0; i < each_blocks.length; i += 1) {
-				each_blocks[i].m(div, null);
+				if (each_blocks[i]) {
+					each_blocks[i].m(div, null);
+				}
 			}
 		},
 		p(new_ctx, dirty) {
@@ -1843,7 +1914,7 @@ function create_each_block(key_1, ctx) {
 	};
 }
 
-// (328:16) {#if table_data.length === 0}
+// (321:16) {#if table_data.length === 0}
 function create_if_block_2(ctx) {
 	let br;
 	let t0;
@@ -2165,7 +2236,9 @@ function instance($$self, $$props, $$invalidate) {
 class SvelteGenericCrudTable extends SvelteElement {
 	constructor(options) {
 		super();
-		this.shadowRoot.innerHTML = `<style>main{position:inherit;padding-top:0.4em}.no-entries{width:100%;color:#666666;text-align:center}.red:hover{fill:red;fill-opacity:80%}.green:hover{fill:limegreen;fill-opacity:80%}.blue:hover{fill:dodgerblue;fill-opacity:80%}.table{display:inline-grid;text-align:left}.thead{display:inline-flex;padding:0 0 0.4em 0}.row{display:inline-flex;padding:0;margin:0 0 1px;resize:vertical}.dark{background-color:#efefef}.row:hover{background-color:rgba(0, 0, 0, 0.1)}.td{color:#5f5f5f;border:none;border-left:0.1em solid transparent;font-weight:100;padding:0.2em 0 0.1em 0.4em;float:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;resize:none}.td-disabled{vertical-align:middle;color:#5f5f5f;border:none;font-weight:200;float:left;line-height:1em;min-height:1.3em;max-height:1.3em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;width:-moz-available;width:-webkit-fill-available;width:stretch}.headline{cursor:pointer;min-height:1.3em;max-height:1.3em;height:1.3em;font-weight:300;padding:0 0 0.3em 0.4em;margin-bottom:0.3em;resize:horizontal}#labelOptions{width:fit-content;width:-moz-fit-content;resize:none}.options-field{min-height:1.3em;max-height:1.3em;width:fit-content;width:-moz-fit-content;opacity:60%;resize:inherit}.options{float:left;position:relative;width:fit-content;width:-moz-fit-content;height:16px;padding:0.2em 0.4em;cursor:pointer;fill:#999999;color:#666666;line-height:0.9em}.options:hover{color:#333333;text-decoration:underline}.options:focus{border:none;outline:none;opacity:100%}.hidden{display:none}.shown{display:block}textarea{position:relative;resize:vertical;overflow:hidden;width:100%;height:100%;min-height:1.3em;padding:1px 1px;background-color:#ffffff;border:none;font-size:0.95em;font-weight:300;font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;text-overflow:ellipsis;white-space:pre;-webkit-transition:box-shadow 0.3s;border-bottom:0.5px solid #5f5f5f;overflow-y:scroll}textarea:focus{outline:none;font-weight:300;white-space:normal;overflow:auto;padding-top:1px}textarea:not(:focus){height:100%}</style>`;
+		const style = document.createElement('style');
+		style.textContent = `:root{--textarea-border:#e1e1e1;--textarea-border-focus:#bfbfbf;--font-color:#333333;--border-bottom:#bfbfbf;--border-bottom-hover:#4A849F;--font-size:1em;--error-text:#999999;--font-size-textarea:1em}main{position:inherit}.no-entries{width:100%;color:#666666;text-align:center}.red:hover{fill:red;fill-opacity:80%}.green:hover{fill:limegreen;fill-opacity:80%}.blue:hover{fill:dodgerblue;fill-opacity:80%}.table{display:inline-grid;text-align:left}.thead{display:inline-flex;padding:0 0 0.3em 0}.row{display:inline-flex;padding:.5em 1em .5em .5em;resize:vertical;border-radius:.3em;transition:all .2s ease-out}.dark{background-color:#efefef}.row:hover{background-color:rgba(0, 0, 0, 0.1)}.td{color:#5f5f5f;border:none;font-weight:100;float:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;resize:none;height:inherit}.td-disabled{vertical-align:middle;color:#5f5f5f;border:none;font-weight:200;float:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;padding-left:.2em}.headline{font-weight:300;resize:horizontal;padding:0 0 .3em .3em;line-height:1em;border-radius:.3em}.headline:hover{border-bottom:1px solid var(--border-bottom)}.headline-name:hover{cursor:pointer;color:var(--border-bottom);font-weight:bolder}#labelOptions{width:fit-content;resize:none}.options-field{width:fit-content;opacity:60%;resize:inherit}.options{float:left;position:relative;width:fit-content;height:16px;padding:0.3em;cursor:pointer;fill:#999999;color:#666666;line-height:0.9em}.options:hover{color:#333333;text-decoration:underline}.options:focus{border:none;outline:none;opacity:100%}.hidden{display:none}.shown{display:block}textarea{position:relative;resize:vertical;overflow:hidden;width:100%;height:100%;padding-left:.2em;background-color:#ffffff;font-size:var(--font-size-textarea);border:none;font-weight:300;font-family:inherit;text-overflow:ellipsis;white-space:pre;overflow-y:scroll}textarea:focus{outline:none;font-weight:300;white-space:normal;overflow:auto}textarea:not(:focus){height:100%}`;
+		this.shadowRoot.appendChild(style);
 
 		init(
 			this,

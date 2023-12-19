@@ -1,18 +1,14 @@
 <script>
     import {createEventDispatcher} from 'svelte';
-    import {SvelteGenericCrudTableService} from "./SvelteGenericCrudTableService";
-    import {icontrash, iconedit, iconsend, icondetail, iconcancel, iconcreate, iconsave} from './svgIcon'
-
+    import {SvelteGenericCrudTableService} from "./SvelteGenericCrudTableService.mjs";
+    import {icontrash, iconedit, iconsend, icondetail, iconcancel, iconcreate, iconsave} from './SvgIcon'
     /* istanbul ignore next line */
     export let shadowed = false;
-
     const dispatch = createEventDispatcher();
-
     const EDIT = 'EDIT';
     const DELETE = 'DELETE';
     const CREATE = 'CREATE';
     const DETAILS = 'DETAILS';
-
     const table_config_default = {
         name: 'crud-table',
         options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
@@ -20,29 +16,23 @@
         details_text: 'detail',
         row_settings: {height: '1.3em'}
     }
-
     /* istanbul ignore next line */
     export let table_data = {};
     /* istanbul ignore next line */
     $: table_data = (typeof table_data === 'string') ? JSON.parse(table_data) : table_data;
-
     /* istanbul ignore next line */
     export let table_config = table_config_default;
     /* istanbul ignore next line */
     $: table_config = (typeof table_config === 'string') ? JSON.parse(table_config) : table_config;
-
     let name = '';
     $: name = tableNameToId(table_config.name);
-
     let options = [];
     /* istanbul ignore next line */
     $: options = (typeof table_config.options !== 'undefined') ? table_config.options : [];
-
     const NO_ROW_IN_EDIT_MODE = -1;
     let cursor = NO_ROW_IN_EDIT_MODE;
     let genericCrudTableService = new SvelteGenericCrudTableService(table_config, name);
     $: genericCrudTableService = new SvelteGenericCrudTableService(table_config, name);
-
 
     function handleEdit(id, event) {
         resetRawInEditMode(id, event);
@@ -113,7 +103,6 @@
         }
     }
 
-
     function handleDetails(id, event) {
         resetRawInEditMode(id, event);
         const body = genericCrudTableService.gatherUpdates(id, table_data, event);
@@ -123,7 +112,6 @@
         };
         dispatcher('details', details, event);
     }
-
 
     function resetRawInEditMode(id, event) {
         if ((cursor !== id) && (cursor !== NO_ROW_IN_EDIT_MODE)) {
@@ -135,7 +123,6 @@
         let column = {column: elem};
         dispatcher('sort', column, event);
     }
-
 
     const columnsWidth = [];
     const columnsResize = [];
@@ -183,7 +170,6 @@
             genericCrudTableService.tooltip(event, 0, 15, text, type)
         }
     }
-
 </script>
 
 <main>
@@ -202,7 +188,8 @@
                              on:mousedown={startResize}
                              on:mousemove={handleResize}
                              on:mouseup={stopResize}>
-                            <span aria-label="Sort{elem.name}"
+                            <!-- svelte-ignore a11y-click-events-have-key-events -->
+                            <span aria-label="Sort{elem.name}" class="headline-name"
                                   on:click={(e) => handleSort(elem.name, e)}
                                   on:mouseenter={(e)=>{genericCrudTableService.tooltip(e, 0, 15, elem.description)}}>
                                 {genericCrudTableService.makeCapitalLead(elem.name)}
@@ -212,6 +199,7 @@
                     <div id="labelOptions" class="td headline">
                         <!-- /* istanbul ignore next line */ -->
                         {#if options.includes(CREATE)}
+                            <!-- svelte-ignore a11y-click-events-have-key-events -->
                             <div class="options blue" on:click={handleCreate}
                                  title="Create">
                                 {@html iconcreate}
@@ -255,6 +243,7 @@
                                              class="options-field shown">
                                             <!-- /* istanbul ignore next */ -->
                                             {#if options.includes(DELETE)}
+                                                <!-- svelte-ignore a11y-click-events-have-key-events -->
                                                 <div class="options red" on:click={(e) => handleDelete(i, e)}
                                                      title="Delete"
                                                      aria-label={name + column_order.name + i + 'delete'} tabindex="0">
@@ -263,6 +252,7 @@
                                             {/if}
                                             <!-- /* istanbul ignore next */ -->
                                             {#if options.includes(EDIT)}
+                                                <!-- svelte-ignore a11y-click-events-have-key-events -->
                                                 <div class="options green"
                                                      on:click={(e) => handleEdit(i, e)} title="Edit" tabindex="0">
                                                     {@html iconedit}
@@ -270,6 +260,7 @@
                                             {/if}
                                             <!-- /* istanbul ignore next */ -->
                                             {#if options.includes(DETAILS)}
+                                                <!-- svelte-ignore a11y-click-events-have-key-events -->
                                                 <div class="options blue" on:click="{(e) => {handleDetails(i, e)}}"
                                                      title="{table_config.details_text !== undefined ? table_config.details_text : 'Details'}"
                                                      tabindex="0">
@@ -285,11 +276,13 @@
                                              class="options-field hidden">
                                             <!-- /* istanbul ignore next */ -->
                                             {#if options.includes(EDIT)}
+                                                <!-- svelte-ignore a11y-click-events-have-key-events -->
                                                 <div class="options green"
                                                      on:click="{(e) => {handleEditConfirmation(i, e)}}"
                                                      title="Update" tabindex="0">
                                                     {@html iconsave}
                                                 </div>
+                                                <!-- svelte-ignore a11y-click-events-have-key-events -->
                                                 <div class="options red" on:click="{(e) => {handleCancelEdit(i, e)}}"
                                                      title="Cancel"
                                                      aria-label={name + column_order.name + i + 'editCancel'}
@@ -303,6 +296,7 @@
                                              class="options-field hidden">
                                             <!-- /* istanbul ignore next */ -->
                                             {#if options.includes(DELETE)}
+                                                <!-- svelte-ignore a11y-click-events-have-key-events -->
                                                 <div class="options red" on:click={(e) => handleCancelDelete(i, e)}
                                                      title="Cancel"
                                                      aria-label={name + column_order.name + i + 'deleteCancel'}
@@ -334,9 +328,19 @@
 </main>
 
 <style>
+    :root {
+        --textarea-border: #e1e1e1;
+        --textarea-border-focus: #bfbfbf;
+        --font-color: #333333;
+        --border-bottom: #bfbfbf;
+        --border-bottom-hover: #4A849F;
+        --font-size: 1em;
+        --error-text: #999999;
+        --font-size-textarea: 1em;
+    }
+
     main {
         position: inherit;
-        padding-top: 0.4em;
     }
 
     .no-entries {
@@ -367,14 +371,15 @@
 
     .thead {
         display: inline-flex;
-        padding: 0 0 0.4em 0;
+        padding: 0 0 0.3em 0;
     }
 
     .row {
         display: inline-flex;
-        padding: 0;
-        margin: 0 0 1px;
+        padding: .5em 1em .5em .5em;
         resize: vertical;
+        border-radius: .3em;
+        transition: all .2s ease-out;
     }
 
     .dark {
@@ -388,14 +393,13 @@
     .td {
         color: #5f5f5f;
         border: none;
-        border-left: 0.1em solid transparent;
         font-weight: 100;
-        padding: 0.2em 0 0.1em 0.4em;
         float: left;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         resize: none;
+        height: inherit;
     }
 
     .td-disabled {
@@ -404,40 +408,38 @@
         border: none;
         font-weight: 200;
         float: left;
-        line-height: 1em;
-        min-height: 1.3em;
-        max-height: 1.3em;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         width: 100%;
-        width: -moz-available;
-        width: -webkit-fill-available;
-        width: stretch;
+        padding-left: .2em;
     }
 
     .headline {
-        cursor: pointer;
-        min-height: 1.3em;
-        max-height: 1.3em;
-        height: 1.3em;
         font-weight: 300;
-        padding: 0 0 0.3em 0.4em;
-        margin-bottom: 0.3em;
         resize: horizontal;
+        padding: 0 0 .3em .3em;
+        line-height: 1em;
+        border-radius: .3em;
+    }
+
+    .headline:hover {
+        border-bottom: 1px solid var(--border-bottom);
+    }
+
+    .headline-name:hover {
+        cursor: pointer;
+        color: var(--border-bottom);
+        font-weight: bolder;
     }
 
     #labelOptions {
         width: fit-content;
-        width: -moz-fit-content;
         resize: none;
     }
 
     .options-field {
-        min-height: 1.3em;
-        max-height: 1.3em;
         width: fit-content;
-        width: -moz-fit-content;
         opacity: 60%;
         resize: inherit;
     }
@@ -446,9 +448,8 @@
         float: left;
         position: relative;
         width: fit-content;
-        width: -moz-fit-content;
         height: 16px;
-        padding: 0.2em 0.4em;
+        padding: 0.3em;
         cursor: pointer;
         fill: #999999;
         color: #666666;
@@ -480,17 +481,14 @@
         overflow: hidden;
         width: 100%;
         height: 100%;
-        min-height: 1.3em;
-        padding: 1px 1px;
+        padding-left: .2em;
         background-color: #ffffff;
+        font-size: var(--font-size-textarea);
         border: none;
-        font-size: 0.95em;
         font-weight: 300;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+        font-family: inherit;
         text-overflow: ellipsis;
         white-space: pre;
-        -webkit-transition: box-shadow 0.3s;
-        border-bottom: 0.5px solid #5f5f5f;
         overflow-y: scroll;
     }
 
@@ -499,11 +497,9 @@
         font-weight: 300;
         white-space: normal;
         overflow: auto;
-        padding-top: 1px;
     }
 
     textarea:not(:focus) {
         height: 100%;
     }
-
 </style>

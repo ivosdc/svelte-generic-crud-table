@@ -18,7 +18,7 @@ export class SvelteGenericCrudTableService {
     }
 
     resetEditMode(id, event) {
-        let parentrow = this.getRow(event);
+        let parentrow = this.getTable(event);
         this.table_config.columns_setting.forEach((toEdit) => {
             let rowEnabled = parentrow.querySelector('#' + this.name + toEdit.name + id);
             let rowDisabled = parentrow.querySelector('#' + this.name + toEdit.name + id + '-disabled');
@@ -42,7 +42,7 @@ export class SvelteGenericCrudTableService {
     }
 
     resetDeleteMode(id, event) {
-        let parentrow = this.getRow(event);
+        let parentrow = this.getTable(event);
         let optionsDefault = parentrow.querySelector('#' + this.name + 'options-default' + id);
         let optionsDelete = parentrow.querySelector('#' + this.name + 'options-delete' + id);
         if (optionsDefault !== null && optionsDelete !== null) {
@@ -94,7 +94,7 @@ export class SvelteGenericCrudTableService {
         this.table_config.columns_setting.forEach((elem) => {
             let domElement = parentrow.querySelector('#' + this.name + elem.name + id);
             if (elem.show && domElement !== null) {
-                    body[elem.name] = domElement.value;
+                body[elem.name] = domElement.value;
             }
         })
         return body;
@@ -155,16 +155,19 @@ export class SvelteGenericCrudTableService {
         element.style.position = 'fixed';
         element.style.border = 'solid 1px black'
         element.style.whiteSpace = 'break-spaces';
+        element.style.borderRadius = '.3em';
+        element.classList.add('tooltip')
+
         if (type === 'html') {
             element.innerHTML = text;
         } else {
             element.innerText = text;
         }
-        element.style.zIndex = (10000).toString();
+
         targetElem.appendChild(element);
         element.style.top = (event.pageY - window.scrollY - element.clientHeight - y) + 'px';
         element.style.left = (event.pageX - window.scrollX - (element.clientWidth / 2) + x) + 'px';
-        targetElem.addEventListener('mouseleave', e => {
+        targetElem.addEventListener('mouseleave', () => {
             if (element.parentNode === targetElem) {
                 targetElem.removeChild(element);
             }
@@ -172,4 +175,3 @@ export class SvelteGenericCrudTableService {
     }
 
 }
-

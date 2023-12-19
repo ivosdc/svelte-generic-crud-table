@@ -1,4 +1,4 @@
-import {SvelteGenericCrudTableService} from './SvelteGenericCrudTableService'
+import {SvelteGenericCrudTableService} from './SvelteGenericCrudTableService.mjs'
 
 const config = {
     name: '',
