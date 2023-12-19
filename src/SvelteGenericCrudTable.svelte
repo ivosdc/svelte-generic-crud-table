@@ -196,7 +196,7 @@
                             </span>
                         </div>
                     {/each}
-                    <div id="labelOptions" class="td headline">
+                    <div id="label-options" class="td">
                         <!-- /* istanbul ignore next line */ -->
                         {#if options.includes(CREATE)}
                             <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -210,7 +210,8 @@
 
                 <!-- /* istanbul ignore next line */ -->
                 {#each table_data as tableRow, i (tableRow)}
-                    <div class="row {i % 2 === 0 ? 'dark' : ''}"
+                    <div class="row"
+                         class:dark={i % 2 === 0}
                          style="min-height:{(table_config.row_settings !== undefined) && (table_config.row_settings.height !== undefined) ? table_config.row_settings.height : table_config_default.row_settings.height};">
                         {#each table_config.columns_setting as column_order, j}
                             {#each Object.entries(tableRow) as elem, k}
@@ -328,19 +329,30 @@
 </main>
 
 <style>
+
     :root {
-        --textarea-border: #e1e1e1;
-        --textarea-border-focus: #bfbfbf;
-        --font-color: #333333;
-        --border-bottom: #bfbfbf;
-        --border-bottom-hover: #4A849F;
-        --font-size: 1em;
-        --error-text: #999999;
+
+
+        --lightgrey1: #f4f4f4;
+        --lightgrey2: #efefef;
+        --lightgrey3: #e1e1e1;
+        --grey1: #bfbfbf;
+        --grey2: #999999;
+        --grey3: #666666;
+        --darkgrey1: #555555;
+        --darkgrey2: #333333;
+        --darkgrey3: #1f1f1f;
+        --button1: #004666;
+        --button2: #4A849F;
+        --button3: #A4C8D8;
+
         --font-size-textarea: 1em;
     }
 
+
     main {
         position: inherit;
+        transition: all .1s ease-in;
     }
 
     .no-entries {
@@ -367,19 +379,22 @@
     .table {
         display: inline-grid;
         text-align: left;
+        border: 1px solid var(--lightgrey3);
+        border-top: 1px solid transparent;
+        border-radius: .2em;
     }
 
     .thead {
         display: inline-flex;
-        padding: 0 0 0.3em 0;
+        padding: 0 0 .3em .5em;
+        border-bottom: 1px solid var(--grey2);
     }
 
     .row {
         display: inline-flex;
-        padding: .5em 1em .5em .5em;
+        padding: .5em 1em .5em 1em;
         resize: vertical;
-        border-radius: .3em;
-        transition: all .2s ease-out;
+        border-radius: .2em;
     }
 
     .dark {
@@ -412,28 +427,24 @@
         overflow: hidden;
         text-overflow: ellipsis;
         width: 100%;
-        padding-left: .2em;
+        margin-left: .5em;
     }
 
     .headline {
         font-weight: 300;
         resize: horizontal;
-        padding: 0 0 .3em .3em;
+        padding-left: 1em;
         line-height: 1em;
         border-radius: .3em;
     }
 
-    .headline:hover {
-        border-bottom: 1px solid var(--border-bottom);
-    }
-
     .headline-name:hover {
         cursor: pointer;
-        color: var(--border-bottom);
+        color: var(--darkgrey3);
         font-weight: bolder;
     }
 
-    #labelOptions {
+    #label-options {
         width: fit-content;
         resize: none;
     }
@@ -442,6 +453,7 @@
         width: fit-content;
         opacity: 60%;
         resize: inherit;
+        padding-left: .5em;
     }
 
     .options {
@@ -479,17 +491,17 @@
         position: relative;
         resize: vertical;
         overflow: hidden;
-        width: 100%;
-        height: 100%;
-        padding-left: .2em;
+        width: calc(100% - 1em);
+        height: calc(100% - .5em);
+        padding-left: .5em;
         background-color: #ffffff;
         font-size: var(--font-size-textarea);
-        border: none;
         font-weight: 300;
         font-family: inherit;
         text-overflow: ellipsis;
         white-space: pre;
         overflow-y: scroll;
+        border: 1px solid var(--grey1);
     }
 
     textarea:focus {
@@ -500,6 +512,6 @@
     }
 
     textarea:not(:focus) {
-        height: 100%;
+        height: calc(100% - .5em);
     }
 </style>
