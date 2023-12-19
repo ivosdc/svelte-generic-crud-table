@@ -82,6 +82,9 @@
             node.style.setProperty(key, value, important ? 'important' : '');
         }
     }
+    function toggle_class(element, name, toggle) {
+        element.classList[toggle ? 'add' : 'remove'](name);
+    }
     function custom_event(type, detail, { bubbles = false, cancelable = false } = {}) {
         const e = document.createEvent('CustomEvent');
         e.initCustomEvent(type, bubbles, cancelable, detail);
@@ -840,8 +843,8 @@
 
     			t2 = space();
     			if (if_block1) if_block1.c();
-    			attr(div0, "id", "labelOptions");
-    			attr(div0, "class", "td headline");
+    			attr(div0, "id", "label-options");
+    			attr(div0, "class", "td");
     			attr(div1, "class", "thead");
 
     			set_style(div1, "max-height", /*table_config*/ ctx[1].row_settings !== undefined && /*table_config*/ ctx[1].row_settings.height !== undefined
@@ -919,7 +922,7 @@
     				: /*table_config_default*/ ctx[5].row_settings.height);
     			}
 
-    			if (dirty[0] & /*table_data, table_config, table_config_default, name, handleDeleteConfirmation, handleCancelDelete, options, handleCancelEdit, handleEditConfirmation, handleDetails, handleEdit, handleDelete, genericCrudTableService, getWidth, showTooltipByConfig*/ 1323007) {
+    			if (dirty[0] & /*table_config, table_config_default, table_data, name, handleDeleteConfirmation, handleCancelDelete, options, handleCancelEdit, handleEditConfirmation, handleDetails, handleEdit, handleDelete, genericCrudTableService, getWidth, showTooltipByConfig*/ 1323007) {
     				each_value = /*table_data*/ ctx[0];
     				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each1_lookup, div2, destroy_block, create_each_block, t2, get_each_context);
     			}
@@ -1057,7 +1060,7 @@
     	};
     }
 
-    // (218:32) {#if (column_order.name === genericCrudTableService.getKey(elem))}
+    // (219:32) {#if (column_order.name === genericCrudTableService.getKey(elem))}
     function create_if_block_10(ctx) {
     	let div1;
     	let div0;
@@ -1173,7 +1176,7 @@
     	};
     }
 
-    // (229:44) {:else}
+    // (230:44) {:else}
     function create_else_block_1(ctx) {
     	let t_value = /*table_data*/ ctx[0][/*i*/ ctx[41]][/*column_order*/ ctx[42].name] + "";
     	let t;
@@ -1194,7 +1197,7 @@
     	};
     }
 
-    // (227:44) {#if column_order.type === 'html'}
+    // (228:44) {#if column_order.type === 'html'}
     function create_if_block_11(ctx) {
     	let html_tag;
     	let raw_value = /*table_data*/ ctx[0][/*i*/ ctx[41]][/*column_order*/ ctx[42].name] + "";
@@ -1220,7 +1223,7 @@
     	};
     }
 
-    // (239:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
+    // (240:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
     function create_if_block_3(ctx) {
     	let div3;
     	let div0;
@@ -1393,7 +1396,7 @@
     	};
     }
 
-    // (245:44) {#if options.includes(DELETE)}
+    // (246:44) {#if options.includes(DELETE)}
     function create_if_block_9(ctx) {
     	let div;
     	let div_aria_label_value;
@@ -1436,7 +1439,7 @@
     	};
     }
 
-    // (254:44) {#if options.includes(EDIT)}
+    // (255:44) {#if options.includes(EDIT)}
     function create_if_block_8(ctx) {
     	let div;
     	let mounted;
@@ -1473,7 +1476,7 @@
     	};
     }
 
-    // (262:44) {#if options.includes(DETAILS)}
+    // (263:44) {#if options.includes(DETAILS)}
     function create_if_block_6(ctx) {
     	let div;
     	let div_title_value;
@@ -1543,7 +1546,7 @@
     	};
     }
 
-    // (269:52) {:else}
+    // (270:52) {:else}
     function create_else_block(ctx) {
     	let html_tag;
     	let html_anchor;
@@ -1566,7 +1569,7 @@
     	};
     }
 
-    // (267:52) {#if table_config.details_text !== undefined}
+    // (268:52) {#if table_config.details_text !== undefined}
     function create_if_block_7(ctx) {
     	let t_value = /*table_config*/ ctx[1].details_text + "";
     	let t;
@@ -1587,7 +1590,7 @@
     	};
     }
 
-    // (278:44) {#if options.includes(EDIT)}
+    // (279:44) {#if options.includes(EDIT)}
     function create_if_block_5(ctx) {
     	let div0;
     	let t;
@@ -1650,7 +1653,7 @@
     	};
     }
 
-    // (298:44) {#if options.includes(DELETE)}
+    // (299:44) {#if options.includes(DELETE)}
     function create_if_block_4(ctx) {
     	let div0;
     	let div0_aria_label_value;
@@ -1719,7 +1722,7 @@
     	};
     }
 
-    // (216:28) {#each Object.entries(tableRow) as elem, k}
+    // (217:28) {#each Object.entries(tableRow) as elem, k}
     function create_each_block_2(ctx) {
     	let show_if_1 = /*column_order*/ ctx[42].name === /*genericCrudTableService*/ ctx[4].getKey(/*elem*/ ctx[45]);
     	let t;
@@ -1781,7 +1784,7 @@
     	};
     }
 
-    // (215:24) {#each table_config.columns_setting as column_order, j}
+    // (216:24) {#each table_config.columns_setting as column_order, j}
     function create_each_block_1(ctx) {
     	let each_1_anchor;
     	let each_value_2 = Object.entries(/*tableRow*/ ctx[39]);
@@ -1842,7 +1845,6 @@
     // (212:16) {#each table_data as tableRow, i (tableRow)}
     function create_each_block(key_1, ctx) {
     	let div;
-    	let div_class_value;
     	let each_value_1 = /*table_config*/ ctx[1].columns_setting;
     	let each_blocks = [];
 
@@ -1860,12 +1862,13 @@
     				each_blocks[i].c();
     			}
 
-    			attr(div, "class", div_class_value = "row " + (/*i*/ ctx[41] % 2 === 0 ? 'dark' : ''));
+    			attr(div, "class", "row");
 
     			set_style(div, "min-height", /*table_config*/ ctx[1].row_settings !== undefined && /*table_config*/ ctx[1].row_settings.height !== undefined
     			? /*table_config*/ ctx[1].row_settings.height
     			: /*table_config_default*/ ctx[5].row_settings.height);
 
+    			toggle_class(div, "dark", /*i*/ ctx[41] % 2 === 0);
     			this.first = div;
     		},
     		m(target, anchor) {
@@ -1903,14 +1906,14 @@
     				each_blocks.length = each_value_1.length;
     			}
 
-    			if (dirty[0] & /*table_data*/ 1 && div_class_value !== (div_class_value = "row " + (/*i*/ ctx[41] % 2 === 0 ? 'dark' : ''))) {
-    				attr(div, "class", div_class_value);
-    			}
-
     			if (dirty[0] & /*table_config*/ 2) {
     				set_style(div, "min-height", /*table_config*/ ctx[1].row_settings !== undefined && /*table_config*/ ctx[1].row_settings.height !== undefined
     				? /*table_config*/ ctx[1].row_settings.height
     				: /*table_config_default*/ ctx[5].row_settings.height);
+    			}
+
+    			if (dirty[0] & /*table_data*/ 1) {
+    				toggle_class(div, "dark", /*i*/ ctx[41] % 2 === 0);
     			}
     		},
     		d(detaching) {
@@ -1920,7 +1923,7 @@
     	};
     }
 
-    // (321:16) {#if table_data.length === 0}
+    // (322:16) {#if table_data.length === 0}
     function create_if_block_2(ctx) {
     	let br;
     	let t0;
@@ -2243,7 +2246,7 @@
     	constructor(options) {
     		super();
     		const style = document.createElement('style');
-    		style.textContent = `:root{--textarea-border:#e1e1e1;--textarea-border-focus:#bfbfbf;--font-color:#333333;--border-bottom:#bfbfbf;--border-bottom-hover:#4A849F;--font-size:1em;--error-text:#999999;--font-size-textarea:1em}main{position:inherit}.no-entries{width:100%;color:#666666;text-align:center}.red:hover{fill:red;fill-opacity:80%}.green:hover{fill:limegreen;fill-opacity:80%}.blue:hover{fill:dodgerblue;fill-opacity:80%}.table{display:inline-grid;text-align:left}.thead{display:inline-flex;padding:0 0 0.3em 0}.row{display:inline-flex;padding:.5em 1em .5em .5em;resize:vertical;border-radius:.3em;transition:all .2s ease-out}.dark{background-color:#efefef}.row:hover{background-color:rgba(0, 0, 0, 0.1)}.td{color:#5f5f5f;border:none;font-weight:100;float:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;resize:none;height:inherit}.td-disabled{vertical-align:middle;color:#5f5f5f;border:none;font-weight:200;float:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;padding-left:.2em}.headline{font-weight:300;resize:horizontal;padding:0 0 .3em .3em;line-height:1em;border-radius:.3em}.headline:hover{border-bottom:1px solid var(--border-bottom)}.headline-name:hover{cursor:pointer;color:var(--border-bottom);font-weight:bolder}#labelOptions{width:fit-content;resize:none}.options-field{width:fit-content;opacity:60%;resize:inherit}.options{float:left;position:relative;width:fit-content;height:16px;padding:0.3em;cursor:pointer;fill:#999999;color:#666666;line-height:0.9em}.options:hover{color:#333333;text-decoration:underline}.options:focus{border:none;outline:none;opacity:100%}.hidden{display:none}.shown{display:block}textarea{position:relative;resize:vertical;overflow:hidden;width:100%;height:100%;padding-left:.2em;background-color:#ffffff;font-size:var(--font-size-textarea);border:none;font-weight:300;font-family:inherit;text-overflow:ellipsis;white-space:pre;overflow-y:scroll}textarea:focus{outline:none;font-weight:300;white-space:normal;overflow:auto}textarea:not(:focus){height:100%}`;
+    		style.textContent = `:root{--lightgrey1:#f4f4f4;--lightgrey2:#efefef;--lightgrey3:#e1e1e1;--grey1:#bfbfbf;--grey2:#999999;--grey3:#666666;--darkgrey1:#555555;--darkgrey2:#333333;--darkgrey3:#1f1f1f;--button1:#004666;--button2:#4A849F;--button3:#A4C8D8;--font-size-textarea:1em}main{position:inherit;transition:all .1s ease-in}.no-entries{width:100%;color:#666666;text-align:center}.red:hover{fill:red;fill-opacity:80%}.green:hover{fill:limegreen;fill-opacity:80%}.blue:hover{fill:dodgerblue;fill-opacity:80%}.table{display:inline-grid;text-align:left;border:1px solid var(--lightgrey3);border-top:1px solid transparent;border-radius:.2em}.thead{display:inline-flex;padding:0 0 .3em .5em;border-bottom:1px solid var(--grey2)}.row{display:inline-flex;padding:.5em 1em .5em 1em;resize:vertical;border-radius:.2em}.dark{background-color:#efefef}.row:hover{background-color:rgba(0, 0, 0, 0.1)}.td{color:#5f5f5f;border:none;font-weight:100;float:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;resize:none;height:inherit}.td-disabled{vertical-align:middle;color:#5f5f5f;border:none;font-weight:200;float:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;margin-left:.5em}.headline{font-weight:300;resize:horizontal;padding-left:1em;line-height:1em;border-radius:.3em}.headline-name:hover{cursor:pointer;color:var(--darkgrey3);font-weight:bolder}#label-options{width:fit-content;resize:none}.options-field{width:fit-content;opacity:60%;resize:inherit;padding-left:.5em}.options{float:left;position:relative;width:fit-content;height:16px;padding:0.3em;cursor:pointer;fill:#999999;color:#666666;line-height:0.9em}.options:hover{color:#333333;text-decoration:underline}.options:focus{border:none;outline:none;opacity:100%}.hidden{display:none}.shown{display:block}textarea{position:relative;resize:vertical;overflow:hidden;width:calc(100% - 1em);height:calc(100% - .5em);padding-left:.5em;background-color:#ffffff;font-size:var(--font-size-textarea);font-weight:300;font-family:inherit;text-overflow:ellipsis;white-space:pre;overflow-y:scroll;border:1px solid var(--grey1)}textarea:focus{outline:none;font-weight:300;white-space:normal;overflow:auto}textarea:not(:focus){height:calc(100% - .5em)}`;
     		this.shadowRoot.appendChild(style);
 
     		init(
