@@ -799,7 +799,7 @@
     	let div1;
     	let t0;
     	let div0;
-    	let show_if = /*options*/ ctx[3].includes(CREATE);
+    	let show_if;
     	let t1;
     	let each_blocks = [];
     	let each1_lookup = new Map();
@@ -811,7 +811,15 @@
     		each_blocks_1[i] = create_each_block_3(get_each_context_3(ctx, each_value_3, i));
     	}
 
-    	let if_block0 = show_if && create_if_block_12(ctx);
+    	function select_block_type(ctx, dirty) {
+    		if (dirty[0] & /*options*/ 8) show_if = null;
+    		if (show_if == null) show_if = !!/*options*/ ctx[3].includes(CREATE);
+    		if (show_if) return create_if_block_12;
+    		return create_else_block_2;
+    	}
+
+    	let current_block_type = select_block_type(ctx, [-1, -1]);
+    	let if_block0 = current_block_type(ctx);
     	let each_value = /*table_data*/ ctx[0];
     	const get_key = ctx => /*tableRow*/ ctx[39];
 
@@ -834,7 +842,7 @@
 
     			t0 = space();
     			div0 = element("div");
-    			if (if_block0) if_block0.c();
+    			if_block0.c();
     			t1 = space();
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
@@ -865,7 +873,7 @@
 
     			append(div1, t0);
     			append(div1, div0);
-    			if (if_block0) if_block0.m(div0, null);
+    			if_block0.m(div0, null);
     			append(div2, t1);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
@@ -901,19 +909,16 @@
     				each_blocks_1.length = each_value_3.length;
     			}
 
-    			if (dirty[0] & /*options*/ 8) show_if = /*options*/ ctx[3].includes(CREATE);
+    			if (current_block_type === (current_block_type = select_block_type(ctx, dirty)) && if_block0) {
+    				if_block0.p(ctx, dirty);
+    			} else {
+    				if_block0.d(1);
+    				if_block0 = current_block_type(ctx);
 
-    			if (show_if) {
     				if (if_block0) {
-    					if_block0.p(ctx, dirty);
-    				} else {
-    					if_block0 = create_if_block_12(ctx);
     					if_block0.c();
     					if_block0.m(div0, null);
     				}
-    			} else if (if_block0) {
-    				if_block0.d(1);
-    				if_block0 = null;
     			}
 
     			if (dirty[0] & /*table_config*/ 2) {
@@ -941,7 +946,7 @@
     		d(detaching) {
     			if (detaching) detach(div2);
     			destroy_each(each_blocks_1, detaching);
-    			if (if_block0) if_block0.d();
+    			if_block0.d();
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].d();
@@ -954,13 +959,13 @@
 
     // (183:20) {#each table_config.columns_setting as elem, index}
     function create_each_block_3(ctx) {
-    	let div;
-    	let span;
+    	let div1;
+    	let div0;
     	let t_value = /*genericCrudTableService*/ ctx[4].makeCapitalLead(/*elem*/ ctx[45].name) + "";
     	let t;
-    	let span_aria_label_value;
-    	let div_class_value;
-    	let div_style_value;
+    	let div0_aria_label_value;
+    	let div1_class_value;
+    	let div1_style_value;
     	let mounted;
     	let dispose;
 
@@ -974,31 +979,31 @@
 
     	return {
     		c() {
-    			div = element("div");
-    			span = element("span");
+    			div1 = element("div");
+    			div0 = element("div");
     			t = text(t_value);
-    			attr(span, "aria-label", span_aria_label_value = "Sort" + /*elem*/ ctx[45].name);
-    			attr(span, "class", "headline-name");
-    			attr(div, "id", /*index*/ ctx[49]);
+    			attr(div0, "aria-label", div0_aria_label_value = "Sort" + /*elem*/ ctx[45].name);
+    			attr(div0, "class", "headline-name");
+    			attr(div1, "id", /*index*/ ctx[49]);
 
-    			attr(div, "class", div_class_value = "td headline " + (/*genericCrudTableService*/ ctx[4].isShowField(/*elem*/ ctx[45].name) === false
+    			attr(div1, "class", div1_class_value = "td headline " + (/*genericCrudTableService*/ ctx[4].isShowField(/*elem*/ ctx[45].name) === false
     			? 'hidden'
     			: 'shown'));
 
-    			attr(div, "style", div_style_value = /*setWidth*/ ctx[19](/*elem*/ ctx[45], /*index*/ ctx[49]));
+    			attr(div1, "style", div1_style_value = /*setWidth*/ ctx[19](/*elem*/ ctx[45], /*index*/ ctx[49]));
     		},
     		m(target, anchor) {
-    			insert(target, div, anchor);
-    			append(div, span);
-    			append(span, t);
+    			insert(target, div1, anchor);
+    			append(div1, div0);
+    			append(div0, t);
 
     			if (!mounted) {
     				dispose = [
-    					listen(span, "click", click_handler),
-    					listen(span, "mouseenter", mouseenter_handler),
-    					listen(div, "mousedown", /*startResize*/ ctx[16]),
-    					listen(div, "mousemove", /*handleResize*/ ctx[15]),
-    					listen(div, "mouseup", /*stopResize*/ ctx[17])
+    					listen(div0, "click", click_handler),
+    					listen(div0, "mouseenter", mouseenter_handler),
+    					listen(div1, "mousedown", /*startResize*/ ctx[16]),
+    					listen(div1, "mousemove", /*handleResize*/ ctx[15]),
+    					listen(div1, "mouseup", /*stopResize*/ ctx[17])
     				];
 
     				mounted = true;
@@ -1008,24 +1013,44 @@
     			ctx = new_ctx;
     			if (dirty[0] & /*genericCrudTableService, table_config*/ 18 && t_value !== (t_value = /*genericCrudTableService*/ ctx[4].makeCapitalLead(/*elem*/ ctx[45].name) + "")) set_data(t, t_value);
 
-    			if (dirty[0] & /*table_config*/ 2 && span_aria_label_value !== (span_aria_label_value = "Sort" + /*elem*/ ctx[45].name)) {
-    				attr(span, "aria-label", span_aria_label_value);
+    			if (dirty[0] & /*table_config*/ 2 && div0_aria_label_value !== (div0_aria_label_value = "Sort" + /*elem*/ ctx[45].name)) {
+    				attr(div0, "aria-label", div0_aria_label_value);
     			}
 
-    			if (dirty[0] & /*genericCrudTableService, table_config*/ 18 && div_class_value !== (div_class_value = "td headline " + (/*genericCrudTableService*/ ctx[4].isShowField(/*elem*/ ctx[45].name) === false
+    			if (dirty[0] & /*genericCrudTableService, table_config*/ 18 && div1_class_value !== (div1_class_value = "td headline " + (/*genericCrudTableService*/ ctx[4].isShowField(/*elem*/ ctx[45].name) === false
     			? 'hidden'
     			: 'shown'))) {
-    				attr(div, "class", div_class_value);
+    				attr(div1, "class", div1_class_value);
     			}
 
-    			if (dirty[0] & /*table_config*/ 2 && div_style_value !== (div_style_value = /*setWidth*/ ctx[19](/*elem*/ ctx[45], /*index*/ ctx[49]))) {
-    				attr(div, "style", div_style_value);
+    			if (dirty[0] & /*table_config*/ 2 && div1_style_value !== (div1_style_value = /*setWidth*/ ctx[19](/*elem*/ ctx[45], /*index*/ ctx[49]))) {
+    				attr(div1, "style", div1_style_value);
     			}
     		},
     		d(detaching) {
-    			if (detaching) detach(div);
+    			if (detaching) detach(div1);
     			mounted = false;
     			run_all(dispose);
+    		}
+    	};
+    }
+
+    // (207:24) {:else}
+    function create_else_block_2(ctx) {
+    	let div;
+
+    	return {
+    		c() {
+    			div = element("div");
+    			div.textContent = " ";
+    			attr(div, "class", "options-spacer");
+    		},
+    		m(target, anchor) {
+    			insert(target, div, anchor);
+    		},
+    		p: noop,
+    		d(detaching) {
+    			if (detaching) detach(div);
     		}
     	};
     }
@@ -1060,7 +1085,7 @@
     	};
     }
 
-    // (219:32) {#if (column_order.name === genericCrudTableService.getKey(elem))}
+    // (223:32) {#if (column_order.name === genericCrudTableService.getKey(elem))}
     function create_if_block_10(ctx) {
     	let div1;
     	let div0;
@@ -1076,12 +1101,12 @@
     	let mounted;
     	let dispose;
 
-    	function select_block_type(ctx, dirty) {
+    	function select_block_type_1(ctx, dirty) {
     		if (/*column_order*/ ctx[42].type === 'html') return create_if_block_11;
     		return create_else_block_1;
     	}
 
-    	let current_block_type = select_block_type(ctx);
+    	let current_block_type = select_block_type_1(ctx);
     	let if_block = current_block_type(ctx);
 
     	function mouseenter_handler_1(...args) {
@@ -1125,7 +1150,7 @@
     		p(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
+    			if (current_block_type === (current_block_type = select_block_type_1(ctx)) && if_block) {
     				if_block.p(ctx, dirty);
     			} else {
     				if_block.d(1);
@@ -1176,7 +1201,7 @@
     	};
     }
 
-    // (230:44) {:else}
+    // (234:44) {:else}
     function create_else_block_1(ctx) {
     	let t_value = /*table_data*/ ctx[0][/*i*/ ctx[41]][/*column_order*/ ctx[42].name] + "";
     	let t;
@@ -1197,7 +1222,7 @@
     	};
     }
 
-    // (228:44) {#if column_order.type === 'html'}
+    // (232:44) {#if column_order.type === 'html'}
     function create_if_block_11(ctx) {
     	let html_tag;
     	let raw_value = /*table_data*/ ctx[0][/*i*/ ctx[41]][/*column_order*/ ctx[42].name] + "";
@@ -1223,7 +1248,7 @@
     	};
     }
 
-    // (240:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
+    // (244:32) {#if table_config.columns_setting.length - 1 === j && Object.entries(tableRow).length - 1 === k }
     function create_if_block_3(ctx) {
     	let div3;
     	let div0;
@@ -1396,7 +1421,7 @@
     	};
     }
 
-    // (246:44) {#if options.includes(DELETE)}
+    // (250:44) {#if options.includes(DELETE)}
     function create_if_block_9(ctx) {
     	let div;
     	let div_aria_label_value;
@@ -1439,7 +1464,7 @@
     	};
     }
 
-    // (255:44) {#if options.includes(EDIT)}
+    // (259:44) {#if options.includes(EDIT)}
     function create_if_block_8(ctx) {
     	let div;
     	let mounted;
@@ -1476,19 +1501,19 @@
     	};
     }
 
-    // (263:44) {#if options.includes(DETAILS)}
+    // (267:44) {#if options.includes(DETAILS)}
     function create_if_block_6(ctx) {
     	let div;
     	let div_title_value;
     	let mounted;
     	let dispose;
 
-    	function select_block_type_1(ctx, dirty) {
+    	function select_block_type_2(ctx, dirty) {
     		if (/*table_config*/ ctx[1].details_text !== undefined) return create_if_block_7;
     		return create_else_block;
     	}
 
-    	let current_block_type = select_block_type_1(ctx);
+    	let current_block_type = select_block_type_2(ctx);
     	let if_block = current_block_type(ctx);
 
     	function click_handler_3(...args) {
@@ -1519,7 +1544,7 @@
     		p(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (current_block_type === (current_block_type = select_block_type_1(ctx)) && if_block) {
+    			if (current_block_type === (current_block_type = select_block_type_2(ctx)) && if_block) {
     				if_block.p(ctx, dirty);
     			} else {
     				if_block.d(1);
@@ -1546,7 +1571,7 @@
     	};
     }
 
-    // (270:52) {:else}
+    // (274:52) {:else}
     function create_else_block(ctx) {
     	let html_tag;
     	let html_anchor;
@@ -1569,7 +1594,7 @@
     	};
     }
 
-    // (268:52) {#if table_config.details_text !== undefined}
+    // (272:52) {#if table_config.details_text !== undefined}
     function create_if_block_7(ctx) {
     	let t_value = /*table_config*/ ctx[1].details_text + "";
     	let t;
@@ -1590,7 +1615,7 @@
     	};
     }
 
-    // (279:44) {#if options.includes(EDIT)}
+    // (283:44) {#if options.includes(EDIT)}
     function create_if_block_5(ctx) {
     	let div0;
     	let t;
@@ -1653,7 +1678,7 @@
     	};
     }
 
-    // (299:44) {#if options.includes(DELETE)}
+    // (303:44) {#if options.includes(DELETE)}
     function create_if_block_4(ctx) {
     	let div0;
     	let div0_aria_label_value;
@@ -1722,7 +1747,7 @@
     	};
     }
 
-    // (217:28) {#each Object.entries(tableRow) as elem, k}
+    // (221:28) {#each Object.entries(tableRow) as elem, k}
     function create_each_block_2(ctx) {
     	let show_if_1 = /*column_order*/ ctx[42].name === /*genericCrudTableService*/ ctx[4].getKey(/*elem*/ ctx[45]);
     	let t;
@@ -1784,7 +1809,7 @@
     	};
     }
 
-    // (216:24) {#each table_config.columns_setting as column_order, j}
+    // (220:24) {#each table_config.columns_setting as column_order, j}
     function create_each_block_1(ctx) {
     	let each_1_anchor;
     	let each_value_2 = Object.entries(/*tableRow*/ ctx[39]);
@@ -1842,7 +1867,7 @@
     	};
     }
 
-    // (212:16) {#each table_data as tableRow, i (tableRow)}
+    // (216:16) {#each table_data as tableRow, i (tableRow)}
     function create_each_block(key_1, ctx) {
     	let div;
     	let each_value_1 = /*table_config*/ ctx[1].columns_setting;
@@ -1923,7 +1948,7 @@
     	};
     }
 
-    // (322:16) {#if table_data.length === 0}
+    // (326:16) {#if table_data.length === 0}
     function create_if_block_2(ctx) {
     	let br;
     	let t0;
@@ -2105,10 +2130,10 @@
     			let column;
     			let querySelector = '[id^="' + elem.id + '-' + tableNameToId(table_config.name) + '"]';
     			column = elem.closest('.table').querySelectorAll(querySelector);
-    			columnsWidth[elem.id] = elem.offsetWidth - 8 + 'px';
+    			columnsWidth[elem.id] = elem.offsetWidth + 'px';
 
     			for (let i = 0; i < column.length; i++) {
-    				column[i].setAttribute('style', 'width:' + (elem.offsetWidth - 8) + 'px');
+    				column[i].setAttribute('style', 'width:' + elem.offsetWidth + 'px');
     			}
     		}
     	}
@@ -2246,7 +2271,10 @@
     	constructor(options) {
     		super();
     		const style = document.createElement('style');
-    		style.textContent = `:root{--lightgrey1:#f4f4f4;--lightgrey2:#efefef;--lightgrey3:#e1e1e1;--grey1:#bfbfbf;--grey2:#999999;--grey3:#666666;--darkgrey1:#555555;--darkgrey2:#333333;--darkgrey3:#1f1f1f;--button1:#004666;--button2:#4A849F;--button3:#A4C8D8;--font-size-textarea:1em}main{position:inherit}.no-entries{width:100%;color:#666666;text-align:center}.red:hover{fill:red;fill-opacity:80%}.green:hover{fill:limegreen;fill-opacity:80%}.blue:hover{fill:dodgerblue;fill-opacity:80%}.table{display:inline-grid;text-align:left;border-bottom:1px solid var(--grey1);border-radius:.3em}.thead{display:inline-flex;padding:0 0 .3em .5em;border-radius:inherit;border-bottom:1px solid var(--grey1)}.row{display:inline-flex;padding:.5em 1em .5em 1em;resize:vertical;border-radius:inherit;border:1px solid var(--lightgrey3)}.dark{background-color:#efefef}.row:hover{transition:all .1s ease-in;background-color:rgba(0, 0, 0, 0.1)}.td{color:#5f5f5f;border:none;font-weight:100;float:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;resize:none;height:inherit}.td-disabled{vertical-align:middle;color:#5f5f5f;border:none;font-weight:200;float:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;margin-left:.5em}.headline{font-weight:300;resize:horizontal;padding-left:1em;line-height:1em;border-radius:inherit}.headline-name:hover{cursor:pointer;color:var(--darkgrey3);font-weight:bolder}#label-options{width:fit-content;resize:none}.options-field{width:fit-content;opacity:60%;resize:inherit;padding-left:.5em}.options{float:left;position:relative;width:fit-content;height:16px;padding:0.3em;cursor:pointer;fill:#999999;color:#666666;line-height:0.9em}.options:hover{color:#333333;text-decoration:underline}.options:focus{border:none;outline:none;opacity:100%}.hidden{display:none}.shown{display:block}textarea{position:relative;resize:vertical;overflow:hidden;width:calc(100% - 1em);height:calc(100% - .5em);padding-left:.5em;background-color:#ffffff;font-size:var(--font-size-textarea);font-weight:300;font-family:inherit;text-overflow:ellipsis;white-space:pre;overflow-y:scroll;border:1px solid var(--lightgrey3)}textarea:focus{outline:none;font-weight:100;white-space:normal;overflow:auto}textarea:not(:focus){height:calc(100% - .5em)}`;
+
+    		style.textContent = `@import "../styles/theme.scss";:root{--lightgrey1:#f4f4f4;--lightgrey2:#efefef;--lightgrey3:#e1e1e1;--grey1:#bfbfbf;--grey2:#999999;--grey3:#666666;--darkgrey1:#555555;--darkgrey2:#333333;--darkgrey3:#1f1f1f;--button1:#004666;--button2:#4A849F;--button3:#A4C8D8;--textarea-font-size:1em;--textarea-background-color:#ffffff
+  }main{position:inherit}.no-entries{width:100%;color:var(--grey3);text-align:center}.red:hover{fill:red;fill-opacity:80%}.green:hover{fill:limegreen;fill-opacity:80%}.blue:hover{fill:dodgerblue;fill-opacity:80%}.table{display:inline-grid;text-align:left;border-bottom:1px solid var(--grey1);border-radius:.3em}.thead{display:inline-flex;padding:.5em 2em .3em;border-radius:inherit;border-bottom:1px solid var(--grey1)}.row{display:inline-flex;padding:.5em 2em .5em;resize:vertical;border-radius:inherit;border:1px solid var(--lightgrey3)}.dark{background-color:var(--lightgrey2)}.row:hover{transition:all .1s ease-in;background-color:rgba(0, 0, 0, 0.1)}.td{color:var(--darkgrey1);border:none;font-weight:100;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;resize:none;height:inherit}.td-disabled{vertical-align:middle;color:var(--darkgrey1);border:none;font-weight:200;float:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;padding-left:.5em}.headline{font-weight:300;resize:horizontal;line-height:1em;border-radius:inherit}.headline-name:hover{color:var(--darkgrey3);font-weight:bolder}.headline-name{cursor:pointer;padding-left:.5em}#label-options{width:fit-content;resize:none}.options-field{width:fit-content;opacity:60%;resize:inherit;padding-left:.5em}.options{float:left;position:relative;width:fit-content;height:16px;padding:0.3em;cursor:pointer;fill:var(--grey2);color:var(--grey3);line-height:0.9em}.options:hover{color:var(--darkgrey2);text-decoration:underline}.options:focus{border:none;outline:none;opacity:100%}.hidden{display:none}.shown{display:block}textarea{position:relative;resize:vertical;overflow:hidden;width:calc(100% - 1em);height:calc(100% - .5em);padding-left:.5em;background-color:var(--textarea-background-color);font-size:var(--font-size);font-weight:300;font-family:inherit;text-overflow:ellipsis;white-space:pre;overflow-y:scroll;border:1px solid var(--lightgrey3)}textarea:focus{outline:none;font-weight:200;white-space:normal;overflow:auto}textarea:not(:focus){height:calc(100% - .5em)}`;
+
     		this.shadowRoot.appendChild(style);
 
     		init(
