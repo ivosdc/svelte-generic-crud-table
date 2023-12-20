@@ -132,14 +132,19 @@ main {
 .td-disabled {
 	vertical-align: middle;
 	color: var(--darkgrey1);
-	border: none;
 	font-weight: 200;
 	float: left;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	width: 100%;
+	width: calc(100% - 1em);
 	padding-left: .5em;
+	cursor: auto;
+	border: none;
+}
+
+.td-disabled:hover {
+	background-color: white;
 }
 
 .headline {
