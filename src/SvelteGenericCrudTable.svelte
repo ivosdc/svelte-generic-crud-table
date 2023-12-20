@@ -1,7 +1,7 @@
 <script>
     import {createEventDispatcher} from 'svelte';
     import {SvelteGenericCrudTableService} from "./SvelteGenericCrudTableService.mjs";
-    import {icontrash, iconedit, iconsend, icondetail, iconcancel, iconcreate, iconsave} from './SvgIcon'
+    import {iconcancel, iconcreate, icondetail, iconedit, iconsave, iconsend, icontrash} from './SvgIcon'
     /* istanbul ignore next line */
     export let shadowed = false;
     const dispatch = createEventDispatcher();
@@ -137,9 +137,9 @@
             let column;
             let querySelector = '[id^="' + elem.id + '-' + tableNameToId(table_config.name) + '"]';
             column = elem.closest('.table').querySelectorAll(querySelector);
-            columnsWidth[elem.id] = (elem.offsetWidth - 8) + 'px';
+            columnsWidth[elem.id] = (elem.offsetWidth) + 'px';
             for (let i = 0; i < column.length; i++) {
-                column[i].setAttribute('style', 'width:' + (elem.offsetWidth - 8) + 'px');
+                column[i].setAttribute('style', 'width:' + (elem.offsetWidth) + 'px');
             }
         }
     }
@@ -189,11 +189,11 @@
                              on:mousemove={handleResize}
                              on:mouseup={stopResize}>
                             <!-- svelte-ignore a11y-click-events-have-key-events -->
-                            <span aria-label="Sort{elem.name}" class="headline-name"
-                                  on:click={(e) => handleSort(elem.name, e)}
-                                  on:mouseenter={(e)=>{genericCrudTableService.tooltip(e, 0, 15, elem.description)}}>
+                            <div aria-label="Sort{elem.name}" class="headline-name"
+                                 on:click={(e) => handleSort(elem.name, e)}
+                                 on:mouseenter={(e)=>{genericCrudTableService.tooltip(e, 0, 15, elem.description)}}>
                                 {genericCrudTableService.makeCapitalLead(elem.name)}
-                            </span>
+                            </div>
                         </div>
                     {/each}
                     <div id="label-options" class="td">
@@ -203,6 +203,10 @@
                             <div class="options blue" on:click={handleCreate}
                                  title="Create">
                                 {@html iconcreate}
+                            </div>
+                        {:else}
+                            <div class="options-spacer">
+                                &nbsp;
                             </div>
                         {/if}
                     </div>
@@ -328,188 +332,191 @@
     {/if}
 </main>
 
-<style>
+<style lang="scss">
+  @import "../styles/theme.scss";
 
-    :root {
-        --lightgrey1: #f4f4f4;
-        --lightgrey2: #efefef;
-        --lightgrey3: #e1e1e1;
-        --grey1: #bfbfbf;
-        --grey2: #999999;
-        --grey3: #666666;
-        --darkgrey1: #555555;
-        --darkgrey2: #333333;
-        --darkgrey3: #1f1f1f;
-        --button1: #004666;
-        --button2: #4A849F;
-        --button3: #A4C8D8;
-        --font-size-textarea: 1em;
-    }
+  :root {
+    --lightgrey1: #f4f4f4;
+    --lightgrey2: #efefef;
+    --lightgrey3: #e1e1e1;
+    --grey1: #bfbfbf;
+    --grey2: #999999;
+    --grey3: #666666;
+    --darkgrey1: #555555;
+    --darkgrey2: #333333;
+    --darkgrey3: #1f1f1f;
+    --button1: #004666;
+    --button2: #4A849F;
+    --button3: #A4C8D8;
+    --textarea-font-size: 1em;
+    --textarea-background-color: #ffffff
+  }
 
+  main {
+    position: inherit;
+  }
 
-    main {
-        position: inherit;
-    }
+  .no-entries {
+    width: 100%;
+    color: var(--grey3);
+    text-align: center;
+  }
 
-    .no-entries {
-        width: 100%;
-        color: #666666;
-        text-align: center;
-    }
+  .red:hover {
+    fill: red;
+    fill-opacity: 80%;
+  }
 
-    .red:hover {
-        fill: red;
-        fill-opacity: 80%;
-    }
+  .green:hover {
+    fill: limegreen;
+    fill-opacity: 80%;
+  }
 
-    .green:hover {
-        fill: limegreen;
-        fill-opacity: 80%;
-    }
+  .blue:hover {
+    fill: dodgerblue;
+    fill-opacity: 80%;
+  }
 
-    .blue:hover {
-        fill: dodgerblue;
-        fill-opacity: 80%;
-    }
+  .table {
+    display: inline-grid;
+    text-align: left;
+    border-bottom: 1px solid var(--grey1);
+    border-radius: .3em;
+  }
 
-    .table {
-        display: inline-grid;
-        text-align: left;
-        border-bottom: 1px solid var(--grey1);
-        border-radius: .3em;
-    }
+  .thead {
+    display: inline-flex;
+    padding: .5em 2em .3em;
+    border-radius: inherit;
+    border-bottom: 1px solid var(--grey1);
+  }
 
-    .thead {
-        display: inline-flex;
-        padding: 0 0 .3em .5em;
-        border-radius: inherit;
-        border-bottom: 1px solid var(--grey1);
-    }
+  .row {
+    display: inline-flex;
+    padding: .5em 2em .5em;
+    resize: vertical;
+    border-radius: inherit;
+    border: 1px solid var(--lightgrey3);
+  }
 
-    .row {
-        display: inline-flex;
-        padding: .5em 1em .5em 1em;
-        resize: vertical;
-        border-radius: inherit;
-        border: 1px solid var(--lightgrey3);
-    }
+  .dark {
+    background-color: var(--lightgrey2);
+  }
 
-    .dark {
-        background-color: #efefef;
-    }
+  .row:hover {
+    transition: all .1s ease-in;
+    background-color: rgba(0, 0, 0, 0.1);
+  }
 
-    .row:hover {
-        transition: all .1s ease-in;
-        background-color: rgba(0, 0, 0, 0.1);
-    }
+  .td {
+    color: var(--darkgrey1);
+    border: none;
+    font-weight: 100;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    resize: none;
+    height: inherit;
+  }
 
-    .td {
-        color: #5f5f5f;
-        border: none;
-        font-weight: 100;
-        float: left;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        resize: none;
-        height: inherit;
-    }
+  .td-disabled {
+    vertical-align: middle;
+    color: var(--darkgrey1);
+    border: none;
+    font-weight: 200;
+    float: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    padding-left: .5em;
+  }
 
-    .td-disabled {
-        vertical-align: middle;
-        color: #5f5f5f;
-        border: none;
-        font-weight: 200;
-        float: left;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        width: 100%;
-        margin-left: .5em;
-    }
+  .headline {
+    font-weight: 300;
+    resize: horizontal;
+    line-height: 1em;
+    border-radius: inherit;
+  }
 
-    .headline {
-        font-weight: 300;
-        resize: horizontal;
-        padding-left: 1em;
-        line-height: 1em;
-        border-radius: inherit;
-    }
+  .headline-name:hover {
+    color: var(--darkgrey3);
+    font-weight: bolder;
+  }
 
-    .headline-name:hover {
-        cursor: pointer;
-        color: var(--darkgrey3);
-        font-weight: bolder;
-    }
+  .headline-name {
+    cursor: pointer;
+    padding-left: .5em;
+  }
 
-    #label-options {
-        width: fit-content;
-        resize: none;
-    }
+  #label-options {
+    width: fit-content;
+    resize: none;
+  }
 
-    .options-field {
-        width: fit-content;
-        opacity: 60%;
-        resize: inherit;
-        padding-left: .5em;
-    }
+  .options-field {
+    width: fit-content;
+    opacity: 60%;
+    resize: inherit;
+    padding-left: .5em;
+  }
 
-    .options {
-        float: left;
-        position: relative;
-        width: fit-content;
-        height: 16px;
-        padding: 0.3em;
-        cursor: pointer;
-        fill: #999999;
-        color: #666666;
-        line-height: 0.9em;
-    }
+  .options {
+    float: left;
+    position: relative;
+    width: fit-content;
+    height: 16px;
+    padding: 0.3em;
+    cursor: pointer;
+    fill: var(--grey2);
+    color: var(--grey3);
+    line-height: 0.9em;
+  }
 
-    .options:hover {
-        color: #333333;
-        text-decoration: underline;
-    }
+  .options:hover {
+    color: var(--darkgrey2);
+    text-decoration: underline;
+  }
 
-    .options:focus {
-        border: none;
-        outline: none;
-        opacity: 100%;
-    }
+  .options:focus {
+    border: none;
+    outline: none;
+    opacity: 100%;
+  }
 
-    .hidden {
-        display: none;
-    }
+  .hidden {
+    display: none;
+  }
 
-    .shown {
-        display: block;
-    }
+  .shown {
+    display: block;
+  }
 
-    textarea {
-        position: relative;
-        resize: vertical;
-        overflow: hidden;
-        width: calc(100% - 1em);
-        height: calc(100% - .5em);
-        padding-left: .5em;
-        background-color: #ffffff;
-        font-size: var(--font-size-textarea);
-        font-weight: 300;
-        font-family: inherit;
-        text-overflow: ellipsis;
-        white-space: pre;
-        overflow-y: scroll;
-        border: 1px solid var(--lightgrey3);
-    }
+  textarea {
+    position: relative;
+    resize: vertical;
+    overflow: hidden;
+    width: calc(100% - 1em);
+    height: calc(100% - .5em);
+    padding-left: .5em;
+    background-color: var(--textarea-background-color);
+    font-size: var(--font-size);
+    font-weight: 300;
+    font-family: inherit;
+    text-overflow: ellipsis;
+    white-space: pre;
+    overflow-y: scroll;
+    border: 1px solid var(--lightgrey3);
+  }
 
-    textarea:focus {
-        outline: none;
-        font-weight: 100;
-        white-space: normal;
-        overflow: auto;
-    }
+  textarea:focus {
+    outline: none;
+    font-weight: 200;
+    white-space: normal;
+    overflow: auto;
+  }
 
-    textarea:not(:focus) {
-        height: calc(100% - .5em);
-    }
+  textarea:not(:focus) {
+    height: calc(100% - .5em);
+  }
 </style>
