@@ -196,7 +196,7 @@
                             </div>
                         </div>
                     {/each}
-                    <div id="label-options" class="td">
+                    <div id="label-options" class="td options-field">
                         <!-- /* istanbul ignore next line */ -->
                         {#if options.includes(CREATE)}
                             <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -332,8 +332,7 @@
     {/if}
 </main>
 
-<style lang="scss">
-  @import "../styles/theme.scss";
+<style>
 
   :root {
     --lightgrey1: #f4f4f4;
@@ -389,6 +388,7 @@
     padding: .5em 2em .3em;
     border-radius: inherit;
     border-bottom: 1px solid var(--grey1);
+    line-height: 1em;
   }
 
   .row {
@@ -435,8 +435,8 @@
   .headline {
     font-weight: 300;
     resize: horizontal;
-    line-height: 1em;
     border-radius: inherit;
+    line-height: .8em;
   }
 
   .headline-name:hover {
@@ -449,16 +449,10 @@
     padding-left: .5em;
   }
 
-  #label-options {
-    width: fit-content;
-    resize: none;
-  }
-
   .options-field {
-    width: fit-content;
+    width: max-content;
     opacity: 60%;
     resize: inherit;
-    padding-left: .5em;
   }
 
   .options {
@@ -466,11 +460,11 @@
     position: relative;
     width: fit-content;
     height: 16px;
-    padding: 0.3em;
     cursor: pointer;
     fill: var(--grey2);
-    color: var(--grey3);
-    line-height: 0.9em;
+    stroke: var(--grey2);
+    color: var(--grey2);
+    padding-left: .5em;
   }
 
   .options:hover {
