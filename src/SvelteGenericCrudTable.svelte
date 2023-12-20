@@ -235,6 +235,7 @@
                                          class="td {genericCrudTableService.isShowField(column_order.name) === false ? 'hidden' : 'shown'}"
                                          style="{getWidth(j)}">
                                         <div id={name + column_order.name + i + '-disabled'}
+                                             on:click={(e) => {e.stopPropagation()}}
                                              class="td-disabled shown"
                                              aria-label={name + column_order.name + i + '-disabled'}
                                              on:mouseenter={(e) => {
@@ -272,6 +273,19 @@
                                                 <div class="options green"
                                                      on:click={(e) => handleEdit(i, e)} title="Edit" tabindex="0">
                                                     {@html iconedit}
+                                                </div>
+                                            {/if}
+                                            <!-- /* istanbul ignore next */ -->
+                                            {#if options.includes(DETAILS)}
+                                                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                                <div class="options blue" on:click="{(e) => {handleDetails(i, e)}}"
+                                                     title="{table_config.details_text !== undefined ? table_config.details_text : 'Details'}"
+                                                     tabindex="0">
+                                                    {#if table_config.details_text !== undefined}
+                                                        {table_config.details_text}
+                                                    {:else}
+                                                        {@html icondetail}
+                                                    {/if}
                                                 </div>
                                             {/if}
                                         </div>
@@ -425,14 +439,19 @@
   .td-disabled {
     vertical-align: middle;
     color: var(--darkgrey1);
-    border: none;
     font-weight: 200;
     float: left;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    width: 100%;
+    width: calc(100% - 1em);
     padding-left: .5em;
+    cursor: auto;
+    border: none;
+  }
+
+  .td-disabled:hover {
+    background-color: white;
   }
 
   .headline {
