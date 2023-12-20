@@ -35,6 +35,7 @@
     $: genericCrudTableService = new SvelteGenericCrudTableService(table_config, name);
 
     function handleEdit(id, event) {
+        event.stopPropagation();
         resetRawInEditMode(id, event);
         cursor = id;
         for (let i = 0; i < table_data.length; i++) {
@@ -44,6 +45,7 @@
     }
 
     function handleCancelEdit(id, event) {
+        event.stopPropagation();
         genericCrudTableService.resetRawValues(id, table_data, event);
         genericCrudTableService.resetEditMode(id, event);
         genericCrudTableService.resetDeleteMode(id, event);
@@ -51,6 +53,7 @@
     }
 
     function handleEditConfirmation(id, event) {
+        event.stopPropagation();
         resetRawInEditMode(id, event);
         const body = genericCrudTableService.gatherUpdates(id, table_data, event);
         table_data[id] = body;
@@ -63,6 +66,7 @@
     }
 
     function handleDelete(id, event) {
+        event.stopPropagation();
         resetRawInEditMode(id, event);
         genericCrudTableService.resetDeleteMode(id, event)
         cursor = id;
@@ -70,11 +74,13 @@
     }
 
     function handleCancelDelete(id, event) {
+        event.stopPropagation();
         genericCrudTableService.resetEditMode(id, event);
         genericCrudTableService.resetDeleteMode(id, event);
     }
 
     function handleDeleteConfirmation(id, event) {
+        event.stopPropagation();
         const body = genericCrudTableService.gatherUpdates(id, table_data, event);
         const details = {
             id: id,
@@ -86,6 +92,7 @@
     }
 
     function handleCreate(event) {
+        event.stopPropagation();
         let details = event.detail;
         dispatcher('create', details, event);
     }
@@ -104,6 +111,7 @@
     }
 
     function handleDetails(id, event) {
+        event.stopPropagation();
         resetRawInEditMode(id, event);
         const body = genericCrudTableService.gatherUpdates(id, table_data, event);
         const details = {
@@ -216,7 +224,9 @@
                 {#each table_data as tableRow, i (tableRow)}
                     <div class="row"
                          class:dark={i % 2 === 0}
-                         style="min-height:{(table_config.row_settings !== undefined) && (table_config.row_settings.height !== undefined) ? table_config.row_settings.height : table_config_default.row_settings.height};">
+                         class:handle-detail={table_config.options.includes('DETAILS')}
+                         style="min-height:{(table_config.row_settings !== undefined) && (table_config.row_settings.height !== undefined) ? table_config.row_settings.height : table_config_default.row_settings.height};"
+                         on:click={(e) => {table_config.options.includes('DETAILS') ? handleDetails(i, e) : e.stopPropagation()}}>
                         {#each table_config.columns_setting as column_order, j}
                             {#each Object.entries(tableRow) as elem, k}
                                 <!-- /* istanbul ignore next */ -->
@@ -237,6 +247,7 @@
                                         </div>
                                         <textarea id={name + column_order.name + i}
                                                   class="hidden"
+                                                  on:click={(e) => {e.stopPropagation()}}
                                                   aria-label={name + column_order.name + i}>{table_data[i][column_order.name]}</textarea>
                                     </div>
                                 {/if}
@@ -261,19 +272,6 @@
                                                 <div class="options green"
                                                      on:click={(e) => handleEdit(i, e)} title="Edit" tabindex="0">
                                                     {@html iconedit}
-                                                </div>
-                                            {/if}
-                                            <!-- /* istanbul ignore next */ -->
-                                            {#if options.includes(DETAILS)}
-                                                <!-- svelte-ignore a11y-click-events-have-key-events -->
-                                                <div class="options blue" on:click="{(e) => {handleDetails(i, e)}}"
-                                                     title="{table_config.details_text !== undefined ? table_config.details_text : 'Details'}"
-                                                     tabindex="0">
-                                                    {#if table_config.details_text !== undefined}
-                                                        {table_config.details_text}
-                                                    {:else}
-                                                        {@html icondetail}
-                                                    {/if}
                                                 </div>
                                             {/if}
                                         </div>
@@ -355,6 +353,10 @@
     position: inherit;
   }
 
+  .handle-detail {
+    cursor: pointer;
+  }
+
   .no-entries {
     width: 100%;
     color: var(--grey3);
@@ -404,8 +406,9 @@
   }
 
   .row:hover {
-    transition: all .1s ease-in;
+    transition: all .1s linear;
     background-color: rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--grey1);
   }
 
   .td {
@@ -494,7 +497,7 @@
     height: calc(100% - .5em);
     padding-left: .5em;
     background-color: var(--textarea-background-color);
-    font-size: var(--font-size);
+    font-size: var(--textarea-font-size);
     font-weight: 300;
     font-family: inherit;
     text-overflow: ellipsis;

@@ -38,6 +38,7 @@ pre {
     width: fit-content;
 }
 
+
 :root {
 	--lightgrey1: #f4f4f4;
 	--lightgrey2: #efefef;
@@ -57,6 +58,10 @@ pre {
 
 main {
 	position: inherit;
+}
+
+.handle-detail {
+	cursor: pointer;
 }
 
 .no-entries {
@@ -108,8 +113,9 @@ main {
 }
 
 .row:hover {
-	transition: all .1s ease-in;
+	transition: all .1s linear;
 	background-color: rgba(0, 0, 0, 0.1);
+	border: 1px solid var(--grey1);
 }
 
 .td {
