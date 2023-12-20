@@ -198,7 +198,7 @@ textarea {
 	height: calc(100% - .5em);
 	padding-left: .5em;
 	background-color: var(--textarea-background-color);
-	font-size: var(--font-size);
+	font-size: var(--textarea-font-size);
 	font-weight: 300;
 	font-family: inherit;
 	text-overflow: ellipsis;
