@@ -2,6 +2,8 @@
     import {createEventDispatcher} from 'svelte';
     import {SvelteGenericCrudTableService} from "./SvelteGenericCrudTableService.mjs";
     import {iconcancel, iconcreate, icondetail, iconedit, iconsave, iconsend, icontrash} from './SvgIcon'
+    import {defaultSort} from './ArrayService.mjs'
+
     /* istanbul ignore next line */
     export let shadowed = false;
     const dispatch = createEventDispatcher();
@@ -127,9 +129,10 @@
         }
     }
 
-    function handleSort(elem, event) {
-        let column = {column: elem};
-        dispatcher('sort', column, event);
+    let sortStore = [];
+
+    function handleSort(event, elem) {
+        table_data = defaultSort(elem, sortStore, table_data);
     }
 
     const columnsWidth = [];
@@ -198,9 +201,9 @@
                              on:mouseup={stopResize}>
                             <!-- svelte-ignore a11y-click-events-have-key-events -->
                             <div aria-label="Sort{elem.name}" class="headline-name"
-                                 on:click={(e) => handleSort(elem.name, e)}
+                                 on:click={(e) => handleSort(e, elem.name)}
                                  on:mouseenter={(e)=>{genericCrudTableService.tooltip(e, 0, 15, elem.description)}}>
-                                {genericCrudTableService.makeCapitalLead(elem.name)}
+                                {elem.displayName !== undefined ? elem.displayName : genericCrudTableService.makeCapitalLead(elem.name)}
                             </div>
                         </div>
                     {/each}
@@ -360,7 +363,7 @@
     --button2: #4A849F;
     --button3: #A4C8D8;
     --textarea-font-size: 1em;
-    --textarea-background-color: #ffffff
+    --textarea-background-color: white;
   }
 
   main {
@@ -401,10 +404,10 @@
 
   .thead {
     display: inline-flex;
-    padding: .5em 2em .3em;
+    padding: 0 2em;
     border-radius: inherit;
     border-bottom: 1px solid var(--grey1);
-    line-height: 1em;
+    min-height: 2em;
   }
 
   .row {
@@ -451,7 +454,7 @@
   }
 
   .td-disabled:hover {
-    background-color: white;
+    background-color: var(--lightgrey1);
   }
 
   .headline {
@@ -464,11 +467,15 @@
   .headline-name:hover {
     color: var(--darkgrey3);
     font-weight: bolder;
+    border-top: 1px solid var(--grey1);
+    height: 2em;
   }
 
   .headline-name {
     cursor: pointer;
-    padding-left: .5em;
+    padding: .5em;
+    border-radius: .2em;
+    border-top: 1px solid transparent;
   }
 
   .options-field {

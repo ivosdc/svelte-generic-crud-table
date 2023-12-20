@@ -39,6 +39,7 @@ pre {
 }
 
 
+/* crud-table from here */
 :root {
 	--lightgrey1: #f4f4f4;
 	--lightgrey2: #efefef;
@@ -53,7 +54,7 @@ pre {
 	--button2: #4A849F;
 	--button3: #A4C8D8;
 	--textarea-font-size: 1em;
-	--textarea-background-color: #ffffff
+	--textarea-background-color: white;
 }
 
 main {
@@ -94,10 +95,10 @@ main {
 
 .thead {
 	display: inline-flex;
-	padding: .5em 2em .3em;
+	padding: 0 2em;
 	border-radius: inherit;
 	border-bottom: 1px solid var(--grey1);
-	line-height: 1em;
+	min-height: 2em;
 }
 
 .row {
@@ -144,7 +145,7 @@ main {
 }
 
 .td-disabled:hover {
-	background-color: white;
+	background-color: var(--lightgrey1);
 }
 
 .headline {
@@ -157,11 +158,15 @@ main {
 .headline-name:hover {
 	color: var(--darkgrey3);
 	font-weight: bolder;
+	border-top: 1px solid var(--grey1);
+	height: 2em;
 }
 
 .headline-name {
 	cursor: pointer;
-	padding-left: .5em;
+	padding: .5em;
+	border-radius: .2em;
+	border-top: 1px solid transparent;
 }
 
 .options-field {

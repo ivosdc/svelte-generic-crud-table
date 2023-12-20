@@ -14,7 +14,6 @@ let table_config = {
 
 // table-1
 let genericCrudTable = document.getElementById('crud-table-1');
-const sortStore = [];
 
 genericCrudTable.setAttribute('shadowed', 'true');
 genericCrudTable.setAttribute('table_config', JSON.stringify(table_config));
@@ -55,28 +54,3 @@ genericCrudTable.addEventListener('delete', (e) => {
     genericCrudTable.setAttribute('table_data', JSON.stringify(myData));
 });
 
-genericCrudTable.addEventListener('sort', (e) => {
-    console.log('sort: ' + e.detail.column);
-    const column = e.detail.column;
-    if (sortStore[column] === undefined || sortStore[column] === 'DESC') {
-        sortStore[column] = 'ASC';
-    } else {
-        sortStore[column] = 'DESC';
-    }
-
-    const tableSort = (a, b) => {
-        var keyA = a[column];
-        var keyB = b[column];
-        if (sortStore[column] === 'ASC') {
-            if (keyA < keyB) return -1;
-            if (keyA > keyB) return 1;
-        } else {
-            if (keyA < keyB) return 1;
-            if (keyA > keyB) return -1;
-        }
-        return 0;
-    };
-
-    myData = myData.sort(tableSort);
-    genericCrudTable.setAttribute('table_data', JSON.stringify(myData));
-});

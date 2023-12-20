@@ -3,8 +3,6 @@
 - or Svelte-component: `import SvelteGenericCrudTable from 'svelte-generic-crud-table'`
 
 A self-containing sortable table component with inline edit option.
-See `<table-pager>` with integrated paginator for pagination.
-[table-pager](https://www.npmjs.com/package/svelte-generic-table-pager/ "CrudTable with paginator Example")
 
 Allows CRUD-operations for Object-Arrays.
 
@@ -19,10 +17,6 @@ Allows CRUD-operations for Object-Arrays.
 npm install svelte-generic-crud-table --save-dev
 ```
 
-
-### State (master):
-[![Build Status](https://travis-ci.com/ivosdc/svelte-generic-crud-table.svg?branch=master)](https://travis-ci.com/ivosdc/svelte-generic-crud-table)
-[![Coverage Status](https://coveralls.io/repos/github/ivosdc/svelte-generic-crud-table/badge.svg?branch=master)](https://coveralls.io/github/ivosdc/svelte-generic-crud-table?branch=master)
 
 # Usage
 Use the svelte-generic-crud-table in your component to show and, if you like, edit,update and delete it's content.
@@ -39,8 +33,8 @@ Only wanted keys of your source array have to be mapped by columns_settings *nam
         options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
         columns_setting: [
             {name: 'id', show: false, edit: true, width: '0px'},
-            {name: 'job', show: true, edit: true, width: '150px', description: 'The job'},
-            {name: 'name', show: true, edit: true, width: '150px', tooltip: true},
+            {name: 'job', displayName: 'Top-Jobs', show: true, edit: true, width: '150px', description: 'The job'},
+            {name: 'name', displayName: 'Account-ID', show: true, edit: true, width: '150px', tooltip: true},
             {name: 'private', show: true, edit: false, width: '200px', description: 'your things', tooltip: true},
             {name: 'html', show: true, edit: true, width: '500px', type: 'html', description: 'You can use HTML', tooltip: true}
         ],
@@ -48,6 +42,7 @@ Only wanted keys of your source array have to be mapped by columns_settings *nam
     }
 ```
 - <b>*name*</b>: the key from your data-array. This is used as column name.
+- *displayName*: An alternative column header if *name* is not matching the needs.
 - *show*: true/false; Should this column displayed? (optional, default: false)
 - *edit*: true/false; Set this field editable or not. (optional, default: false)
 - *width*: px/em; set the field width.  (optional, default: 100px)
@@ -93,8 +88,6 @@ Only wanted keys of your source array have to be mapped by columns_settings *nam
     import {onMount} from 'svelte';
     import {goto} from "@sapper/app";
 
-    const sortStore = [];
-
     let myData = [];
 
     onMount(reload);
@@ -129,30 +122,7 @@ Only wanted keys of your source array have to be mapped by columns_settings *nam
         goto('/project/' + event.detail.body.id);
     }
 
-    function handleSort(event) {
-        const column = event.detail.column;
-        if (sortStore[column] === undefined || sortStore[column] === 'DESC') {
-            sortStore[column] = 'ASC';
-        } else {
-            sortStore[column] = 'DESC';
-        }
-
-        const tableSort = (a, b) => {
-            var keyA = a[column];
-            var keyB = b[column];
-            if (sortStore[column] === 'ASC') {
-                if (keyA < keyB) return -1;
-                if (keyA > keyB) return 1;
-            } else {
-                if (keyA < keyB) return 1;
-                if (keyA > keyB) return -1;
-            }
-            return 0;
-        };
-
-        myData = myData.sort(tableSort);
-    }
-
+    
     const table_config = {
         name: 'Awesome',
         options: ['CREATE', 'EDIT', 'DELETE', 'DETAILS'],
@@ -173,7 +143,6 @@ Only wanted keys of your source array have to be mapped by columns_settings *nam
                             on:update={handleUpdate}
                             on:create={handleCreate}
                             on:details={handleDetail}
-                            on:sort={handleSort}
                             table_config={table_config}
                             table_data={myData}/>
 </main>
