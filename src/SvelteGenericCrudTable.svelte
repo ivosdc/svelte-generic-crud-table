@@ -375,11 +375,9 @@
       cursor: pointer;
   }
 
-  .row-details:hover {
-      & .blue {
+  .row-details:hover .blue {
           fill: dodgerblue;
           fill-opacity: 80%;
-      }
   }
 
   .no-entries {
