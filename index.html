@@ -6,7 +6,7 @@
     <title>Generic Crud Table</title>
     <link rel='icon' type='image/png' href='favicon.png'>
     <link rel='stylesheet' href='global.css'>
-    <script defer src='build/crud-table.js'></script>
+    <script type="module" src='build/crud-table.mjs'></script>
 </head>
 
 <body>
@@ -34,13 +34,10 @@ const table_config = {
     details_text: 'detail'   // replace the standard icon with an text-link
 }
 </code></pre></blockquote>
-<crud-table id="crud-table-1"></crud-table>
-<hr>
-<img src="https://travis-ci.com/ivosdc/svelte-generic-crud-table.svg?branch=master" alt="travis-ci:status">
-<a rel="noopener noreferrer" href='https://coveralls.io/github/ivosdc/svelte-generic-crud-table?branch=master'><img
-        src='https://coveralls.io/repos/github/ivosdc/svelte-generic-crud-table/badge.svg?branch=master'
-        alt='Coverage Status'/></a>
 
+<crud-table id="crud-table-1"></crud-table>
+
+<hr>
 </body>
 <script src='array-utils.js'></script>
 <script src='test-data.js'></script>
