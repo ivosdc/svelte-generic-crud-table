@@ -5,11 +5,11 @@ const pkg = require('./package.json');
 
 export default {
     input: [
-        'src/index.js'
+        'src/index.cjs'
     ],
     output: [
         {file: pkg.module, format: 'es', name: 'SvelteGenericCrudTable'},
-        {file: pkg.main, format: 'umd', name: 'SvelteGenericCrudTable'},
+        {file: pkg.main, format: 'es', name: 'SvelteGenericCrudTable'},
     ],
     plugins: [
         svelte({
