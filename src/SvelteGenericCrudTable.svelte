@@ -181,6 +181,16 @@
             genericCrudTableService.tooltip(event, 0, 15, text, type)
         }
     }
+
+    function handleTdDisabled(i, e) {
+        if (options.includes(EDIT)) {
+            handleEdit(i, e);
+        }
+        if (options.includes(DETAILS) && !options.includes(EDIT)) {
+            handleDetails(i, e);
+        }
+        e.stopPropagation();
+    }
 </script>
 
 <main>
@@ -238,7 +248,7 @@
                                          class="td {genericCrudTableService.isShowField(column_order.name) === false ? 'hidden' : 'shown'}"
                                          style="{getWidth(j)}">
                                         <div id={name + column_order.name + i + '-disabled'}
-                                             on:click={(e) => {e.stopPropagation()}}
+                                             on:click={(e) => {(e) => handleTdDisabled(i, e)}}
                                              class="td-disabled shown"
                                              aria-label={name + column_order.name + i + '-disabled'}
                                              on:mouseenter={(e) => {
