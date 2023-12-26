@@ -18,11 +18,29 @@ npm install svelte-generic-crud-table --save-dev
 ```
 
 
-# Usage
-Use the svelte-generic-crud-table in your component to show and, if you like, edit,update and delete it's content.
+# Usage - table_config
+Use the svelte-generic-crud-table in your component to show and, if you like, edit, update and delete it's content.
 Just include the table as seen in the example below.
 
-## column settings
+## name
+This is used as `id` for the component.
+
+## options
+- 'CREATE' - activates the add-icon to fire the create-event.
+- 'EDIT' - activates the edit-icon to set the table-row in edit-mode.
+- 'DELETE' - activates the delete-icon to fire the delete-event.
+- 'DETAILS' - activates the details-icon or showa the alternative details_text if configured to fire the details-event.
+
+
+The events contain the element from the `crud-table` with the table-id and eventually made changes to the element. Additionally the original element with all it's `hidden fields -> column_setting:show true/false`.
+
+As webcomponent use `event.target`.
+As Svelte-Component use `event.detail` to fetch the data.
+
+Have a look inside `event.target.body` / `event.detail.body` to see original element.
+
+
+## column setting
 All fields are optional.
 
 Settings regarding a column behaviour can be specified in the table_config.
@@ -51,6 +69,11 @@ Only wanted keys of your source array have to be mapped by columns_settings *nam
 - *type*: There are two types:  (optional, default: text)
     - *text*: Default.
     - *html*: The value/text will be interpreted as HTML.
+
+## details_text
+You can replace the icon for "DETAILS" by a text. Perhaps you like to specify the acvtion behind the button more concrete.
+
+
 
 [See example:](https://ivosdc.github.io/svelte-generic-crud-table/ "GeneralCrudTable Example")
 
@@ -147,4 +170,10 @@ Only wanted keys of your source array have to be mapped by columns_settings *nam
                             table_data={myData}/>
 </main>
 
+```
+
+I recommend for Svelte-Users the direct import of the component source `"svelte-generic-crud-table/src/SvelteGenericCrudTable.svelte"`.
+```html
+// import SvelteGenericCrudTable from "svelte-generic-crud-table";
+import SvelteGenericCrudTable from "svelte-generic-crud-table/src/SvelteGenericCrudTable.svelte";
 ```

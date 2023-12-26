@@ -45,7 +45,6 @@
     "@babel/preset-env": "^7.14.2",
     "@testing-library/svelte": "^3.0.3",
     "babel-jest": "^26.6.3",
-    "coveralls": "^3.1.0",
     "jest": "^26.6.3",
     "jest-mock": "^26.6.2",
     "jest-svelte-resolver": "^1.0.0",
