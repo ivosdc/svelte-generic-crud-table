@@ -182,15 +182,6 @@
         }
     }
 
-    function handleTdDisabled(i, e) {
-        if (options.includes(EDIT)) {
-            handleEdit(i, e);
-        }
-        if (options.includes(DETAILS) && !options.includes(EDIT)) {
-            handleDetails(i, e);
-        }
-        e.stopPropagation();
-    }
 </script>
 
 <main>
@@ -237,7 +228,8 @@
                 {#each table_data as tableRow, i (tableRow)}
                     <div class="row"
                          class:dark={i % 2 === 0}
-                         class:handle-detail={table_config.options.includes('DETAILS')}
+                         class:row-details={table_config.options.includes('DETAILS')}
+                         title="{table_config.details_text !== undefined ? table_config.details_text : 'Details'}"
                          style="min-height:{(table_config.row_settings !== undefined) && (table_config.row_settings.height !== undefined) ? table_config.row_settings.height : table_config_default.row_settings.height};"
                          on:click={(e) => {table_config.options.includes('DETAILS') ? handleDetails(i, e) : e.stopPropagation()}}>
                         {#each table_config.columns_setting as column_order, j}
@@ -248,7 +240,6 @@
                                          class="td {genericCrudTableService.isShowField(column_order.name) === false ? 'hidden' : 'shown'}"
                                          style="{getWidth(j)}">
                                         <div id={name + column_order.name + i + '-disabled'}
-                                             on:click={(e) => {(e) => handleTdDisabled(i, e)}}
                                              class="td-disabled shown"
                                              aria-label={name + column_order.name + i + '-disabled'}
                                              on:mouseenter={(e) => {
@@ -380,8 +371,15 @@
     position: inherit;
   }
 
-  .handle-detail {
-    cursor: pointer;
+  .row-details {
+      cursor: pointer;
+  }
+
+  .row-details:hover {
+      & .blue {
+          fill: dodgerblue;
+          fill-opacity: 80%;
+      }
   }
 
   .no-entries {
@@ -459,12 +457,7 @@
     text-overflow: ellipsis;
     width: calc(100% - 1em);
     padding-left: .5em;
-    cursor: auto;
     border: none;
-  }
-
-  .td-disabled:hover {
-    background-color: var(--lightgrey1);
   }
 
   .headline {
